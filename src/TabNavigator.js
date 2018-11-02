@@ -4,8 +4,9 @@ import {createBottomTabNavigator} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
+import Reservation from './screens/Reservation';
 import Saved from './screens/Saved';
-import Trips from './screens/Trips';
+import Chat from './screens/Chat';
 import Profile from './screens/Profile';
 import Colors from './utils/Colors';
 
@@ -21,7 +22,7 @@ export default createBottomTabNavigator({
     }
   },
   Saved : {
-    screen : Saved,
+    screen : Reservation,
     navigationOptions : {
       tabBarLabel : '예약보기',
       tabBarIcon : ({tintColor}) => (
@@ -30,7 +31,7 @@ export default createBottomTabNavigator({
     }
   },
   Trips : {
-    screen : Trips,
+    screen : Chat,
     navigationOptions : {
       tabBarLabel : '대화하기',
       tabBarIcon : ({tintColor}) => (

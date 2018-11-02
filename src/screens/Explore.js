@@ -146,7 +146,21 @@ const styles = StyleSheet.create({
         height : 200, 
         marginTop : 10
     },
-    exploreImage : {flex : 1, height : null, width : null, resizeMode : 'cover', borderRadius : 5, borderWidth : 1, borderColor : '#dddddd'},
-    exploreImageTitle : {fontSize : 24, fontWeight : '700'},
-    exploreImageDescription : {fontWeight : '100', marginTop : 10}
+    exploreImage : {
+        flex : 1, 
+        height : null, 
+        width : null, 
+        resizeMode : 'cover', 
+        borderRadius : 5, 
+        borderWidth : 1, 
+        borderColor : '#dddddd'
+    },
+    exploreImageTitle : {
+        fontSize : 24, 
+        fontWeight : '700'
+    },
+    exploreImageDescription : {
+        fontWeight : '100', 
+        marginTop : 10
+    }
 });

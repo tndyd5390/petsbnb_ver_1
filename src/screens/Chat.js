@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 
-class Inbox extends Component {
+class Chat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Inbox</Text>
+        <Text>Chat</Text>
       </View>
     );
   }
 }
 
 
-export default Inbox;
+export default Chat;
 
 const styles = StyleSheet.create({
   container: {

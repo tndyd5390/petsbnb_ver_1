@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 
-class Trips extends Component {
+class Reservation extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Trips</Text>
+        <Text>Reservation</Text>
       </View>
     );
   }
 }
 
 
-export default Trips;
+export default Reservation;
 
 const styles = StyleSheet.create({
   container: {
