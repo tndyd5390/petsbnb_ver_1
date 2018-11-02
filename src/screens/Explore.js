@@ -38,6 +38,9 @@ class Explore extends Component {
                     <ScrollView
                         scrollEventThrottle={16}
                     >
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Reservation')}
+                    >
                         <View style={styles.exploreContainer}>
                             <View style={styles.exploreWrapper}>
                                 <View style={styles.exploreImageView}>
@@ -47,10 +50,27 @@ class Explore extends Component {
                                     />
                                 </View>
                                 <Text style={styles.exploreImageTitle}>
-                                    Introducing petsbnb plus
+                                    펫시터 알바 입니다.
                                 </Text>
                                 <Text style={styles.exploreImageDescription}>
-                                    a new selection of homes verified for quality & comfort
+                                    성남시 분당구 불곡산 산책을 시키며...
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                        <View style={styles.exploreContainer}>
+                            <View style={styles.exploreWrapper}>
+                                <View style={styles.exploreImageView}>
+                                    <Image
+                                        source={require('../../assets/home.jpg')}
+                                        style={styles.exploreImage}
+                                    />
+                                </View>
+                                <Text style={styles.exploreImageTitle}>
+                                    펫시터 알바 입니다.
+                                </Text>
+                                <Text style={styles.exploreImageDescription}>
+                                    성남시 분당구 불곡산 산책을 시키며...
                                 </Text>
                             </View>
                         </View>
@@ -63,26 +83,10 @@ class Explore extends Component {
                                     />
                                 </View>
                                 <Text style={styles.exploreImageTitle}>
-                                    Introducing petsbnb plus
+                                    펫시터 알바 입니다.
                                 </Text>
                                 <Text style={styles.exploreImageDescription}>
-                                    a new selection of homes verified for quality & comfort
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.exploreContainer}>
-                            <View style={styles.exploreWrapper}>
-                                <View style={styles.exploreImageView}>
-                                    <Image
-                                        source={require('../../assets/home.jpg')}
-                                        style={styles.exploreImage}
-                                    />
-                                </View>
-                                <Text style={styles.exploreImageTitle}>
-                                    Introducing petsbnb plus
-                                </Text>
-                                <Text style={styles.exploreImageDescription}>
-                                    a new selection of homes verified for quality & comfort
+                                    성남시 분당구 불곡산 산책을 시키며...
                                 </Text>
                             </View>
                         </View>

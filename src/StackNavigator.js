@@ -1,5 +1,6 @@
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import Saved from './screens/Saved';
+import Reservation from './screens/Reservation';
 import TabNavigator from './TabNavigator'
 
 export default createStackNavigator({
@@ -9,8 +10,8 @@ export default createStackNavigator({
           header : null
         }
       },
-      saved : {
-        screen : Saved,
+      Reservation : {
+        screen : Reservation,
         navigationOptions : {
           
         }
