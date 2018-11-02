@@ -3,9 +3,14 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 
 class Saved extends Component {
   render() {
+    const{navigation} = this.props;
+    console.log(navigation);
+    const data = navigation.getParam('data','tmpData');
+
     return (
       <View style={styles.container}>
         <Text>Saved</Text>
+        <Text>{toString.call(data)}</Text>
       </View>
     );
   }

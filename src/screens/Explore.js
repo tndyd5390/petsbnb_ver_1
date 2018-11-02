@@ -62,19 +62,19 @@ class Explore extends Component {
                                     showsHorizontalScrollIndicator={false}
                                 >
                                 <TouchableOpacity 
-                                    onPress={() => this.props.navigation.navigate('saved')}
+                                    onPress={() => this.props.navigation.navigate('saved', {data : 'parksooyong'})}
                                 >
                                     <Category
-                                        imageUri={require('../assets/home.jpg')}
+                                        imageUri={require('../../assets/home.jpg')}
                                         name='home'
                                     />
                                 </TouchableOpacity>
                                     <Category
-                                        imageUri={require('../assets/experiences.jpg')}
+                                        imageUri={require('../../assets/experiences.jpg')}
                                         name='Experience'
                                     />
                                     <Category
-                                        imageUri={require('../assets/restaurant.jpg')}
+                                        imageUri={require('../../assets/restaurant.jpg')}
                                         name='Restaurant'
                                     />
                                 </ScrollView>
@@ -88,7 +88,7 @@ class Explore extends Component {
                                 </Text>
                                 <View style={{width : width-40, height : 200, marginTop : 20}}>
                                     <Image
-                                        source={require('../assets/home.jpg')}
+                                        source={require('../../assets/home.jpg')}
                                         style={{flex : 1, height : null, width : null, resizeMode : 'cover', borderRadius : 5, borderWidth : 1, borderColor : '#dddddd'}}
                                     />
                                 </View>

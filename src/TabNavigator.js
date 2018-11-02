@@ -33,7 +33,7 @@ export default createBottomTabNavigator({
     navigationOptions : {
       tabBarLabel : 'Trips',
       tabBarIcon : ({tintColor}) => (
-        <Image source={require('./img/img.png')} style={{height : 24, width : 24, tintColor : tintColor}}/>
+        <Image source={require('../img/img.png')} style={{height : 24, width : 24, tintColor : tintColor}}/>
       )
     }
   },
@@ -70,3 +70,12 @@ export default createBottomTabNavigator({
     }
   }
 })
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  }
+});
