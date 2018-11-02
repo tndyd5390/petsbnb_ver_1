@@ -2,17 +2,18 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Saved from './screens/Saved';
 import Trips from './screens/Trips';
-import Inbox from './screens/Inbox';
 import Profile from './screens/Profile';
+import Colors from './utils/Colors';
 
 export default createBottomTabNavigator({
   Explore : {
     screen : Explore,
     navigationOptions : {
-      tabBarLabel : 'EXPLORE',
+      tabBarLabel : '검색하기',
       tabBarIcon : ({tintColor}) => (
         //<Image source={require('./img/img.png')} style={{height : 24, width : 24, tintColor : tintColor}}/>
         <Icon name='ios-search' color={tintColor} size={24}/>
@@ -22,36 +23,27 @@ export default createBottomTabNavigator({
   Saved : {
     screen : Saved,
     navigationOptions : {
-      tabBarLabel : 'SAVED',
+      tabBarLabel : '예약보기',
       tabBarIcon : ({tintColor}) => (
-        <Icon name='ios-heart' color={tintColor} size={24}/>
+        <IconFontAwesome name='calendar' color={tintColor} size={24}/>
       )
     }
   },
   Trips : {
     screen : Trips,
     navigationOptions : {
-      tabBarLabel : 'Trips',
+      tabBarLabel : '대화하기',
       tabBarIcon : ({tintColor}) => (
-        <Image source={require('../img/img.png')} style={{height : 24, width : 24, tintColor : tintColor}}/>
-      )
-    }
-  },
-  Inbox : {
-    screen : Inbox,
-    navigationOptions : {
-      tabBarLabel : 'Inbox',
-      tabBarIcon : ({tintColor}) => (
-        <Icon name='ios-chatboxes' color={tintColor} size={24}/>
+        <IconFontAwesome name='comments' color={tintColor} size={24}/>
       )
     }
   },
   Profile : {
     screen : Profile,
     navigationOptions : {
-      tabBarLabel : 'PROFILE',
+      tabBarLabel : '프로필',
       tabBarIcon : ({tintColor}) => (
-        <Icon name='ios-heart' color={tintColor} size={24}/>
+        <IconFontAwesome name='user' color={tintColor} size={24}/>
       )
     }
   },
@@ -62,6 +54,7 @@ export default createBottomTabNavigator({
     inactiveTintColor : 'grey',
     style : {
       //backgroundColor : 'white',
+      backgroundColor : Colors.bottomNavigatorGrey,
       borderTopWidth : 0,
       shadowOffset : {width : 5, height : 3},
       shadowColor : 'black',
