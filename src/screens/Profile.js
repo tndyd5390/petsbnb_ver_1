@@ -1,24 +1,25 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  Platform, 
+  StyleSheet, 
+  Text, 
+  View,
+  Dimensions,
+} from 'react-native';
+import Colors from '../utils/Colors';
+import PropTypes from 'prop-types';
+import RoundedButton from '../screens/components/buttons/RoundedButton';
+const{height, width} = Dimensions.get('window');
+
 
 class Profile extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Profile</Text>
+      <View>
+        <Text>프로필</Text>
       </View>
     );
   }
 }
 
-
 export default Profile;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  }
-});

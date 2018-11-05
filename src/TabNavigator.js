@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
-import {createBottomTabNavigator} from 'react-navigation';
+import {createBottomTabNavigator, withNavigation} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Reservation from './screens/Reservation';
-import Saved from './screens/Saved';
 import Chat from './screens/Chat';
-import Profile from './screens/Profile';
 import Colors from './utils/Colors';
+import ProfileStackNavigator from './ProfileStackNavigator';
+
 
 export default createBottomTabNavigator({
   Explore : {
@@ -21,7 +21,7 @@ export default createBottomTabNavigator({
       )
     }
   },
-  Saved : {
+  Reservation : {
     screen : Reservation,
     navigationOptions : {
       tabBarLabel : '예약보기',
@@ -30,7 +30,7 @@ export default createBottomTabNavigator({
       )
     }
   },
-  Trips : {
+  Chat : {
     screen : Chat,
     navigationOptions : {
       tabBarLabel : '대화하기',
@@ -40,7 +40,7 @@ export default createBottomTabNavigator({
     }
   },
   Profile : {
-    screen : Profile,
+    screen : ProfileStackNavigator,
     navigationOptions : {
       tabBarLabel : '프로필',
       tabBarIcon : ({tintColor}) => (
@@ -50,11 +50,12 @@ export default createBottomTabNavigator({
   },
 },
 {
+  
+  tabBarPosition : 'bottom',
   tabBarOptions : {
     activeTintColor : 'red',
     inactiveTintColor : 'grey',
     style : {
-      //backgroundColor : 'white',
       backgroundColor : Colors.bottomNavigatorGrey,
       borderTopWidth : 0,
       shadowOffset : {width : 5, height : 3},
