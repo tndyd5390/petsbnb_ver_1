@@ -1,97 +1,67 @@
 import React, {Component} from 'react';
 import {
-  Platform, 
   StyleSheet, 
   Text, 
   View,
   Dimensions,
-  Image,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import Colors from '../utils/Colors';
-import PropTypes from 'prop-types';
-import RoundedButton from '../screens/components/buttons/RoundedButton';
-import LoginProc from '../utils/LoginProc';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 const{height, width} = Dimensions.get('window');
 
 
 class LoginView extends Component {
-
-  constructor(props){
-    super(props);
-    this.state = {
-      id : '',
-      password : '',
-      
-    }
-  }
-
-  _loginButtonHandle = () => {
-    console.log("loginbutton click");
-    this.props.navigation.navigate('ProfileMenu');
-  }
-
-  _regUserButtonHandle = () => {
-    this.props.navigation.navigate('SignUpForm');
-  }
-
-  _findIdButtonHandle = () => {
-      console.log('find id button is clicked');
-  }
-
-  _findPasswordButtonHandle = () => {
-      console.log('find password button is clicked');
-  }
-
-
   render() {
     return (
-      <View style={styles.container}>
-        <View>
-          <Image source={require('../../img/user.png')} style={{width : 100, height : 100, marginTop : 30}}/>
-        </View>
-        <View style={{width : width-60}}>
-          <Text style={styles.idText}>아이디</Text>
-          <TextInput style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5}}
-            onChangeText={(id)=> this.setState({id : id})}
-          />
-        </View>
-        <View style={{width : width-60, marginTop : 10}}>
-          <Text style={styles.idText}>비밀번호</Text>
-          <TextInput style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5}}
-            onChangeText={(password) => this.setState({password : password})}
-          />
-        </View>
-        <RoundedButton 
-          title={'로그인'} 
-          buttonHandleFunc={this._loginButtonHandle} 
-          buttonColor={{backgroundColor : Colors.buttonBlue}} 
-          textColor={{color:Colors.white}}
-        />
-        <RoundedButton 
-          title={'회원가입'} 
-          buttonHandleFunc={this._regUserButtonHandle}
-          buttonColor={{backgroundColor : Colors.buttonBlue}}
-          textColor={{color : Colors.white}}
-        />
+      <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
+        <View style={{display : 'flex'}}>
+          <TouchableOpacity
+            style={{marginTop : 20, marginLeft : 20, marginBottom : 20}}
+            onPress={()=>this.props.navigation.goBack()}
+          >
+            <Icon name="angle-left" size={40}/>
+          </TouchableOpacity>
+        
+          <View style={{alignItems : 'center'}}>
+            <View style={{display : 'flex', width : width -60}}>
+              <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>아이디</Text>
+            </View>
+            <TextInput style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}}/>
+          </View>
 
-        <View style={{flex : 1, flexDirection : 'row'}}>
-          <RoundedButton 
-            title={'아이디 찾기'} 
-            buttonHandleFunc={this._regUserButtonHandle}
-            buttonColor={{backgroundColor : Colors.buttonBlue}}
-            textColor={{color : Colors.white}}
-            customButtonStyle={{width : width/2 - 30, height : 30, marginRight : 5}}
-          />
-          <RoundedButton 
-            title={'비밀번호 찾기'} 
-            buttonHandleFunc={this._regUserButtonHandle}
-            buttonColor={{backgroundColor : Colors.buttonBlue}}
-            textColor={{color : Colors.white}}
-            customButtonStyle={{width : width/2 - 30, height : 30, marginLeft : 5}}
-          />
+          <View style={{alignItems : 'center', marginTop : 20}}>
+            <View style={{display : 'flex', width : width -60}}>
+              <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>패스워드</Text>
+            </View>
+            <TextInput style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}}/>
+          </View>
         </View>
-      </View>
+
+        <View style={{alignItems : 'center', marginTop : 20}}>
+          <View style={{width : width -60, flexDirection : 'row', justifyContent : 'flex-end'}}>
+            <TouchableOpacity>
+              <Text style={{textAlign : 'right', fontSize : 17, fontWeight : '500', marginRight : 20}}>아이디 찾기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={{textAlign : 'right', fontSize : 17, fontWeight : '500'}}>비밀번호 찾기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+        <TouchableOpacity style={{width: width, 
+                                  height: 50, 
+                                  backgroundColor: Colors.buttonSky, 
+                                  justifyContent: 'center', 
+                                  alignItems: 'center',
+                                  position: 'absolute',
+                                  bottom: 0}}>
+          <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>로그인</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -99,13 +69,5 @@ class LoginView extends Component {
 export default LoginView;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-  }, 
-  idText : {
-    fontSize : 20,
-    marginTop : 10
-  }
-});
+  
+})

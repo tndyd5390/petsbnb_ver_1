@@ -10,17 +10,62 @@ import {
     Image,
     ScrollView,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    WebView
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
 export default class SignUpForm extends Component{
-    _SignUpHandle = () => {
-        console.log("test");
+
+
+
+    constructor(props){
+        super(props);
+        this.state = {
+            postCode : '',
+            address : '',
+            addressDetail : '',
+            daumPostCodeView : false
+        }
     }
+
+    _SignUpHandle = () => {
+        this.setState({
+            daumPostCodeView : true
+        })
+    }
+
+    _daumPostCode = () => {
+        this.setState({
+            daumPostCodeView : true
+        })
+    }
+
+    _getAddressData = (event) => {
+        let code = JSON.parse(event.nativeEvent.data);
+        this.setState({
+            daumPostCodeView : false,
+            postCode : code.zonecode,
+            address : code.fullAddr
+        })
+    }
+
     render(){
-        return(
-            <ScrollView style={{backgroundColor : Colors.white}}>
+
+        const{daumPostCodeView} = this.state;
+
+        if(daumPostCodeView){
+            return(
+                <WebView
+                    /**여기 주소는 나중에 웹뷰 보여줄 도메인으로 대체해야함 */
+                    source={{uri: 'http://192.168.0.10:8080/mobile/camera.jsp'}}
+                    onMessage={(event) => {this._getAddressData(event)}}
+                    style={{width : width, height : 300}}
+                />
+            );
+        }else{
+            return(
+                <ScrollView style={{backgroundColor : Colors.white}}>
                 <View style={{alignItems : 'center'}}>
                     <Image source={require('../../img/user.png')} style={{width : 150, height : 150, marginTop : 30}}/>
                 </View>
@@ -58,9 +103,12 @@ export default class SignUpForm extends Component{
                             <TextInput
                                 style={{borderBottomWidth : 1, height : 40, width : width-200}}
                                 placeholder="우편번호"
+                                value={this.state.postCode}
                             />
                             
-                            <TouchableOpacity style={{width : 150, borderWidth : 1, marginLeft : 10, justifyContent : 'center', alignItems :'center'}}>
+                            <TouchableOpacity style={{width : 150, borderWidth : 1, marginLeft : 10, justifyContent : 'center', alignItems :'center'}}
+                                onPress={this._daumPostCode}
+                            >
                                 <Text >우편번호 검색</Text>
                             </TouchableOpacity>
                         </View>
@@ -72,6 +120,7 @@ export default class SignUpForm extends Component{
                         <TextInput 
                             style={{borderBottomWidth : 1, height : 40}}
                             placeholder="주소"
+                            value={this.state.address}
                         />
                     </View>
                 </View>
@@ -104,7 +153,8 @@ export default class SignUpForm extends Component{
                     />
                 </View>
             </ScrollView>
-        );
+            );
+        }
     }
 }
 

@@ -5,5 +5,6 @@ export default {
     naverGreen : '#03cf5d',
     buttonBlue : "#556080",
     buttonBorderGrey : "#767171",
-    buttonSky : '#10b5f1'
+    buttonSky : '#10b5f1',
+    termsBackground : '#E6E6E6'
 }
