@@ -1,9 +1,13 @@
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import Reservation from './screens/Reservation';
 import Init from './screens/Init';
-import LoginView from './screens/LoginView';
+import LoginForm from './screens/LoginForm';
 import SignUpEmail from './screens/SignUpEmail';
+import Terms from './screens/Terms';
+import SignUpPassword from './screens/SignUpPassword';
+import SignUpAddress from './screens/SignUpAddress';
 export default createStackNavigator({
+  
       Init : {
         screen : Init,
         navigationOptions : {
@@ -16,8 +20,8 @@ export default createStackNavigator({
           
         }
       },
-      LoginView : {
-        screen : LoginView,
+      LoginForm : {
+        screen : LoginForm,
         navigationOptions : {
           header : null
         }
@@ -27,6 +31,27 @@ export default createStackNavigator({
         navigationOptions : {
           header : null
         }
-      }
-
+      },
+      Terms : {
+        screen : Terms,
+        navigationOptions: {
+          title: '가입 약관',
+          headerTitleStyle: {
+              width: '75%',
+              textAlign: 'center',
+          },
+        }
+      },
+      SignUpPassword : {
+        screen : SignUpPassword,
+        navigationOptions  : {
+          header : null
+        }
+      },
+      SignUpAddress : {
+        screen : SignUpAddress,
+        navigationOptions : {
+          header : null
+        }
+      },
 })

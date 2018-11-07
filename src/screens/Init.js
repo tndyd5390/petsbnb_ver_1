@@ -29,7 +29,7 @@ export default class Init extends Component{
                     <View>
                         <TouchableOpacity 
                             style={{width : width - 150, height : 50, backgroundColor : Colors.buttonBorderGrey, marginTop : 100, justifyContent : 'center', alignItems : 'center'}}
-                            onPress={() => this.props.navigation.navigate('LoginView')}
+                            onPress={() => this.props.navigation.navigate('LoginForm')}
                         >
                             <Text style={{color : Colors.white, fontSize : 20, fontWeight : '800'}}>로그인</Text>
                         </TouchableOpacity>

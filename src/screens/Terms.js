@@ -16,12 +16,9 @@ export default class Terms extends Component{
         return(
             <View style={{backgroundColor : Colors.white, flex : 1}}>
                 <View style={{alignItems : 'center'}}>
-                    <View style={{display : 'flex', width : width-40, marginTop : 10, marginBottom : 5}}>
-                        <Text style={{fontSize : 25, fontWeight : '800', color : Colors.black, marginLeft : 10}}>가입 약관</Text>
-                    </View>
-                    <ScrollView style={{width : width-40, height : 100, backgroundColor : Colors.termsBackground, borderRadius : 10}}>
+                    <ScrollView style={{width : width-40, height : height}}>
                         <Text>
-                        {`제 1 장 : 총칙 
+{`제 1 장 : 총칙 
 제 2 장 : 서비스 이용계약 
 제 3 장 : 계약당사자의 의무 
 제 4 장 : 서비스 이용 

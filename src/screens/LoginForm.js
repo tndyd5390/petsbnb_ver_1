@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const{height, width} = Dimensions.get('window');
 
 
-class LoginView extends Component {
+class LoginForm extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
@@ -66,7 +66,7 @@ class LoginView extends Component {
   }
 }
 
-export default LoginView;
+export default LoginForm;
 
 const styles = StyleSheet.create({
   
