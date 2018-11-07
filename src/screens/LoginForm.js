@@ -28,7 +28,7 @@ class LoginForm extends Component {
         
           <View style={{alignItems : 'center'}}>
             <View style={{display : 'flex', width : width -60}}>
-              <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>아이디</Text>
+              <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>이메일</Text>
             </View>
             <TextInput style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}}/>
           </View>
@@ -43,10 +43,14 @@ class LoginForm extends Component {
 
         <View style={{alignItems : 'center', marginTop : 20}}>
           <View style={{width : width -60, flexDirection : 'row', justifyContent : 'flex-end'}}>
-            <TouchableOpacity>
-              <Text style={{textAlign : 'right', fontSize : 17, fontWeight : '500', marginRight : 20}}>아이디 찾기</Text>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('FindEmail')}
+            >
+              <Text style={{textAlign : 'right', fontSize : 17, fontWeight : '500', marginRight : 20}}>이메일 찾기</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('FindPassword')}
+            >
               <Text style={{textAlign : 'right', fontSize : 17, fontWeight : '500'}}>비밀번호 찾기</Text>
             </TouchableOpacity>
           </View>

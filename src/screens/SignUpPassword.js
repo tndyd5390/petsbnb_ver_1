@@ -17,7 +17,9 @@ export default class SignUpPassword extends Component{
 
     state = {
         password : '',
-        passwordCheck : ''
+        passwordCheck : '',
+        passwordSecureEntry : true,
+        passwordCheckSecureEntry : true
     }
 
     _nextStep = () => {
@@ -31,6 +33,18 @@ export default class SignUpPassword extends Component{
         }else{
             this.props.navigation.navigate('SignUpAddress', {email : email, password : this.state.password});
         }
+    }
+
+    _togglePassword = () => {
+        this.setState({
+            passwordSecureEntry : !this.state.passwordSecureEntry
+        })
+    }
+
+    _togglePasswordCheck = () => {
+        this.setState({
+            passwordCheckSecureEntry : !this.state.passwordCheckSecureEntry
+        })
     }
 
     render(){
@@ -48,24 +62,40 @@ export default class SignUpPassword extends Component{
                         <View style={{display : 'flex', width : width -60}}>
                             <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>비밀번호</Text>
                         </View>
-                        <TextInput
-                            style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}}
-                            onChangeText={(text)=>this.setState({email : text})}
-                            placeholder="8자 이상 숫자, 특수문자 포함"
-                            onChangeText={(password) => this.setState({password : password})}
-                        />
+                        <View style={{flexDirection : 'row'}}>
+                            <TextInput
+                                style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-90}}
+                                onChangeText={(text)=>this.setState({email : text})}
+                                placeholder="8자 이상 숫자, 특수문자 포함"
+                                onChangeText={(password) => this.setState({password : password})}
+                                secureTextEntry={this.state.passwordSecureEntry}
+                            />
+                            <TouchableOpacity
+                                onPress={this._togglePassword}
+                            >
+                                <Icon name='eye-slash' size={20} style={{marginLeft : 10}}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     
                     <View style={{alignItems : 'center', marginTop : 20}}>
                         <View style={{display : 'flex', width : width -60}}>
                             <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>비밀번호 확인</Text>
                         </View>
-                        <TextInput
-                            style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}} 
-                            onChangeText={(text)=>this.setState({email : text})}
-                            placeholder="8자 이상 숫자, 특수문자 포함"
-                            onChangeText={(passwordCheck)=>this.setState({passwordCheck : passwordCheck})}
-                        />
+                        <View style={{flexDirection : 'row'}}>
+                            <TextInput
+                                style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-90}} 
+                                onChangeText={(text)=>this.setState({email : text})}
+                                placeholder="8자 이상 숫자, 특수문자 포함"
+                                onChangeText={(passwordCheck)=>this.setState({passwordCheck : passwordCheck})}
+                                secureTextEntry={this.state.passwordCheckSecureEntry}
+                            />
+                            <TouchableOpacity
+                                onPress={this._togglePasswordCheck}
+                            >
+                                <Icon name='eye-slash' size={20} style={{marginLeft : 10}}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
         

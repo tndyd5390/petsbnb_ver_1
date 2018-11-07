@@ -6,8 +6,10 @@ import SignUpEmail from './screens/SignUpEmail';
 import Terms from './screens/Terms';
 import SignUpPassword from './screens/SignUpPassword';
 import SignUpAddress from './screens/SignUpAddress';
+import FindEmail from './screens/FindEmail';
+import FindPassword from './screens/FindPassword';
+
 export default createStackNavigator({
-  
       Init : {
         screen : Init,
         navigationOptions : {
@@ -54,4 +56,16 @@ export default createStackNavigator({
           header : null
         }
       },
+      FindEmail : {
+        screen : FindEmail,
+        navigationOptions : {
+          header : null
+        }
+      },
+      FindPassword : {
+        screen : FindPassword,
+        navigationOptions :{
+          header : null
+        }
+      }
 })
