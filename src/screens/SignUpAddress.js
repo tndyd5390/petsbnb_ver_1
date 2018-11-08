@@ -15,12 +15,16 @@ import {
 const{width, height} = Dimensions.get('window');
 
 export default class SignUpAddress extends Component{
-    state = {
-        zipCode : '',
-        address : '',
-        addressDetail : '',
-        daumWebView : false
+    constructor(props){
+        super(props);
+        this.state = {
+            zipCode : '',
+            address : '',
+            addressDetail : '',
+            daumWebView : false
+        }
     }
+    
 
     _getAddressData = (event) => {
         let data = JSON.parse(event.nativeEvent.data);
@@ -38,8 +42,6 @@ export default class SignUpAddress extends Component{
     }
 
     _nextStep = () => {
-        const email = this.props.navigation.getParam('email', 'tmp');
-        const password = this.props.navigation.getParam('password', 'tmp');
         if(this.state.zipCode == ''){
             alert('우편번호를 확인해 주세요.');
         }else if(this.state.address == ''){

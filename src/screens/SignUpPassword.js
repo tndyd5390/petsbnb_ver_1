@@ -24,14 +24,21 @@ export default class SignUpPassword extends Component{
 
     _nextStep = () => {
         const passwordRegx = /^(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,}$/;
-        const email = this.props.navigation.getParam('email', 'tmp');
-        console.log(email);
+        const navi = this.props.navigation;
+        const params = {
+            email : navi.getParam('email'),
+            name : navi.getParam('name'),
+           // birthday : navi.getParam('birthday'),
+            //teleCorp : navi.getParam('teleCorp'),
+            phoneNumber : navi.getParam('phoneNumber'),
+            password : this.state.password
+        }
         if(this.state.password != this.state.passwordCheck){
             alert('비밀번호가 일치 하지 않습니다.');
         }else if(!passwordRegx.test(this.state.password)){
             alert('비밀번호 형식을 다시 확인해 주세요.');
         }else{
-            this.props.navigation.navigate('SignUpAddress', {email : email, password : this.state.password});
+            this.props.navigation.navigate('SignUpAddress', params);
         }
     }
 

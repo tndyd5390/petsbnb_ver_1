@@ -8,6 +8,8 @@ import SignUpPassword from './screens/SignUpPassword';
 import SignUpAddress from './screens/SignUpAddress';
 import FindEmail from './screens/FindEmail';
 import FindPassword from './screens/FindPassword';
+import SignUpNameAndPhone from './screens/SignUpNameAndPhone';
+import TmpSignUpNameAndPhone from './screens/TmpSignUpNameAndPhone';
 
 export default createStackNavigator({
       Init : {
@@ -32,6 +34,22 @@ export default createStackNavigator({
         screen : SignUpEmail,
         navigationOptions : {
           header : null
+        }
+      },
+      TmpSignUpNameAndPhone : {
+        screen : TmpSignUpNameAndPhone,
+        navigationOptions : {
+          header : null
+        }
+      },
+      SignUpNameAndPhone : {
+        screen : SignUpNameAndPhone,
+        navigationOptions: {
+          title: '본인 인증',
+          headerTitleStyle: {
+              width: '75%',
+              textAlign: 'center',
+          },
         }
       },
       Terms : {
