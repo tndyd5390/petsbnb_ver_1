@@ -10,7 +10,8 @@ import {
     ScrollView,
     Image,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'
 import Category from './components/Explore/Category';
@@ -19,7 +20,6 @@ import Colors from '../utils/Colors';
 const{height, width} = Dimensions.get('window');
 
 class Explore extends Component {
-
     render() {
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -39,7 +39,7 @@ class Explore extends Component {
                         scrollEventThrottle={16}
                     >
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('Reservation')}
+                        onPress={this._checkData}
                     >
                         <View style={styles.exploreContainer}>
                             <View style={styles.exploreWrapper}>

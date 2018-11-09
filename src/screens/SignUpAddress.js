@@ -10,7 +10,8 @@ import {
     Dimensions,
     StyleSheet,
     TouchableOpacity,
-    WebView
+    WebView,
+    AsyncStorage
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
@@ -49,16 +50,68 @@ export default class SignUpAddress extends Component{
         }else if(this.state.addressDetail == ''){
             alert('상세주소를 확인해 주세요.');
         }else{
-            
+            this._regUser();
         }
     }
+
+    _regUser = async () => {
+        const navi = this.props.navigation;
+        const email = navi.getParam('email');
+        const name = navi.getParam('name');
+        const phoneNumber = navi.getParam('phoneNumber');
+        const password = navi.getParam('password');
+        const params = {
+            email : email || 'email',
+            name : name || 'name',
+            phoneNumber : phoneNumber || '01057907883',
+            password : password || 'tndyd5390@',
+            zipCode : this.state.zipCode,
+            address : this.state.address,
+            addressDetail : this.state.addressDetail
+        }
+        console.log(params);
+        
+        fetch('http://192.168.0.10:8080/user/userRegProc.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+          })
+          .then((response) => response.json())
+          .then((res => {
+              console.log(res);
+              if(res.regSuccess === true){
+                  //가입 성공
+                try{
+                    this._storeData(res);
+                    alert('회원 가입 되셨습니다.');
+                    navi.navigate('Tabs');
+                }catch(error){
+                    alert('다시 시도해주세요.')
+                }
+              }else{
+                  //가입 실패
+              }
+          }))
+        
+    }
+
+    _storeData = async (data) => {
+        try {
+         const tmp = await AsyncStorage.setItem('userInfo', JSON.stringify(data));
+        } catch (error) {
+          // Error saving data
+        }
+      }
 
     render() {
         if(this.state.daumWebView){
             return(
                 <WebView
                     /**여기 주소는 나중에 웹뷰 보여줄 도메인으로 대체해야함 */
-                    source={{uri: 'http://192.168.0.10:8080/mobile/camera.jsp'}}
+                    source={{uri: 'http://192.168.0.10:8080/user/daumPostView.do'}}
                     onMessage={(event) => {this._getAddressData(event)}}
                     style={{width : width, height : 300}}
                 />
@@ -116,6 +169,12 @@ export default class SignUpAddress extends Component{
                             />
                         </View>
                     </View>
+
+                    <TouchableOpacity
+                        onPress={this._checkData}
+                    >
+                        <Text>확인</Text>
+                    </TouchableOpacity>
             
                     <TouchableOpacity 
                         style={{width: width, 

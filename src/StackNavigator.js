@@ -10,8 +10,20 @@ import FindEmail from './screens/FindEmail';
 import FindPassword from './screens/FindPassword';
 import SignUpNameAndPhone from './screens/SignUpNameAndPhone';
 import TmpSignUpNameAndPhone from './screens/TmpSignUpNameAndPhone';
-
+import Tabs from './TabNavigator';
 export default createStackNavigator({
+      SignUpAddress : {
+        screen : SignUpAddress,
+        navigationOptions : {
+          header : null
+        }
+      },
+      Tabs : {
+        screen : Tabs,
+        navigationOptions : {
+          header : null
+        }
+      },
       Init : {
         screen : Init,
         navigationOptions : {
@@ -42,16 +54,7 @@ export default createStackNavigator({
           header : null
         }
       },
-      SignUpNameAndPhone : {
-        screen : SignUpNameAndPhone,
-        navigationOptions: {
-          title: '본인 인증',
-          headerTitleStyle: {
-              width: '75%',
-              textAlign: 'center',
-          },
-        }
-      },
+      
       Terms : {
         screen : Terms,
         navigationOptions: {
@@ -68,12 +71,7 @@ export default createStackNavigator({
           header : null
         }
       },
-      SignUpAddress : {
-        screen : SignUpAddress,
-        navigationOptions : {
-          header : null
-        }
-      },
+      
       FindEmail : {
         screen : FindEmail,
         navigationOptions : {

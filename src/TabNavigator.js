@@ -7,7 +7,7 @@ import Explore from './screens/Explore';
 import Reservation from './screens/Reservation';
 import Chat from './screens/Chat';
 import Colors from './utils/Colors';
-import ProfileStackNavigator from './ProfileStackNavigator';
+import ProfileMenu from './screens/ProfileMenu';
 
 
 export default createBottomTabNavigator({
@@ -40,7 +40,7 @@ export default createBottomTabNavigator({
     }
   },
   Profile : {
-    screen : ProfileStackNavigator,
+    screen : ProfileMenu,
     navigationOptions : {
       tabBarLabel : '프로필',
       tabBarIcon : ({tintColor}) => (
