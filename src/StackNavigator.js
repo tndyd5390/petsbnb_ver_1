@@ -10,10 +10,24 @@ import FindEmail from './screens/FindEmail';
 import FindPassword from './screens/FindPassword';
 import SignUpNameAndPhone from './screens/SignUpNameAndPhone';
 import TmpSignUpNameAndPhone from './screens/TmpSignUpNameAndPhone';
-
+import Tabs from './screens/Tabs';
+import ChatRoom from './screens/ChatRoom';
 export default createStackNavigator({
+
       Init : {
         screen : Init,
+        navigationOptions : {
+          header : null
+        }
+      },
+      Tabs : {
+        screen : Tabs,
+        navigationOptions : {
+          header : null
+        }
+      },
+      ChatRoom : {
+        screen : ChatRoom,
         navigationOptions : {
           header : null
         }
@@ -21,7 +35,7 @@ export default createStackNavigator({
       Reservation : {
         screen : Reservation,
         navigationOptions : {
-          
+
         }
       },
       LoginForm : {

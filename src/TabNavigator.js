@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Reservation from './screens/Reservation';
-import Chat from './screens/Chat';
+import ChatStackNavigator from './ChatStackNavigator';
 import Colors from './utils/Colors';
 import ProfileStackNavigator from './ProfileStackNavigator';
 
@@ -31,7 +31,7 @@ export default createBottomTabNavigator({
     }
   },
   Chat : {
-    screen : Chat,
+    screen : ChatStackNavigator,
     navigationOptions : {
       tabBarLabel : '대화하기',
       tabBarIcon : ({tintColor}) => (
