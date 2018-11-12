@@ -14,12 +14,23 @@ export default createStackNavigator({
     ChatRoom : {
         screen : ChatRoom,
         navigationOptions : {
-            title: this.title,
             headerTitleStyle: {
                 width: '75%',
                 textAlign: 'center',
             },
         }
     },
-
-});
+},
+{
+    initialRouteName: 'Chat',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
+}
+);
