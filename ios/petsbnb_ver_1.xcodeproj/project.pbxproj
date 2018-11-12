@@ -54,6 +54,9 @@
 		F4305BBA12B64E1EB795DEB3 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59270C5664AF49BBB91BD450 /* Octicons.ttf */; };
 		5A8BFA4A25D64FD7804A895F /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42155052BB0D41BCA23531A4 /* SimpleLineIcons.ttf */; };
 		1FE3DDBC0EC54B2CB85FF49B /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19EB19E4534843DE83198F75 /* Zocial.ttf */; };
+		BDA903B1DFD642CA9B47E41F /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891093B4B0314228856298C5 /* libReactNativeNavigation.a */; };
+		2E24464FCED440A583512823 /* libRCTRestart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 160CC45153EB4F7BA6B56117 /* libRCTRestart.a */; };
+		54819D0E952D44D3B99C36B9 /* libReact-Native-Webview-Bridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C3875EFA14D4E7E891DB446 /* libReact-Native-Webview-Bridge.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -377,6 +380,12 @@
 		59270C5664AF49BBB91BD450 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		42155052BB0D41BCA23531A4 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		19EB19E4534843DE83198F75 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0A00E2B0C679445890C7D5E8 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeNavigation.xcodeproj"; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		891093B4B0314228856298C5 /* libReactNativeNavigation.a */ = {isa = PBXFileReference; name = "libReactNativeNavigation.a"; path = "libReactNativeNavigation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		5CAA82329C7C4739A6859CEE /* RCTRestart.xcodeproj */ = {isa = PBXFileReference; name = "RCTRestart.xcodeproj"; path = "../node_modules/react-native-restart/ios/RCTRestart.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		160CC45153EB4F7BA6B56117 /* libRCTRestart.a */ = {isa = PBXFileReference; name = "libRCTRestart.a"; path = "libRCTRestart.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		BD2969EBE57448BEA947511D /* React-Native-Webview-Bridge.xcodeproj */ = {isa = PBXFileReference; name = "React-Native-Webview-Bridge.xcodeproj"; path = "../node_modules/react-native-webview-bridge/ios/React-Native-Webview-Bridge.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		8C3875EFA14D4E7E891DB446 /* libReact-Native-Webview-Bridge.a */ = {isa = PBXFileReference; name = "libReact-Native-Webview-Bridge.a"; path = "libReact-Native-Webview-Bridge.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -405,6 +414,9 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				A2509162B11E4E009D1CA1F8 /* libRNVectorIcons.a in Frameworks */,
+				BDA903B1DFD642CA9B47E41F /* libReactNativeNavigation.a in Frameworks */,
+				2E24464FCED440A583512823 /* libRCTRestart.a in Frameworks */,
+				54819D0E952D44D3B99C36B9 /* libReact-Native-Webview-Bridge.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,6 +605,9 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				1EF5B88DB2FA4B97B464E37D /* RNVectorIcons.xcodeproj */,
+				0A00E2B0C679445890C7D5E8 /* ReactNativeNavigation.xcodeproj */,
+				5CAA82329C7C4739A6859CEE /* RCTRestart.xcodeproj */,
+				BD2969EBE57448BEA947511D /* React-Native-Webview-Bridge.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1261,10 +1276,16 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Debug;
@@ -1288,10 +1309,16 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Release;
@@ -1315,6 +1342,9 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Debug;
@@ -1337,6 +1367,9 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Release;
@@ -1368,10 +1401,16 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Debug;
@@ -1403,10 +1442,16 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Release;
@@ -1437,10 +1482,16 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Debug;
@@ -1471,10 +1522,16 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 				);
 			};
 			name = Release;

@@ -69,7 +69,6 @@ export default class SignUpAddress extends Component{
             address : this.state.address,
             addressDetail : this.state.addressDetail
         }
-        console.log(params);
         
         fetch('http://192.168.0.10:8080/user/userRegProc.do', {
             method: 'POST',
@@ -85,7 +84,8 @@ export default class SignUpAddress extends Component{
               if(res.regSuccess === true){
                   //가입 성공
                 try{
-                    this._storeData(res);
+                    console.log(res.userNo);
+                    this._storeData(res.userNo);
                     alert('회원 가입 되셨습니다.');
                     navi.navigate('Tabs');
                 }catch(error){
@@ -93,6 +93,7 @@ export default class SignUpAddress extends Component{
                 }
               }else{
                   //가입 실패
+                  alert('서버에 문제가 있습니다. 잠시후 다시 시도해주세요.');
               }
           }))
         
@@ -100,7 +101,7 @@ export default class SignUpAddress extends Component{
 
     _storeData = async (data) => {
         try {
-         const tmp = await AsyncStorage.setItem('userInfo', JSON.stringify(data));
+         const tmp = await AsyncStorage.setItem('userInfo', data);
         } catch (error) {
           // Error saving data
         }
@@ -169,12 +170,6 @@ export default class SignUpAddress extends Component{
                             />
                         </View>
                     </View>
-
-                    <TouchableOpacity
-                        onPress={this._checkData}
-                    >
-                        <Text>확인</Text>
-                    </TouchableOpacity>
             
                     <TouchableOpacity 
                         style={{width: width, 

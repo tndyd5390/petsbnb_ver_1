@@ -25,7 +25,7 @@ export default class SignUpEmail extends Component {
         }
     }
 
-    _nextStep = () => {
+    _nextStep = async () => {
         const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
         if(this.state.email === ''){
@@ -33,7 +33,30 @@ export default class SignUpEmail extends Component {
         }else if(!emailCheckRegex.test(this.state.email)){
             alert('이메일 양식을 확인해 주세요.');
         }else{
-            this.props.navigation.navigate('TmpSignUpNameAndPhone', {email : this.state.email});
+            const params = {
+                email : this.state.email
+            }
+            await fetch('http://192.168.0.10:8080/user/emailCheck.do', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+              })
+              .then((response) => response.json())
+              .then((res => {
+                  console.log(res);
+                  if(res.emailValid === true){
+                    //가입 성공
+                    this.props.navigation.navigate('TmpSignUpNameAndPhone', {email : this.state.email});
+                  }else{
+                      //가입 실패
+                      alert('이미 사용중인 이메일입니다.');
+                      return;
+                  }
+              }))
+            
         }
     }
 

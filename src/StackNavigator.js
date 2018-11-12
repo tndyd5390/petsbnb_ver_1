@@ -11,9 +11,16 @@ import FindPassword from './screens/FindPassword';
 import SignUpNameAndPhone from './screens/SignUpNameAndPhone';
 import TmpSignUpNameAndPhone from './screens/TmpSignUpNameAndPhone';
 import Tabs from './TabNavigator';
-export default createStackNavigator({
-      SignUpAddress : {
-        screen : SignUpAddress,
+import App from '../App';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+
+export default class StackNavigator extends Component {
+
+  render(){
+    const Stacks = createStackNavigator({
+      Init : {
+        screen : Init,
         navigationOptions : {
           header : null
         }
@@ -24,8 +31,14 @@ export default createStackNavigator({
           header : null
         }
       },
-      Init : {
-        screen : Init,
+      App : {
+        screen : App,
+        navigation : {
+          header : null
+        }
+      },
+      SignUpAddress : {
+        screen : SignUpAddress,
         navigationOptions : {
           header : null
         }
@@ -84,4 +97,16 @@ export default createStackNavigator({
           header : null
         }
       }
-})
+    }
+  );
+    return(
+      <Stacks/>
+    );
+  }
+}
+
+
+
+
+
+
