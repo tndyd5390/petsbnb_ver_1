@@ -44,6 +44,15 @@ export default class Init extends Component{
                         <Text style={{color : Colors.white, fontSize : 20, fontWeight : '800'}}>회원가입</Text>
                     </TouchableOpacity>
                 </View>
+                <View>
+                    <TouchableOpacity 
+                        style={{width : width - 150, height : 50, backgroundColor : Colors.buttonSky, marginTop : 30, justifyContent : 'center', alignItems : 'center'}}
+                        onPress={() => this.props.navigation.navigate('Tabs')}
+                    >
+                        <Text style={{color : Colors.white, fontSize : 20, fontWeight : '800'}}>메인메뉴</Text>
+                    </TouchableOpacity>
+                </View>
+
                 </View>
             </View>
         );   

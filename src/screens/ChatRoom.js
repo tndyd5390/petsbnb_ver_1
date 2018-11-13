@@ -16,6 +16,7 @@ export default class ChatRoom extends Component{
           title: navigation.getParam('key', 'A Nested Details Screen'),
         };
       };
+
     
 
     render(){
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-between',
-      backgroundColor: 'white'
+      backgroundColor: 'white',
     },
   
     messages: {

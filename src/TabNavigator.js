@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
-import {createBottomTabNavigator, withNavigation} from 'react-navigation';
+import {createBottomTabNavigator, BottomTabBar,withNavigation} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
@@ -33,8 +33,9 @@ export default class TabNavigator extends Component {
         }
       },
       Chat : {
-        screen : Chat,
+        screen : ChatStackNavigator,
         navigationOptions : {
+          tabBarVisible: true,
           tabBarLabel : '대화하기',
           tabBarIcon : ({tintColor}) => (
             <IconFontAwesome name='comments' color={tintColor} size={24}/>
@@ -52,7 +53,6 @@ export default class TabNavigator extends Component {
       },
     },
     {
-      
       tabBarPosition : 'bottom',
       tabBarOptions : {
         activeTintColor : 'red',

@@ -1,37 +1,42 @@
+import React, {Component} from 'react';
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import Chat from './screens/Chat';
 import ChatRoom from './screens/ChatRoom';
 
+export default class ChatStackNavigator extends Component{
 
-export default createStackNavigator({ 
-
-    Chat : {
-        screen : Chat,
-        navigationOptions : {
-            header : null
-        }
-    },
-    ChatRoom : {
-        screen : ChatRoom,
-        navigationOptions : {
-            tabBarVisible : false,
-            headerTitleStyle: {
-                width: '75%',
-                textAlign: 'center',
+    render(){
+        console.log(this.state);
+        const Stacks = createStackNavigator({ 
+            Chat : {
+                screen : Chat,
+                navigationOptions : {
+                    header : null
+                }
             },
-        }
-    },
-},
-{
-    initialRouteName: 'Chat',
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+            ChatRoom : {
+                screen : ChatRoom,
+                navigationOptions : {
+                    tabBarVisible: false,
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    },
+                }
+            },
+        },
+        {
+            initialRouteName: 'Chat',
+            navigationOptions: {
+              headerStyle: {
+                backgroundColor: '#f4511e',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            },
+        });
+        return(<Stacks/>);
+    }
 }
-);
