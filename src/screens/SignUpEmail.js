@@ -95,7 +95,7 @@ export default class SignUpEmail extends Component {
                     justifyContent: 'center', 
                     alignItems: 'center',
                     position: 'absolute'}, 
-                    Platform.OS === 'ios' ? {bottom : 10} : {bottom  : 0}]}
+                    Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
                     onPress={this._nextStep}
                 >
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>

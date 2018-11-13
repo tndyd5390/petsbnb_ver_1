@@ -108,13 +108,13 @@ export default class SignUpPassword extends Component{
                 </View>
         
                 <TouchableOpacity 
-                    style={{width: width, 
+                    style={[{width: width, 
                     height: 50, 
                     backgroundColor: Colors.buttonSky, 
                     justifyContent: 'center', 
                     alignItems: 'center',
-                    position: 'absolute',
-                    bottom: 0}}
+                    position: 'absolute'}, 
+                    Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
                     onPress={this._nextStep}
                 >
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>

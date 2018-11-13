@@ -45,13 +45,16 @@ export default class FindEmail extends Component{
           </View>
         </View>
         
-        <TouchableOpacity style={{width: width, 
-                                  height: 50, 
-                                  backgroundColor: Colors.buttonSky, 
-                                  justifyContent: 'center', 
-                                  alignItems: 'center',
-                                  position: 'absolute',
-                                  bottom: 0}}>
+        <TouchableOpacity 
+                    style={[{width: width, 
+                    height: 50, 
+                    backgroundColor: Colors.buttonSky, 
+                    justifyContent: 'center', 
+                    alignItems: 'center',
+                    position: 'absolute'}, 
+                    Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
+                    onPress={this._nextStep}
+        >
           <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>이메일 찾기</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
