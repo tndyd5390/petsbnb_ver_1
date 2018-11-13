@@ -137,7 +137,13 @@ android {
 }
 
 dependencies {
+<<<<<<< HEAD
     compile project(':react-native-webview-bridge')
+=======
+    compile project(':react-native-restart-android')
+    compile project(':react-native-webview-bridge')
+    compile project(':react-native-restart')
+>>>>>>> origin/psyPetbnb_ver_1
     compile project(':react-native-navigation')
     compile project(':react-native-vector-icons')
     implementation fileTree(dir: "libs", include: ["*.jar"])
