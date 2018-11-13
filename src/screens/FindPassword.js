@@ -11,14 +11,15 @@ import {
     StyleSheet,
     KeyboardAvoidingView,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Platform
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 export default class FindPassword extends Component{
     render(){
         return(
             <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
-                <View style={{display : 'flex'}}>
+                <View style={[{display : 'flex'}, Platform.OS ==='ios' ? {marginTop : 10} : null]}>
                     <TouchableOpacity
                         style={{marginTop : 20, marginLeft : 20, marginBottom : 20}}
                         onPress={()=>this.props.navigation.goBack()}

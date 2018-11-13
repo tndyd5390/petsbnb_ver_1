@@ -12,7 +12,8 @@ import {
     KeyboardAvoidingView,
     Dimensions,
     TextInput,
-    SafeAreaView
+    SafeAreaView,
+    Platform
 } from 'react-native';
 
 const{width, height} = Dimensions.get('window');
@@ -63,9 +64,9 @@ export default class SignUpEmail extends Component {
 
     render(){
         return(
-            <SafeAreaView>
+            
             <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
-                <View style={{display : 'flex'}}>
+                <View style={[{display : 'flex'}, Platform.OS ==='ios' ? {marginTop : 10} : null]}>
                     <TouchableOpacity
                         style={{marginTop : 20, marginLeft : 20, marginBottom : 20}}
                         onPress={()=>this.props.navigation.goBack()}
@@ -100,7 +101,7 @@ export default class SignUpEmail extends Component {
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
-            </SafeAreaView>
+            
         );
     }
 }
