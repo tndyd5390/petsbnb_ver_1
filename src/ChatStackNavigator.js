@@ -14,6 +14,7 @@ export default createStackNavigator({
     ChatRoom : {
         screen : ChatRoom,
         navigationOptions : {
+            tabBarVisible : false,
             headerTitleStyle: {
                 width: '75%',
                 textAlign: 'center',

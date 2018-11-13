@@ -22,19 +22,57 @@ export default class ChatRoom extends Component{
         return(
             <View style={styles.outer}>
             <ScrollView style={styles.messages}>
-                <Text>asdsadsadsadsadwqdwqd</Text>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
             </ScrollView>
                 <InputBar/>
             </View>
         );
     }
 }
+class MessageBubble extends Component {
+    render() {
+  
+        var leftSpacer = this.props.direction === 'left' ? null : <View/>;
+        var rightSpacer = this.props.direction === 'left' ? <View/> : null;
+        var bubbleTextStyle = this.props.direction === 'left' ? styles.messageBubbleTextLeft : styles.messageBubbleTextRight;
+  
+      return (
+          <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+              {leftSpacer}
+              <View>
+                <Text style={bubbleTextStyle}>
+                  {this.props.text}
+                </Text>
+              </View>
+              {rightSpacer}
+            </View>
+        );
+    }
+  }
+
 
 class InputBar extends Component{
     render(){
         return(
             <View style={styles.inputBar}>
-                <TextInput style={styles.textBox} placeholder='문자 메시지'/>
+                <TextInput style={styles.textBox}/>
                 <TouchableHighlight style={styles.sendButton}>
                     <Text style={{color: 'white'}}>></Text>
                 </TouchableHighlight>
@@ -65,7 +103,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       paddingHorizontal: 10,
       paddingVertical: 5,
-      height:'10%'
+      height:'8%'
     },
   
     textBox: {
@@ -76,7 +114,6 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingHorizontal: 10,
     },
-  
     sendButton: {
       justifyContent: 'center',
       alignItems: 'center',
@@ -102,11 +139,20 @@ const styles = StyleSheet.create({
     },
   
     messageBubbleLeft: {
-      backgroundColor: '#d5d8d4',
+      backgroundColor: '#d5d8d4'
     },
   
     messageBubbleTextLeft: {
-      color: 'black'
+      color: 'black',
+      borderRadius: 5,
+      marginTop: 8,
+      marginRight: 10,
+      marginLeft: 10,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      flexDirection:'row',
+      flex: 1,
+      backgroundColor: '#d5d8d4'
     },
   
     messageBubbleRight: {
@@ -114,7 +160,16 @@ const styles = StyleSheet.create({
     },
   
     messageBubbleTextRight: {
-      color: 'white'
+      color: 'white',
+      borderRadius: 5,
+      marginTop: 8,
+      marginRight: 10,
+      marginLeft: 10,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      flexDirection:'row',
+      flex: 1,
+      backgroundColor: '#66db30'
     },
   })
   
