@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Dimensions,
-    TextInput
+    TextInput,
+    SafeAreaView
 } from 'react-native';
 
 const{width, height} = Dimensions.get('window');
@@ -62,6 +63,7 @@ export default class SignUpEmail extends Component {
 
     render(){
         return(
+            <SafeAreaView>
             <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
                 <View style={{display : 'flex'}}>
                     <TouchableOpacity
@@ -98,6 +100,7 @@ export default class SignUpEmail extends Component {
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
+            </SafeAreaView>
         );
     }
 }

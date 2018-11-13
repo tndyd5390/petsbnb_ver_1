@@ -125,6 +125,7 @@ class LoginForm extends Component {
                 width : width-60
                 }}
               onChangeText={(password) => this.setState({password : password})}
+              secureTextEntry={true}
             />
           </View>
         </View>
@@ -132,7 +133,7 @@ class LoginForm extends Component {
         <View style={{alignItems : 'center', marginTop : 20}}>
           <View style={{width : width -60, flexDirection : 'row', justifyContent : 'flex-end'}}>
             <TouchableOpacity
-              onPress={this._checkData}
+              onPress={() => this.props.navigation.navigate('FindEmail')}
             >
               <Text style={{textAlign : 'right', fontSize : 17, fontWeight : '500', marginRight : 20}}>이메일 찾기</Text>
             </TouchableOpacity>

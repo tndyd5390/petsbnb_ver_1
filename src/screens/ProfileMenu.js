@@ -20,18 +20,24 @@ const {width, height} = Dimensions.get('window');
 
 export default class ProfileMenu extends Component {
 
+
     _updateUserInfo = () => {
-        console.log('updateUserInfo button is clicked');
+        this.props.navigation.navigate('CheckPassword', {nextView : 'ProfileUserUpdate'});
     }
 
     _logOut = async () => {
+        
         await AsyncStorage.removeItem('userInfo');
-        //여기서 스택 다 비우면 댐
+        this._gotoInit();
+       
+    }
+
+    _gotoInit = () => {
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ routeName: 'Init' })],
           });
-         this.props.navigation.dispatch(resetAction);
+        this.props.rootStack.dispatch(resetAction);
     }
 
     render() {
@@ -74,6 +80,7 @@ export default class ProfileMenu extends Component {
         );
     }
 }
+
 
 const styles = StyleSheet.create({
     container : {
