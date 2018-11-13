@@ -40,7 +40,11 @@ export default class ProfileStackNavigator extends Component{
             ProfileUserUpdate : {
                 screen : ProfileUserUpdate,
                 navigationOptions : {
-                    header : null
+                    title: '회원정보',
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    },
                 }
             }
         })

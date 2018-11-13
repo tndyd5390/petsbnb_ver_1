@@ -43,7 +43,6 @@ export default class CheckPassword extends Component{
             })
             .then((response) => response.json())
             .then((res => {
-                console.log(res);
                 if(res.passwordCheck == true){
                     this.props.navigation.navigate(nextView);
                 }else{

@@ -48,12 +48,12 @@ export default class ProfileMenu extends Component {
                 </View>
                 <View style={{alignItems : 'center'}}>
                     <RoundedButton
-                        title="회원정보 수정"
+                        title="프로필 확인 및 수정"
                         buttonHandleFunc={this._updateUserInfo}
                         buttonColor={{backgroundColor : Colors.white}}
                         textColor={{color : Colors.black}}
                         textSize={{fontSize : 17}}
-                        customButtonStyle={{width : 150, height : 30, borderWidth : 2, borderRadius:40, borderColor : Colors.buttonBorderGrey}}
+                        customButtonStyle={{width : 170, height : 30, borderWidth : 2, borderRadius:40, borderColor : Colors.buttonBorderGrey}}
                     />
                 </View>
                 <View>
