@@ -1,23 +1,28 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput} from 'react-native';
+import {Alert,Platform, StyleSheet, Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../utils/Colors';
 
 export default class ChatRoom extends Component{
+    constructor(props) {
+      super(props);
+      this.state = {
+        visible : 'none'
+      };
+    }
 
     _loginCheck = async() => {
-        const userInfo = await AsyncStorage.getItem('userInfo');
-        if(userInfo != null){
+      const userInfo = await AsyncStorage.getItem('userInfo');
+      if(userInfo != null){
           //로그인 되있는 상태
-        }
       }
+    };
 
-      static navigationOptions = ({ navigation }) => {
-        console.log(navigation);
-        return {
-          title: navigation.getParam('key', 'A Nested Details Screen'),
-        };
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: navigation.getParam('key', 'A Nested Details Screen'),
       };
+    };
     
 
     render(){
@@ -44,6 +49,7 @@ export default class ChatRoom extends Component{
                <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
             </ScrollView>
                 <InputBar/>
+                <BottomMenu bottomMenu={this.state.visible}/>
             </View>
         );
     }
@@ -71,10 +77,25 @@ class MessageBubble extends Component {
 
 
 class InputBar extends Component{
+    constructor(props) {
+      super(props);
+      this.state = {
+        visible : false
+      };
+    }
+
+    _showBottomMenu = () => {
+      if(this.state.visible = false) {
+        this.setState({visible : false});
+      }else{
+        this.setState({visible : true});
+      }
+    };
+
     render(){
         return(
             <View style={styles.inputBar}>
-                <TouchableHighlight style={styles.plusButton}>
+                <TouchableHighlight style={styles.plusButton} onPress={()=>this._showBottomMenu()}> 
                     <Text style={{color: 'white', fontSize : 17}}>+</Text>
                 </TouchableHighlight>
                 <TextInput style={styles.textBox}/>
@@ -84,7 +105,22 @@ class InputBar extends Component{
             </View>
         );
     }
+};
+
+class BottomMenu extends Component{
+  constructor(props) {
+    super(props);
+    console.log(this.props.visible);
+  }
+  render(){
+    return(
+      <View style={styles.bottomBar}>
+        <Text>바텀</Text>
+      </View>
+    );
+  }
 }
+
 
 const styles = StyleSheet.create({
 
@@ -184,6 +220,19 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: Colors.buttonSky
     },
+
+    // BottomMenu
+
+    
+    bottomBar : {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      height : 80,
+      backgroundColor : Colors.white,
+    },
+
   })
   
   

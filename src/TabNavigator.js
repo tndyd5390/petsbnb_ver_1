@@ -8,7 +8,6 @@ import Reservation from './screens/Reservation';
 import Colors from './utils/Colors';
 import ProfileMenu from './screens/ProfileMenu';
 import ProfileStackNavigator from './screens/ProfileStackNavigator';
-import TabBarComponent from './utils/TabBarComponent';
 import Chat from './screens/Chat';
 import ChatRoom from './screens/ChatRoom';
 
