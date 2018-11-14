@@ -21,6 +21,16 @@ export default class ProfileStackNavigator extends Component{
         console.log("parentNav")
         console.log(this.props.rootStack);
         const ProfileStacks = createStackNavigator({
+            ProfileUserUpdate : {
+                screen : ProfileUserUpdate,
+                navigationOptions : {
+                    title: '회원정보',
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    },
+                }
+            },
             ProfileMenu : {
                 screen : props => <ProfileMenu {...props} rootStack={this.props.rootStack}/>,
                 navigationOptions : {
@@ -37,16 +47,7 @@ export default class ProfileStackNavigator extends Component{
                     },
                 }
             },
-            ProfileUserUpdate : {
-                screen : ProfileUserUpdate,
-                navigationOptions : {
-                    title: '회원정보',
-                    headerTitleStyle: {
-                        width: '75%',
-                        textAlign: 'center',
-                    },
-                }
-            }
+            
         })
 
         return(
