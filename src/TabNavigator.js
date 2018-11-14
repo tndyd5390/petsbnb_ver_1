@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
-import {createBottomTabNavigator, BottomTabBar,withNavigation} from 'react-navigation';
+import {createBottomTabNavigator, BottomTabBar,withNavigation,createStackNavigator} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Reservation from './screens/Reservation';
-import ChatStackNavigator from './ChatStackNavigator';
 import Colors from './utils/Colors';
 import ProfileMenu from './screens/ProfileMenu';
 import ProfileStackNavigator from './screens/ProfileStackNavigator';
+import TabBarComponent from './utils/TabBarComponent';
+import Chat from './screens/Chat';
+import ChatRoom from './screens/ChatRoom';
+
 
 export default class TabNavigator extends Component {
   render(){
@@ -33,9 +36,8 @@ export default class TabNavigator extends Component {
         }
       },
       Chat : {
-        screen : ChatStackNavigator,
+        screen : Stacks,
         navigationOptions : {
-          tabBarVisible: true,
           tabBarLabel : '대화하기',
           tabBarIcon : ({tintColor}) => (
             <IconFontAwesome name='comments' color={tintColor} size={24}/>
@@ -54,6 +56,9 @@ export default class TabNavigator extends Component {
     },
     {
       tabBarPosition : 'bottom',
+      navigationOptions : {
+        tabBarVisible : true
+      },
       tabBarOptions : {
         activeTintColor : 'red',
         inactiveTintColor : 'grey',
@@ -72,3 +77,45 @@ export default class TabNavigator extends Component {
 
   }
 } 
+
+const Stacks = createStackNavigator({ 
+  Chat : {
+      screen : Chat,
+      navigationOptions : {
+          header : null
+      }
+  },
+  ChatRoom : {
+      screen : ChatRoom,
+      navigationOptions : {
+          headerTitleStyle: {
+              width: '75%',
+              textAlign: 'center',
+          },
+      }
+  },
+},
+{
+  initialRouteName: 'Chat',
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: Colors.buttonSky,
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  },
+});
+
+Stacks.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible,
+  };
+};
+
+

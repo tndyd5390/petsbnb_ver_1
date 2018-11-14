@@ -4,6 +4,7 @@ import {List, ListItem} from 'react-native-elements';
 import Colors from '../utils/Colors';
 
 export default class ChatRoom extends Component{
+
     _loginCheck = async() => {
         const userInfo = await AsyncStorage.getItem('userInfo');
         if(userInfo != null){
@@ -11,12 +12,12 @@ export default class ChatRoom extends Component{
         }
       }
 
-    static navigationOptions = ({ navigation }) => {
+      static navigationOptions = ({ navigation }) => {
+        console.log(navigation);
         return {
           title: navigation.getParam('key', 'A Nested Details Screen'),
         };
       };
-
     
 
     render(){
@@ -73,9 +74,12 @@ class InputBar extends Component{
     render(){
         return(
             <View style={styles.inputBar}>
+                <TouchableHighlight style={styles.plusButton}>
+                    <Text style={{color: 'white', fontSize : 17}}>+</Text>
+                </TouchableHighlight>
                 <TextInput style={styles.textBox}/>
                 <TouchableHighlight style={styles.sendButton}>
-                    <Text style={{color: 'white'}}>></Text>
+                    <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
             </View>
         );
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       paddingHorizontal: 10,
       paddingVertical: 5,
-      height:'8%'
+      height : 45
     },
   
     textBox: {
@@ -118,12 +122,20 @@ const styles = StyleSheet.create({
     sendButton: {
       justifyContent: 'center',
       alignItems: 'center',
-      width : '15%',
+      width : '12%',
       paddingLeft: 15,
       marginLeft: 5,
       paddingRight: 15,
       borderRadius: 15,
-      backgroundColor: '#66db30'
+      backgroundColor: Colors.buttonSky
+    },
+    plusButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width : '9%',
+      marginRight: 5,
+      borderRadius: 30,
+      backgroundColor: Colors.buttonSky,
     },
   
     //MessageBubble
@@ -157,7 +169,7 @@ const styles = StyleSheet.create({
     },
   
     messageBubbleRight: {
-      backgroundColor: '#66db30'
+      backgroundColor: Colors.buttonSky
     },
   
     messageBubbleTextRight: {
@@ -170,7 +182,7 @@ const styles = StyleSheet.create({
       paddingVertical: 5,
       flexDirection:'row',
       flex: 1,
-      backgroundColor: '#66db30'
+      backgroundColor: Colors.buttonSky
     },
   })
   
