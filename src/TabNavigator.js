@@ -36,7 +36,7 @@ export default class TabNavigator extends Component {
         }
       },
       Chat : {
-        screen : Stacks,
+        screen : ChatStacks,
         navigationOptions : {
           tabBarLabel : '대화하기',
           tabBarIcon : ({tintColor}) => (
@@ -78,7 +78,7 @@ export default class TabNavigator extends Component {
   }
 } 
 
-const Stacks = createStackNavigator({ 
+const ChatStacks = createStackNavigator({ 
   Chat : {
       screen : Chat,
       navigationOptions : {
@@ -108,7 +108,7 @@ const Stacks = createStackNavigator({
   },
 });
 
-Stacks.navigationOptions = ({ navigation }) => {
+ChatStacks.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
