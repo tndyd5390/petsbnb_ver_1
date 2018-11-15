@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import {Alert,Platform, StyleSheet, Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../utils/Colors';
+import Icon from 'react-native-vector-icons/Ionicons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 export default class ChatRoom extends Component{
     constructor(props) {
       super(props);
-      this.state = {
-        visible : 'none'
-      };
     }
 
     _loginCheck = async() => {
@@ -17,6 +16,7 @@ export default class ChatRoom extends Component{
           //로그인 되있는 상태
       }
     };
+
 
     static navigationOptions = ({ navigation }) => {
       return {
@@ -49,7 +49,6 @@ export default class ChatRoom extends Component{
                <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
             </ScrollView>
                 <InputBar/>
-                <BottomMenu bottomMenu={this.state.visible}/>
             </View>
         );
     }
@@ -80,29 +79,46 @@ class InputBar extends Component{
     constructor(props) {
       super(props);
       this.state = {
-        visible : false
+        bottomMenu : false,
+        plusButton : false
       };
     }
 
     _showBottomMenu = () => {
-      if(this.state.visible = false) {
-        this.setState({visible : false});
+      console.log(this.state);
+      if(this.state.bottomMenu == false) {
+        this.setState({bottomMenu : true, plusButton : true});
       }else{
-        this.setState({visible : true});
+        this.setState({bottomMenu : false, plusButton : false});
       }
     };
 
+    
+    _renderBottom = () =>{
+      if(this.state.bottomMenu == true){
+        return(
+          <BottomMenu/>
+        );
+      }else{
+        return null;
+      }
+    };
+
+
     render(){
         return(
+          <View>
             <View style={styles.inputBar}>
                 <TouchableHighlight style={styles.plusButton} onPress={()=>this._showBottomMenu()}> 
-                    <Text style={{color: 'white', fontSize : 17}}>+</Text>
+                    <Text style={{color: 'white', fontSize : 18}}>{this.state.plusButton ? 'x' : '+'}</Text>
                 </TouchableHighlight>
                 <TextInput style={styles.textBox}/>
                 <TouchableHighlight style={styles.sendButton}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
             </View>
+            {this.state.bottomMenu ? <BottomMenu/> : null}
+          </View>
         );
     }
 };
@@ -110,12 +126,31 @@ class InputBar extends Component{
 class BottomMenu extends Component{
   constructor(props) {
     super(props);
-    console.log(this.props.visible);
   }
   render(){
     return(
       <View style={styles.bottomBar}>
-        <Text>바텀</Text>
+        <TouchableHighlight onPress={()=>console.log('얍얍')}>
+        <View style={{flex : 1,flexDirection: 'row', padding: 10, alignItems:'center'}}>
+            <IconFontAwesome name='images' color={Colors.black} size={50}>
+              <Text style={{fontFamily: 'Arial', fontSize: 15}}>앨범</Text>
+            </IconFontAwesome>
+        </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={()=>console.log('얍얍')}>
+        <View style={{flex : 1,flexDirection: 'row', padding: 10, alignItems:'center'}}>
+            <IconFontAwesome name='camera' color={Colors.black} size={50}>
+              <Text style={{fontFamily: 'Arial', fontSize: 15}}>사진</Text>
+            </IconFontAwesome>
+        </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={()=>console.log('얍얍')}>
+        <View style={{flex : 1,flexDirection: 'row', padding: 10, alignItems:'center'}}>
+            <IconFontAwesome name='video' color={Colors.black} size={50}>
+              <Text style={{fontFamily: 'Arial', fontSize: 15}}>동영상</Text>
+            </IconFontAwesome>       
+        </View>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -144,6 +179,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       paddingHorizontal: 10,
       paddingVertical: 5,
+      marginTop : 5,
       height : 45
     },
   
@@ -229,7 +265,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       paddingHorizontal: 10,
       paddingVertical: 5,
-      height : 80,
+      height : 110,
       backgroundColor : Colors.white,
     },
 
