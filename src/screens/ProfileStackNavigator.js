@@ -6,6 +6,8 @@ import {createStackNavigator, withNavigation} from 'react-navigation';
 import ProfileMenu from './ProfileMenu';
 import CheckPassword from './CheckPassword';
 import ProfileUserUpdate from './ProfileUserUpdate';
+import PetList from './PetList';
+import PetRegView from './PetRegView';
 import {
     View,
     Text,
@@ -21,7 +23,16 @@ export default class ProfileStackNavigator extends Component{
         console.log("parentNav")
         console.log(this.props.rootStack);
         const ProfileStacks = createStackNavigator({
-            
+            PetList : {
+                screen : PetList,
+                navigationOptions : {
+                    title: '반려동물 관리',
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    }
+                }
+            },
             ProfileMenu : {
                 screen : props => <ProfileMenu {...props} rootStack={this.props.rootStack}/>,
                 navigationOptions : {
@@ -48,6 +59,16 @@ export default class ProfileStackNavigator extends Component{
                     },
                 }
             },
+            PetRegView : {
+                screen : PetRegView,
+                navigationOptions : {
+                    title: '반려동물 등록',
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    },
+                }
+            }
         })
 
         return(
