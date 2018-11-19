@@ -8,5 +8,6 @@ export default {
     buttonSky : '#10b5f1',
     termsBackground : '#E6E6E6',
     lightGrey : '#E6E6E6',
-    orange : '#FFBF00'
+    orange : '#FFBF00',
+    red : '#FF0000'
 }

@@ -30,12 +30,8 @@ export default class PetList extends Component{
 
     render(){
         return(
-            <View><Text>펫리스트</Text>
-            <TouchableOpacity
-                onPress={this._change}
-            >
-                <Text>바꾸기</Text>
-            </TouchableOpacity>
+            <View>
+                <Text>펫리스트</Text>
             </View>
         );
     }
