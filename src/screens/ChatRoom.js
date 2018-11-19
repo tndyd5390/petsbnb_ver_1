@@ -4,10 +4,16 @@ import {List, ListItem} from 'react-native-elements';
 import Colors from '../utils/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import SockJsClient from 'react-stomp';
 
 export default class ChatRoom extends Component{
     constructor(props) {
       super(props);
+      this.state = {
+        clientConnected: false,
+        messages: [];
+      };
+      
     }
 
     _loginCheck = async() => {
@@ -16,8 +22,7 @@ export default class ChatRoom extends Component{
           //로그인 되있는 상태
       }
     };
-
-
+  
     static navigationOptions = ({ navigation }) => {
       return {
         title: navigation.getParam('key', 'A Nested Details Screen'),
@@ -26,27 +31,18 @@ export default class ChatRoom extends Component{
     
 
     render(){
+        var messages = [];
+        this.state.messages.forEach(function(contents) {
+          messages.push(
+              <MessageBubble direction={'right'} text={contents}/>
+            );
+        });
+    
         return(
             <View style={styles.outer}>
-            <ScrollView style={styles.messages}>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={2} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={3} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={4} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={5} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={6} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={7} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={8} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={9} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={10} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={11} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={12} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={13} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={14} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={15} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={16} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={17} direction={'right'} text={'sdsdsds'}/>
+            <ScrollView style={styles.messages} ref="scrollView"
+             onContentSizeChange={(width,height) => this.refs.scrollView.scrollTo({y:height})}>
+              {messages}
             </ScrollView>
                 <InputBar/>
             </View>
@@ -80,12 +76,14 @@ class InputBar extends Component{
       super(props);
       this.state = {
         bottomMenu : false,
-        plusButton : false
+        plusButton : false,
+        clientConnected: false,
+        messages: []
       };
     }
 
     _showBottomMenu = () => {
-      console.log(this.state);
+
       if(this.state.bottomMenu == false) {
         this.setState({bottomMenu : true, plusButton : true});
       }else{
@@ -104,6 +102,21 @@ class InputBar extends Component{
       }
     };
 
+    sendMessage = (selfMsg) => {
+      try {
+        this.clientRef.sendMessage("/app/hello", JSON.stringify(selfMsg));
+        return true;
+      } catch(e) {
+        return false;
+      }
+    };
+    
+    onMessageReceive = (msg) => {
+      this.setState(prevState => ({
+        messages: [...prevState.messages, msg]
+      }));
+
+      };
 
     render(){
         return(
@@ -112,12 +125,23 @@ class InputBar extends Component{
                 <TouchableHighlight style={styles.plusButton} onPress={()=>this._showBottomMenu()}> 
                     <Text style={{color: 'white', fontSize : 18}}>{this.state.plusButton ? 'x' : '+'}</Text>
                 </TouchableHighlight>
-                <TextInput style={styles.textBox}/>
-                <TouchableHighlight style={styles.sendButton}>
+                <TextInput style={styles.textBox} onChangeText={(text) => {
+              this.setState({
+                user : 'me',
+                contents : text
+              });
+            }} value={this.state.content}/>
+                <TouchableHighlight style={styles.sendButton} onPress={() => {
+              this.sendMessage({user : this.state.user, contents : this.state.contents})
+            }}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
             </View>
             {this.state.bottomMenu ? <BottomMenu/> : null}
+            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' topics={['/topic/chat']}
+            onMessage={(msg) => { this.onMessageReceive(msg) }}
+            ref={ (client) => { this.clientRef = client }}
+            debug={true} />
           </View>
         );
     }
