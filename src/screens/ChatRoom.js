@@ -31,22 +31,22 @@ export default class ChatRoom extends Component{
             <ScrollView style={styles.messages}>
                <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
                <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
-               <MessageBubble key={0} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
-               <MessageBubble key={1} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={2} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={3} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={4} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={5} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={6} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={7} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={8} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={9} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={10} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={11} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={12} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={13} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={14} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={15} direction={'right'} text={'sdsdsds'}/>
+               <MessageBubble key={16} direction={'left'} text={'sdsdsdsasdasdsaas'}/>
+               <MessageBubble key={17} direction={'right'} text={'sdsdsds'}/>
             </ScrollView>
                 <InputBar/>
             </View>
