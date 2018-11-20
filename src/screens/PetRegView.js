@@ -9,6 +9,7 @@ import DatePicker from 'react-native-datepicker';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 import PetProfileRegCheckbox from './components/checkbox/PetProfileRegCheckbox';
 import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
 import {
     View,
     Text,
@@ -58,8 +59,7 @@ export default class PetRegView extends Component{
             petSpecialMatters : '',
             petReference : '',
             petAccidentAgree : false,
-            imageData : [],
-            imageSource : []
+            imageDataArr : []
         }
         this._getUserNo();
     }
@@ -76,18 +76,64 @@ export default class PetRegView extends Component{
               console.log('User cancelled image picker');
             } else if (response.error) {
               console.log('ImagePicker Error: ', response.error);
+              alert('사진을 다시 선택해주세요.');
             } else {
               const source = { uri: response.uri };
-              const imageData = this.state.imageData;
-              const imageSource = this.state.imageSource;
-              imageData.push(response.data);
-              imageSource.push(source);
+
+              const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
+              console.log(extension);
+
+              const imageDataObject = {
+                  imageData : response.data,
+                  imageSource : response.uri,
+                  extension : extension
+              }
+
+              const imageDataArr = this.state.imageDataArr;
+              imageDataArr.push(imageDataObject);
+
               this.setState({
-                  imageData : imageData,
-                  imageSource : imageSource
+                  imageDataArr : imageDataArr
               })
+
             }
         });
+    }
+
+    _imageDisplay = () => {
+        let imageView = [];
+        const imageDataArr = this.state.imageDataArr;
+        imageDataArr.forEach((value, index) => {
+            const source = value.imageSource;
+            imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
+                                <Image source={{uri : source}} style={{width : '100%', height : '100%'}}/>
+                                <View style={{position : 'absolute', bottom : 10, right : 15}}>
+                                    <TouchableOpacity
+                                        onPress={() => this._deleteImage(index)}
+                                    >
+                                        <FontAwesome5 name='trash-alt' size={30} color={Colors.white}/>
+                                    </TouchableOpacity>
+                                </View>
+                           </View>)
+        })
+        imageView.push(
+            <View key={imageDataArr.length} style={{ alignItems : 'center', justifyContent : 'center'}}>
+                <RoundedButton
+                    title='사진 등록'
+                    buttonHandleFunc={this._butttonHandleFunc}
+                    buttonColor={{backgroundColor : Colors.white}}
+                    textColor={{color : Colors.buttonBorderGrey}}
+                    textSize={{fontSize:15, fontWeight : '200'}}
+                    customButtonStyle={{width : 90, height : 35, borderWidth : 1, borderColor : Colors.buttonBorderGrey, marginTop : 100}}
+                />
+            </View>
+        )
+        return imageView;
+        
+    }
+
+    _deleteImage = (index) => {
+        alert(index);
     }
 
     _noneVaccine = () => {
@@ -108,8 +154,86 @@ export default class PetRegView extends Component{
         }
     }
 
-    _regPetProfile = () => {
-        console.log(this.state.imageSource);
+    _regPetProfile = async () => {
+        const state = this.state;
+        /*if(state.userNo == '') alert('다시 시도해 주세요');
+        else if(state.imageDataArr.length == 0) alert('반려동물 사진을 등록해주세요');
+        else if(state.petName == '') alert('반려동물의 이름을 입력해 주세요.');
+        else if(state.petGender == '') alert('반려동물의 성별을 입력해주세요.');
+        else if(state.petKind == '') alert('반려동물의 품종을 입력해주세요.');
+        else if(state.petWeight == '') alert('반려동물의 몸무게를 입력해주세요.');
+        else if(state.petNeutralization == null) alert('반려동물의 중성화 여부를 선택해주세요.');
+        else if(state.petUnfamiliar == '') alert('"낯선 사람을 만나면 어떤가요?" 질문에 대답해주세요');
+        else if(state.petMeetAnotherPet == '') alert('"다른 강아지를 만나면 어떤가요" 질문에 대답해주세요.');
+        else if(state.petBarks == '') alert('"짖음은 어느정도인가요?" 질문에 대답해주세요.');
+        else if(state.petBowelTraining == '') alert('"배변 훈련은 어떤 편인가요?" 질문에 대답해 주세요.');
+        else if(this._checkVaccine()) alert('예방접종 여부를 선택해 주세요.');
+        else if(state.petAccidentAgree == false) alert('사실과 다른 프로필 기재로 사고가 발생한 경우 책임은 견주 본인에게 있음에 동의해주세요.');
+        else {
+
+        }*/
+
+        let arr = [];
+
+        for(let i = 0; i< this.state.imageDataArr.length; i++){
+            const value = this.state.imageDataArr[i];
+            arr.push({
+                name : 'image' + i,
+                filename : 'image' + i + '.' + value.extension,
+                type : 'image/' + value.extension,
+                data : value.imageData
+            })
+        }
+        
+        arr.push({name : 'userNo', data : state.userNo});
+        arr.push({name : 'petName', data : state.petName});
+        arr.push({name : 'petGender', data : state.petGender});
+        arr.push({name : 'petKind', data : state.petKind});
+        arr.push({name : 'petWeight', data : state.petWeight});
+        arr.push({name : 'petNeutralization', data : state.petNeutralization});
+        arr.push({name : 'petUnfamiliar', data : state.petUnfamiliar});
+        arr.push({name : 'petMeetAnotherPet', data : state.petMeetAnotherPet});
+        arr.push({name : 'petBarks', data : state.petBarks});
+        arr.push({name : 'petBowelTraining', data : state.petBowelTraining});
+        arr.push({name : 'petComprehensiveVaccine', data : state.petComprehensiveVaccine});
+        arr.push({name : 'petRabiesVaccination', data : state.petRabiesVaccination});
+        arr.push({name : 'petHeartWorm', data : state.petHeartWorm});
+        arr.push({name : 'petCoronaEnteritis', data : state.petCoronaEnteritis});
+        arr.push({name : 'petKennelkov', data : state.petKennelkov});
+        arr.push({name : 'petNoneVaccine', data : state.petNoneVaccine});
+
+        console.log(arr[0].filename);
+        console.log(arr[1].filename);
+        await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/user/userPetProfileUploadProc.do', {
+            Authorization : "Bearer access-token",
+            'Content-Type' : 'multipart/form-data',
+          },
+            arr
+          )
+          .then((resp) => resp.json())
+          .then((res => {
+            this.setState({
+                activityIndicator : false
+            })
+            if(res.uploadImageSuccess == true){
+                alert("사진 업로드 성공");
+                this.props.navigation.navigate('ProfileMenu');
+            }else{
+                alert("사진 업로드 실패");
+            }
+          }))
+          .catch((err) => {
+            alert("서버 오작동");
+          })
+    }
+
+    _checkVaccine = () => {
+        const state = this.state;
+        if(state.petComprehensiveVaccine == false && state.petRabiesVaccination == false && state.petHeartWorm == false && state.petCoronaEnteritis == false && state.petKennelkov == false && state.petNoneVaccine == false){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     render() {
@@ -122,20 +246,11 @@ export default class PetRegView extends Component{
                 ) : (null)}
                 <ScrollView>
                     <View style={{width : width, height : 250, backgroundColor : Colors.white, borderBottomWidth : 1, borderBottomColor : Colors.buttonBorderGrey}}>
-                        <Swiper loop={false}>
-                            <View style={{ alignItems : 'center', justifyContent : 'center'}}>
-                                <Image source={require('../../img/petCare.jpg')}/>
-                            </View>
-                            <View style={{ alignItems : 'center', justifyContent : 'center'}}>
-                                <RoundedButton
-                                    title='사진 등록'
-                                    buttonHandleFunc={this._butttonHandleFunc}
-                                    buttonColor={{backgroundColor : Colors.white}}
-                                    textColor={{color : Colors.buttonBorderGrey}}
-                                    textSize={{fontSize:15, fontWeight : '200'}}
-                                    customButtonStyle={{width : 90, height : 35, borderWidth : 1, borderColor : Colors.buttonBorderGrey, marginTop : 100}}
-                                />
-                            </View>
+                        <Swiper 
+                            loop={false}
+                            key={this.state.imageDataArr.length}
+                        >
+                        {this._imageDisplay()}
                         </Swiper>
                     </View>
                     

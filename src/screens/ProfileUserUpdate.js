@@ -101,9 +101,11 @@ export default class ProfileUserUpdate extends Component {
               console.log('ImagePicker Error: ', response.error);
             } else {
               const source = { uri: response.uri };
+              const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
               this.setState({
                 imageSource: source,
                 imageData : response.data,
+                extension : extension,
                 //사진을 고를 경우 파일 이름을 임의로 설정하여 사진이 화면에 출력되게끔 함
                 fileName : "tmp"
               });
@@ -169,7 +171,7 @@ export default class ProfileUserUpdate extends Component {
             Authorization : "Bearer access-token",
             'Content-Type' : 'multipart/form-data',
           }, [
-            { name : 'image', filename : 'image.png', type:'image/png', data: this.state.imageData},
+            { name : 'image', filename : 'image.' + this.state.extension, type:'image/' + this.state.extension, data: this.state.imageData},
             { name : 'userNo', data : this.state.userNo}
           ])
           .then((resp) => resp.json())

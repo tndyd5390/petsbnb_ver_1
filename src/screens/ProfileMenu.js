@@ -40,6 +40,10 @@ export default class ProfileMenu extends Component {
         this.props.rootStack.dispatch(resetAction);
     }
 
+    _goToPetList = () => {
+        this.props.navigation.navigate('PetList');
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -57,7 +61,9 @@ export default class ProfileMenu extends Component {
                     />
                 </View>
                 <View>
-                    <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 30}}>
+                    <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 30}}
+                        onPress={this._goToPetList}
+                    >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>반려동물 프로필</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
