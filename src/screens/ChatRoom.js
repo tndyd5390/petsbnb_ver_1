@@ -11,9 +11,8 @@ export default class ChatRoom extends Component{
       super(props);
       this.state = {
         clientConnected: false,
-        messages: [];
+        messages: []
       };
-      
     }
 
     _loginCheck = async() => {
@@ -22,7 +21,17 @@ export default class ChatRoom extends Component{
           //로그인 되있는 상태
       }
     };
-  
+    
+    callBackMsg = (childMsg) => {
+      console.log('sdsadsa');
+      console.log(childMsg);
+      console.log(this.state);
+      console.log('sdsadsa');
+      this.setState({
+        messages : childMsg
+      });
+    }
+
     static navigationOptions = ({ navigation }) => {
       return {
         title: navigation.getParam('key', 'A Nested Details Screen'),
@@ -32,10 +41,10 @@ export default class ChatRoom extends Component{
 
     render(){
         var messages = [];
-        this.state.messages.forEach(function(contents) {
+        this.state.messages.forEach(function(msg) {
           messages.push(
-              <MessageBubble direction={'right'} text={contents}/>
-            );
+              <MessageBubble direction={'right'} text={msg.contents}/>
+          );
         });
     
         return(
@@ -44,7 +53,7 @@ export default class ChatRoom extends Component{
              onContentSizeChange={(width,height) => this.refs.scrollView.scrollTo({y:height})}>
               {messages}
             </ScrollView>
-                <InputBar/>
+                <InputBar callBackMsg={this.callBackMsg}/>
             </View>
         );
     }
@@ -83,7 +92,6 @@ class InputBar extends Component{
     }
 
     _showBottomMenu = () => {
-
       if(this.state.bottomMenu == false) {
         this.setState({bottomMenu : true, plusButton : true});
       }else{
@@ -115,8 +123,9 @@ class InputBar extends Component{
       this.setState(prevState => ({
         messages: [...prevState.messages, msg]
       }));
+      this.props.callBackMsg(this.state.messages);
+    };
 
-      };
 
     render(){
         return(
