@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-swiper';
-import RoundedButton from './components/buttons/RoundedButton';
+import RoundedButton from '../components/buttons/RoundedButton';
 import DatePicker from 'react-native-datepicker';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
-import PetProfileRegCheckbox from './components/checkbox/PetProfileRegCheckbox';
+import PetProfileRegCheckbox from '../components/checkbox/PetProfileRegCheckbox';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import {
@@ -156,7 +156,7 @@ export default class PetRegView extends Component{
 
     _regPetProfile = async () => {
         const state = this.state;
-        /*if(state.userNo == '') alert('다시 시도해 주세요');
+       /* if(state.userNo == '') alert('다시 시도해 주세요');
         else if(state.imageDataArr.length == 0) alert('반려동물 사진을 등록해주세요');
         else if(state.petName == '') alert('반려동물의 이름을 입력해 주세요.');
         else if(state.petGender == '') alert('반려동물의 성별을 입력해주세요.');
@@ -170,61 +170,57 @@ export default class PetRegView extends Component{
         else if(this._checkVaccine()) alert('예방접종 여부를 선택해 주세요.');
         else if(state.petAccidentAgree == false) alert('사실과 다른 프로필 기재로 사고가 발생한 경우 책임은 견주 본인에게 있음에 동의해주세요.');
         else {
-
+            
         }*/
-
         let arr = [];
 
-        for(let i = 0; i< this.state.imageDataArr.length; i++){
-            const value = this.state.imageDataArr[i];
-            arr.push({
-                name : 'image' + i,
-                filename : 'image' + i + '.' + value.extension,
-                type : 'image/' + value.extension,
-                data : value.imageData
-            })
-        }
-        
-        arr.push({name : 'userNo', data : state.userNo});
-        arr.push({name : 'petName', data : state.petName});
-        arr.push({name : 'petGender', data : state.petGender});
-        arr.push({name : 'petKind', data : state.petKind});
-        arr.push({name : 'petWeight', data : state.petWeight});
-        arr.push({name : 'petNeutralization', data : state.petNeutralization});
-        arr.push({name : 'petUnfamiliar', data : state.petUnfamiliar});
-        arr.push({name : 'petMeetAnotherPet', data : state.petMeetAnotherPet});
-        arr.push({name : 'petBarks', data : state.petBarks});
-        arr.push({name : 'petBowelTraining', data : state.petBowelTraining});
-        arr.push({name : 'petComprehensiveVaccine', data : state.petComprehensiveVaccine});
-        arr.push({name : 'petRabiesVaccination', data : state.petRabiesVaccination});
-        arr.push({name : 'petHeartWorm', data : state.petHeartWorm});
-        arr.push({name : 'petCoronaEnteritis', data : state.petCoronaEnteritis});
-        arr.push({name : 'petKennelkov', data : state.petKennelkov});
-        arr.push({name : 'petNoneVaccine', data : state.petNoneVaccine});
-
-        console.log(arr[0].filename);
-        console.log(arr[1].filename);
-        await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/user/userPetProfileUploadProc.do', {
-            Authorization : "Bearer access-token",
-            'Content-Type' : 'multipart/form-data',
-          },
-            arr
-          )
-          .then((resp) => resp.json())
-          .then((res => {
-            this.setState({
-                activityIndicator : false
-            })
-            if(res.uploadImageSuccess == true){
-                alert("사진 업로드 성공");
-                this.props.navigation.navigate('ProfileMenu');
-            }else{
-                alert("사진 업로드 실패");
+            for(let i = 0; i< this.state.imageDataArr.length; i++){
+                const value = this.state.imageDataArr[i];
+                arr.push({
+                    name : 'image' + i,
+                    filename : 'image' + i + '.' + value.extension,
+                    type : 'image/' + value.extension,
+                    data : value.imageData
+                })
             }
-          }))
-          .catch((err) => {
-            alert("서버 오작동");
-          })
+            
+            arr.push({name : 'userNo', data : state.userNo});
+            arr.push({name : 'petName', data : state.petName});
+            arr.push({name : 'petGender', data : state.petGender});
+            arr.push({name : 'petKind', data : state.petKind});
+            arr.push({name : 'petWeight', data : state.petWeight});
+            arr.push({name : 'petNeutralization', data : state.petNeutralization ? '1' : '0'});
+            arr.push({name : 'petUnfamiliar', data : state.petUnfamiliar});
+            arr.push({name : 'petMeetAnotherPet', data : state.petMeetAnotherPet});
+            arr.push({name : 'petBarks', data : state.petBarks});
+            arr.push({name : 'petBowelTraining', data : state.petBowelTraining});
+            arr.push({name : 'petComprehensiveVaccine', data : state.petComprehensiveVaccine ? '1' : '0'});
+            arr.push({name : 'petRabiesVaccination', data : state.petRabiesVaccination ? '1' : '0'});
+            arr.push({name : 'petHeartWorm', data : state.petHeartWorm ? '1' : '0'});
+            arr.push({name : 'petCoronaEnteritis', data : state.petCoronaEnteritis ? '1' : '0'});
+            arr.push({name : 'petKennelkov', data : state.petKennelkov ? '1' : '0'});
+            arr.push({name : 'petNoneVaccine', data : state.petNoneVaccine ? '1' : '0'});
+            console.log(arr);
+            await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petProfileRegProc.do', {
+                Authorization : "Bearer access-token",
+                'Content-Type' : 'multipart/form-data',
+            },arr)
+            .then((resp) => resp.json())
+            .then((res => {
+                this.setState({
+                    activityIndicator : false
+                })
+                if(res.uploadImageSuccess == true){
+                    alert("사진 업로드 성공");
+                    this.props.navigation.navigate('ProfileMenu');
+                }else{
+                    alert("사진 업로드 실패");
+                }
+            }))
+            .catch((err) => {
+                alert("서버 오작동");
+            })
+        
     }
 
     _checkVaccine = () => {

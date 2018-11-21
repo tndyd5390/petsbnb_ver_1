@@ -1,70 +1,49 @@
 import React, {Component} from 'react';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {CheckBox, colors} from 'react-native-elements';
 import {
     View,
     Text,
-    StyleSheet,
     TouchableOpacity,
-    KeyboardAvoidingView,
-    Dimensions,
     TextInput,
-    SafeAreaView,
+    KeyboardAvoidingView,
+    StyleSheet,
+    Dimensions,
     Platform
 } from 'react-native';
-
 const{width, height} = Dimensions.get('window');
 
-export default class SignUpEmail extends Component {
-    
+export default class TmpSignUpNameAndPhone extends Component{
+
     constructor(props){
         super(props);
         this.state = {
-            email : ''
+            name : '',
+            phoneNumber : ''
         }
     }
 
-    _nextStep = async () => {
-        const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        
-        if(this.state.email === ''){
-            alert('이메일을 입력해주세요.');
-        }else if(!emailCheckRegex.test(this.state.email)){
-            alert('이메일 양식을 확인해 주세요.');
+    _nextStep = () => {
+        const email = this.props.navigation.getParam('email');
+        const {name, phoneNumber} = this.state;
+        const params = {
+            email : email,
+            name : name,
+            phoneNumber : phoneNumber
+        }
+        if(name == ''){
+            alert('이름을 입력해주세요');
+        }else if(phoneNumber == ''){
+            alert('전화번호를 입력해주세요');
         }else{
-            const params = {
-                email : this.state.email
-            }
-            await fetch('http://192.168.0.10:8080/user/emailCheck.do', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(params),
-              })
-              .then((response) => response.json())
-              .then((res => {
-                  console.log(res);
-                  if(res.emailValid === true){
-                    //가입 성공
-                    this.props.navigation.navigate('TmpSignUpNameAndPhone', {email : this.state.email});
-                  }else{
-                      //가입 실패
-                      alert('이미 사용중인 이메일입니다.');
-                      return;
-                  }
-              }))
-            
+            this.props.navigation.navigate('SignUpPassword', params);
         }
     }
 
     render(){
         return(
-            
             <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
                 <View style={[{display : 'flex'}, Platform.OS ==='ios' ? {marginTop : 10} : null]}>
                     <TouchableOpacity
@@ -76,18 +55,30 @@ export default class SignUpEmail extends Component {
         
                     <View style={{alignItems : 'center'}}>
                         <View style={{display : 'flex', width : width -60}}>
-                            <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>이메일</Text>
+                            <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>이름</Text>
                         </View>
                         <TextInput 
                             name='email'
                             style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}} 
-                            placeholder='이메일은 아이디로 사용됩니다.'
-                            onChangeText={(text)=>this.setState({email : text})}
+                            placeholder='실명을 입력해주세요.'
+                            onChangeText={(name) => this.setState({name : name})}
+                        />
+                    </View>
+
+                    <View style={{alignItems : 'center', marginTop : 20}}>
+                        <View style={{display : 'flex', width : width -60}}>
+                            <Text style={{textAlign : 'left', fontSize : 17, fontWeight : '500'}}>전화번호</Text>
+                        </View>
+                        <TextInput 
+                            name='email'
+                            style={{borderBottomWidth : 1, paddingTop : 5, paddingBottom : 5, width : width-60}} 
+                            placeholder='-없이 입력해주세요'
+                            keyboardType='numeric'
+                            onChangeText={(phoneNumber) => this.setState({phoneNumber : phoneNumber})}
                         />
                     </View>
                 </View>
-
-                
+        
                 <TouchableOpacity 
                     style={[{width: width, 
                     height: 50, 
@@ -101,11 +92,6 @@ export default class SignUpEmail extends Component {
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
-            
         );
     }
 }
-
-const styles = StyleSheet.create({
-
-})

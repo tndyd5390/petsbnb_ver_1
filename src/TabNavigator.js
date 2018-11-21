@@ -7,8 +7,8 @@ import Explore from './screens/Explore';
 import Reservation from './screens/Reservation';
 import Chat from './screens/Chat';
 import Colors from './utils/Colors';
-import ProfileMenu from './screens/ProfileMenu';
-import ProfileStackNavigator from './screens/ProfileStackNavigator';
+import ProfileMenu from './screens/profile/ProfileMenu';
+import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
 
 
 export default class TabNavigator extends Component {

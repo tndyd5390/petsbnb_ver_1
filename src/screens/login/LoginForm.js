@@ -10,7 +10,7 @@ import {
   AsyncStorage,
   Platform
 } from 'react-native';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const{height, width} = Dimensions.get('window');

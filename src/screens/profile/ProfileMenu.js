@@ -1,8 +1,8 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import RestartAndroid from 'react-native-restart-android';
-import RoundedButton from './components/buttons/RoundedButton';
+import RoundedButton from '../components/buttons/RoundedButton';
 import {
     View,
     Text,
@@ -48,7 +48,7 @@ export default class ProfileMenu extends Component {
         return (
             <View style={styles.container}>
                 <View style={{alignItems : 'center'}}>
-                    <Image source={require("../../img/user.png")} style={{width : 100, height : 100, marginTop : 30}}/>
+                    <Image source={require("../../../img/user.png")} style={{width : 100, height : 100, marginTop : 30}}/>
                 </View>
                 <View style={{alignItems : 'center'}}>
                     <RoundedButton

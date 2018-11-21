@@ -6,9 +6,9 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import PropTypes from 'prop-types';
-import RoundedButton from '../screens/components/buttons/RoundedButton';
+import RoundedButton from '../components/buttons/RoundedButton';
 const{height, width} = Dimensions.get('window');
 
 

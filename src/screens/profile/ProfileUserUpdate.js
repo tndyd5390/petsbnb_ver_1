@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import PropTypes from 'prop-types';
-import RoundedButton from './components/buttons/RoundedButton';
+import RoundedButton from '../components/buttons/RoundedButton';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Icon from 'react-native-vector-icons/FontAwesome';
