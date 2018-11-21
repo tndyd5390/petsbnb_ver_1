@@ -156,7 +156,7 @@ export default class PetRegView extends Component{
 
     _regPetProfile = async () => {
         const state = this.state;
-       /* if(state.userNo == '') alert('다시 시도해 주세요');
+       if(state.userNo == '') alert('다시 시도해 주세요');
         else if(state.imageDataArr.length == 0) alert('반려동물 사진을 등록해주세요');
         else if(state.petName == '') alert('반려동물의 이름을 입력해 주세요.');
         else if(state.petGender == '') alert('반려동물의 성별을 입력해주세요.');
@@ -170,9 +170,7 @@ export default class PetRegView extends Component{
         else if(this._checkVaccine()) alert('예방접종 여부를 선택해 주세요.');
         else if(state.petAccidentAgree == false) alert('사실과 다른 프로필 기재로 사고가 발생한 경우 책임은 견주 본인에게 있음에 동의해주세요.');
         else {
-            
-        }*/
-        let arr = [];
+            let arr = [];
 
             for(let i = 0; i< this.state.imageDataArr.length; i++){
                 const value = this.state.imageDataArr[i];
@@ -200,7 +198,12 @@ export default class PetRegView extends Component{
             arr.push({name : 'petCoronaEnteritis', data : state.petCoronaEnteritis ? '1' : '0'});
             arr.push({name : 'petKennelkov', data : state.petKennelkov ? '1' : '0'});
             arr.push({name : 'petNoneVaccine', data : state.petNoneVaccine ? '1' : '0'});
-            console.log(arr);
+            arr.push({name : 'petSpecialMatters', data : state.petSpecialMatters});
+            arr.push({name : 'petReference', data : state.petReference});
+            
+            this.setState({
+                activityIndicator : true
+            })
             await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petProfileRegProc.do', {
                 Authorization : "Bearer access-token",
                 'Content-Type' : 'multipart/form-data',
@@ -210,7 +213,7 @@ export default class PetRegView extends Component{
                 this.setState({
                     activityIndicator : false
                 })
-                if(res.uploadImageSuccess == true){
+                if(res.result == true){
                     alert("사진 업로드 성공");
                     this.props.navigation.navigate('ProfileMenu');
                 }else{
@@ -220,7 +223,10 @@ export default class PetRegView extends Component{
             .catch((err) => {
                 alert("서버 오작동");
             })
-        
+            this.setState({
+                activityIndicator : false
+            })
+        }
     }
 
     _checkVaccine = () => {

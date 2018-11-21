@@ -20,6 +20,41 @@ const {width, height} = Dimensions.get('window');
 
 export default class ProfileMenu extends Component {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            userImageURI : ''
+        }
+        this._getUserImage();
+    }
+
+    _getUserImage = async() => {
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo : userNo
+        }
+        await fetch('http://192.168.0.10:8080/user/getUserImage.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+            })
+            .then((response) => response.json())
+            .then((res => {
+                if(res.result === true){
+                    this.setState({
+                        userImageURI : {uri : 'http://192.168.0.10:8080/userImageFile/' + res.fileInfo.fileName}
+                    })
+                }else{
+                  
+                }
+            }))
+            .catch((err) => {
+                console.log("서버 에러" + err);
+            })
+    }
 
     _updateUserInfo = () => {
         this.props.navigation.navigate('CheckPassword', {nextView : 'ProfileUserUpdate'});
@@ -45,11 +80,24 @@ export default class ProfileMenu extends Component {
     }
 
     render() {
+        console.log(this.state.userImageURI);
         return (
             <View style={styles.container}>
-                <View style={{alignItems : 'center'}}>
-                    <Image source={require("../../../img/user.png")} style={{width : 100, height : 100, marginTop : 30}}/>
-                </View>
+                {
+                    this.state.userImageURI ? 
+                    (
+                        <View style={{alignItems : 'center'}}>
+                            <Image source={this.state.userImageURI} style={{width : 100, height : 100, marginTop : 30}}/>
+                        </View>
+                    ) 
+                    : 
+                    (
+                        <View style={{alignItems : 'center'}}>
+                            <Image source={require("../../../img/user.png")} style={{width : 100, height : 100, marginTop : 30}}/>
+                        </View>
+                    )
+                }
+                
                 <View style={{alignItems : 'center'}}>
                     <RoundedButton
                         title="프로필 확인 및 수정"
