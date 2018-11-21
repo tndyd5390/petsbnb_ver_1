@@ -23,11 +23,8 @@ export default class ChatRoom extends Component{
     };
     
     callBackMsg = (childMsg) => {
-      console.log('sdsadsa');
-      console.log(childMsg);
-      console.log(this.state);
-      console.log('sdsadsa');
       this.setState({
+        clientConnected : true,
         messages : childMsg
       });
     }
@@ -43,7 +40,7 @@ export default class ChatRoom extends Component{
         var messages = [];
         this.state.messages.forEach(function(msg) {
           messages.push(
-              <MessageBubble direction={'right'} text={msg.contents}/>
+              <MessageBubble key={msg.id} direction={'right'} text={msg.contents}/>
           );
         });
     
@@ -291,7 +288,6 @@ const styles = StyleSheet.create({
     },
 
     // BottomMenu
-
     
     bottomBar : {
       flexDirection: 'row',
@@ -299,9 +295,8 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       paddingVertical: 5,
       height : 110,
-      backgroundColor : Colors.white,
+      backgroundColor : Colors.lightGrey,
     },
-
   })
   
   

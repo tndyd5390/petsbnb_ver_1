@@ -39,7 +39,7 @@ class Explore extends Component {
                         scrollEventThrottle={16}
                     >
                     <TouchableOpacity
-                        onPress={this._checkData}
+                        onPress={() => this.props.navigation.navigate('BookingDetail')}
                     >
                         <View style={styles.exploreContainer}>
                             <View style={styles.exploreWrapper}>

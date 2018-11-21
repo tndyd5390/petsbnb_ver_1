@@ -11,6 +11,7 @@
     "react-devtools": "^3.4.2",
     "react-native": "0.57.4",
     "react-native-elements": "^0.19.1",
+    "react-native-image-slider": "^2.0.3",
     "react-native-navigation": "^1.1.492",
     "react-native-restart": "0.0.7",
     "react-native-restart-android": "0.0.7",

@@ -10,13 +10,13 @@ import ProfileMenu from './screens/ProfileMenu';
 import ProfileStackNavigator from './screens/ProfileStackNavigator';
 import Chat from './screens/Chat';
 import ChatRoom from './screens/ChatRoom';
-
+import BookingDetail from './screens/booking/BookingDetail';
 
 export default class TabNavigator extends Component {
   render(){
     const Tabs = createBottomTabNavigator({
       Explore : {
-        screen : Explore,
+        screen : BookingStacks,
         navigationOptions : {
           tabBarLabel : '검색하기',
           tabBarIcon : ({tintColor}) => (
@@ -76,6 +76,37 @@ export default class TabNavigator extends Component {
 
   }
 } 
+
+const BookingStacks = createStackNavigator({
+  Explore : {
+    screen : Explore,
+    navigationOptions : {
+    }
+  },
+  BookingDetail :{
+      screen : BookingDetail,
+      navigationOptions : {
+          headerTitleStyle: {
+            width: '75%',
+            textAlign: 'center',
+        },
+      }
+  },
+},
+{
+  initialRouteName: 'Explore'
+});
+
+BookingStacks.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible,
+  };
+};
+
 
 const ChatStacks = createStackNavigator({ 
   Chat : {
