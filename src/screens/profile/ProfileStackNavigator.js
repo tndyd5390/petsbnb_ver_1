@@ -8,6 +8,7 @@ import CheckPassword from './CheckPassword';
 import ProfileUserUpdate from './ProfileUserUpdate';
 import PetList from './PetList';
 import PetRegView from './PetRegView';
+import PetUpdateView from './PetUpdateView';
 import {
     View,
     Text,
@@ -64,6 +65,16 @@ export default class ProfileStackNavigator extends Component{
                 screen : PetList,
                 navigationOptions : {
                     title: '반려동물 관리',
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    }
+                }
+            },
+            PetUpdateView : {
+                screen : props => <PetUpdateView {...props} rootStack={this.props.rootStack}/>,
+                navigationOptions : {
+                    title: '반려동물 상세',
                     headerTitleStyle: {
                         width: '75%',
                         textAlign: 'center',
