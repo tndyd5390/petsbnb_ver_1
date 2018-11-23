@@ -130,7 +130,6 @@ export default class PetRegView extends Component{
             </View>
         )
         return imageView;
-        
     }
 
     _deleteImage = (index) => {

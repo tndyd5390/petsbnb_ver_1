@@ -20,6 +20,7 @@ export default class PetList extends Component{
 
     static navigationOptions = ({ navigation }) => {
         const { params = {} } = navigation.state;
+        const title = params.test || 'bbb';
         return {
             headerRight: <Icon name='plus' size={25} onPress={() => params.petRegView()} style={{marginRight : 20}}/>
         };
@@ -72,7 +73,7 @@ export default class PetList extends Component{
           
     }
 
-
+    
 
     componentDidMount() {
         this.props.navigation.setParams({petRegView : this._saveDetails});
@@ -102,6 +103,11 @@ export default class PetList extends Component{
                         renderItem={({item}) => <PetFlatList item={item} onPressPetFlatList={this._onPressPetFlatList}/>}
                         keyExtractor={(item, index) => index.toString()}
                     />
+                    <TouchableOpacity
+                        onPress={this._test}
+                    >
+                        <Text>바꾸기</Text>
+                    </TouchableOpacity>
                 </ScrollView>    
             </View>
         );

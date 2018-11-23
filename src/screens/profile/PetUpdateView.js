@@ -22,28 +22,111 @@ import {
     ScrollView,
     StyleSheet,
     Platform,
-    Image
+    Image,
+    Alert
 } from 'react-native'
 const{width, height} =Dimensions.get('window');
-
+const options={
+    title : '사진',
+    takePhotoButtonTitle : '사진 촬영',
+    chooseFromLibraryButtonTitle : '갤러리에서 고르기'
+}
 export default class PetUpdateView extends Component{
+
+    static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
+        const petNo = params.petNo;
+        return {
+            headerRight: <Icon name='ellipsis-v' size={25} onPress={() => params.deletePet(petNo)} style={{marginRight : 20}}/>
+        };
+    };
+
+    componentDidMount() {
+        this.props.navigation.setParams({deletePet : this._deletePetConfirm});
+    }
+
+    _deletePetConfirm = (petNo) => {
+        Alert.alert(
+            '알림',
+            '프로필을 삭제 하시겠습니까?',
+            [
+              {text: 'Cancel', onPress: () => console.log('cancle pressed'), style: 'cancel'},
+              {text: 'OK', onPress: () => this._deletePet(petNo)},
+            ],
+            { cancelable: false }
+          )
+    }
+
+    _deletePet = async(petNo) => {
+        const params = {
+            petNo : petNo,
+            userNo : this.state.userNo
+        }
+
+        await fetch('http://192.168.0.10:8080/pet/deletePetProfile.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((resp) => resp.json())
+        .then((res => {
+            this.setState({
+                activityIndicator : false
+            })
+            if(res.result){
+                alert('프로필이 삭제 되었습니다.');
+            }else{
+                alert('프로필 삭제에 실패했습니다. 잠시후 다시 시도해 주세요.');
+            }
+            this._gotoMenu();
+        }))
+        .catch((err) => {
+            alert('서버에러입니다. 잠시후 다시 시도해주세요.');
+            this._gotoMenu();
+        })
+    }
+
 
     constructor(props){
         super(props);
         const petNo = this.props.navigation.getParam('petNo');
         this.state = {
             petNo : petNo,
-            activityIndicator : false,
+            userNo : '',
+            activityIndicator : true,
+            petBirthday: '',
+            petName : '',
+            petGender : '',
+            petKind : '',
+            petWeight : '',
+            petNeutralization : null,
+            petUnfamiliar : '',
+            petMeetAnotherPet : '',
+            petBarks : '',
+            petBowelTraining : '',
+            petComprehensiveVaccine : false,
+            petRabiesVaccination : false,
+            petHeartWorm : false,
+            petCoronaEnteritis : false,
+            petKennelkov : false,
+            petNoneVaccine : false,
+            petSpecialMatters : '',
+            petReference : '',
+            petAccidentAgree : false,
+            imageDataArr : []
         }
         this._getPetInfo();
     }
 
-    _gotoInit = () => {
+    _gotoMenu = () => {
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Tabs' })],
+            actions: [NavigationActions.navigate({ routeName: 'ProfileMenu' })],
           });
-        this.props.rootStack.dispatch(resetAction);
+        this.props.navigation.dispatch(resetAction);
     }
 
     _getPetInfo = async() => {
@@ -62,7 +145,6 @@ export default class PetUpdateView extends Component{
           })
         .then((response) => response.json())
         .then((res => {
-            console.log(res);
                 if(res.petDTO != null){
                     const pDTO = res.petDTO;
                     this.setState({
@@ -85,8 +167,8 @@ export default class PetUpdateView extends Component{
                         petNoneVaccine : pDTO.petNonevaccine == '1' ? true : false,
                         petSpecialMatters : pDTO.petSpecialMatters,
                         petReference : pDTO.petReference,
-                        
-                        imageDataArr : []
+                        activityIndicator : false,
+                        imageDataArr : res.petFileList
                     })
                 }else{
                     alert("잠시후 다시 시도해 주세요.");
@@ -99,8 +181,210 @@ export default class PetUpdateView extends Component{
         })
     }
 
+    _noneVaccine = () => {
+        const noneVaccine = !this.state.petNoneVaccine;
+        if(noneVaccine){
+            this.setState({
+                petComprehensiveVaccine : false,
+                petRabiesVaccination : false,
+                petHeartWorm : false,
+                petCoronaEnteritis : false,
+                petKennelkov : false,
+                petNoneVaccine : noneVaccine
+            })
+        }else{
+            this.setState({
+                petNoneVaccine : noneVaccine
+            })
+        }
+    }
+
+    _imageDisplay = () => {
+        let imageView = [];
+        const imageDataArr = this.state.imageDataArr;
+        imageDataArr.forEach((value, index) => {
+            const uri = {uri : 'http://192.168.0.10:8080/petImageFile/' + value.petFileName}
+            imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
+                                <Image source={uri} style={{width : '100%', height : '100%'}}/>
+                                <View style={{position : 'absolute', bottom : 10, right : 15}}>
+                                    <TouchableOpacity
+                                        onPress={() => {this._deleteImage(value.petFileNo)}}
+                                    >
+                                        <FontAwesome5 name='trash-alt' size={30} color={Colors.lightGrey}/>
+                                    </TouchableOpacity>
+                                </View>
+                           </View>)
+        })
+        imageView.push(
+            <View key={imageDataArr.length} style={{ alignItems : 'center', justifyContent : 'center'}}>
+                <RoundedButton
+                    title='사진 등록'
+                    buttonHandleFunc={this._butttonHandleFunc}
+                    buttonColor={{backgroundColor : Colors.white}}
+                    textColor={{color : Colors.buttonBorderGrey}}
+                    textSize={{fontSize:15, fontWeight : '200'}}
+                    customButtonStyle={{width : 90, height : 35, borderWidth : 1, borderColor : Colors.buttonBorderGrey, marginTop : 100}}
+                />
+            </View>
+        )
+        return imageView;
+    }
+
+    _butttonHandleFunc = async () => {
+        ImagePicker.showImagePicker(options, (response) => {
+            
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            } else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+              alert('사진을 다시 선택해주세요.');
+            } else {
+
+                const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
+
+                RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petImageUploadSep.do', {
+                    Authorization : "Bearer access-token",
+                    'Content-Type' : 'multipart/form-data',
+                },[
+                    {name : 'petImage', filename : 'image' + this.state.userNo, type : 'image/' + extension, data : response.data},
+                    {name : 'userNo', data : this.state.userNo},
+                    {name : 'petNo', data : this.state.petNo}
+                  ])
+                .then((resp) => resp.json())
+                .then((res => {
+                    if(res){
+                        this.setState({
+                            imageDataArr : res
+                        })
+                    }else{
+                        alert("사진 업로드 실패");
+                    }
+                    this.setState({
+                        activityIndicator : false
+                    })
+                }))
+                .catch((err) => {
+                    alert("서버 오작동");
+                })
+            }
+        });
+    }
+
+    _deleteImage = async(petFileNo) => {
+        if(this.state.imageDataArr.length==1){
+            alert('반려동물 프로필 사진은 하나 이상 등록되어야 합니다.');
+            return;
+        }
+        this.setState({
+            activityIndicator : true
+        })
+
+        const params = {
+            petFileNo : petFileNo,
+            userNo : this.state.userNo,
+            petNo : this.state.petNo
+        }
+
+        await fetch('http://192.168.0.10:8080/pet/deletePetImage.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((resp) => resp.json())
+        .then((res => {
+            this.setState({
+                activityIndicator : false
+            })
+            if(res){
+                alert('사진이 삭제 되었습니다.');
+                this.setState({
+                    imageDataArr : res
+                })
+            }
+        }))
+        .catch((err) => {
+            alert('서버에러입니다. 잠시후 다시 시도해주세요.');
+        })
+    }
+
+    _checkVaccine = () => {
+        const state = this.state;
+        if(state.petComprehensiveVaccine == false && state.petRabiesVaccination == false && state.petHeartWorm == false && state.petCoronaEnteritis == false && state.petKennelkov == false && state.petNoneVaccine == false){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    _updatePetProfile = async() => {
+        const data = this.state;
+        if(data.userNo == '') alert('다시 시도해 주세요');
+        else if(data.petName == '') alert('반려동물의 이름을 입력해 주세요.');
+        else if(data.petGender == '') alert('반려동물의 성별을 입력해주세요.');
+        else if(data.petKind == '') alert('반려동물의 품종을 입력해주세요.');
+        else if(data.petWeight == '') alert('반려동물의 몸무게를 입력해주세요.');
+        else if(data.petNeutralization == null) alert('반려동물의 중성화 여부를 선택해주세요.');
+        else if(data.petUnfamiliar == '') alert('"낯선 사람을 만나면 어떤가요?" 질문에 대답해주세요');
+        else if(data.petMeetAnotherPet == '') alert('"다른 강아지를 만나면 어떤가요" 질문에 대답해주세요.');
+        else if(data.petBarks == '') alert('"짖음은 어느정도인가요?" 질문에 대답해주세요.');
+        else if(data.petBowelTraining == '') alert('"배변 훈련은 어떤 편인가요?" 질문에 대답해 주세요.');
+        else if(this._checkVaccine()) alert('예방접종 여부를 선택해 주세요.');
+        else if(data.petAccidentAgree == false) alert('사실과 다른 프로필 기재로 사고가 발생한 경우 책임은 견주 본인에게 있음에 동의해주세요.');
+        else{
+            const params = {
+                petNo : data.petNo,
+                userNo : data.userNo,
+                petBirthday: data.petBirthday,
+                petName : data.petName,
+                petGender : data.petGender,
+                petKind : data.petKind,
+                petWeight : data.petWeight,
+                petNeutralization : data.petNeutralization ? '1' : '0',
+                petUnfamiliar : data.petUnfamiliar,
+                petMeetAnotherPet : data.petMeetAnotherPet,
+                petBarks : data.petBarks,
+                petBowelTraining : data.petBowelTraining,
+                petComprehensiveVaccine : data.petComprehensiveVaccine ? '1' : '0',
+                petRabiesVaccination : data.petRabiesVaccination ? '1' : '0',
+                petHeartWorm : data.petHeartWorm ? '1' : '0',
+                petCoronaEnteritis : data.petCoronaEnteritis ? '1' : '0',
+                petKennelkov : data.petKennelkov ? '1' : '0',
+                petNoneVaccine : data.petNonevaccine ? '1' : '0',
+                petSpecialMatters : data.petSpecialMatters,
+                petReference : data.petReference 
+            }
+
+            await fetch('http://192.168.0.10:8080/pet/updatePetProfile.do', {
+                method: 'POST',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+            })
+            .then((resp) => resp.json())
+            .then((res => {
+                this.setState({
+                    activityIndicator : false
+                })
+                if(res.result == true){
+                    alert('성공적으로 반려동물 정보를 수정했습니다.')
+                }else{
+                    alert('반려동물 정보 수정에 실패했습니다.')
+                }
+                this._gotoMenu();
+            }))
+            .catch((err) => {
+                alert('서버에러입니다. 잠시후 다시 시도해주세요.');
+                this._gotoMenu();
+            })
+        }
+    }
+
     render(){
-        console.log(this.state);
         return(
             <View style={{backgroundColor : Colors.white}}>
                 {this.state.activityIndicator ? (
@@ -112,17 +396,9 @@ export default class PetUpdateView extends Component{
                     <View style={{width : width, height : 250, backgroundColor : Colors.white, borderBottomWidth : 1, borderBottomColor : Colors.buttonBorderGrey}}>
                         <Swiper 
                             loop={false}
+                            key={this.state.imageDataArr.length}
                         >
-                        <View style={{ alignItems : 'center', justifyContent : 'center'}}>
-                                <Image source={require('../../../img/user.png')} style={{width : '100%', height : '100%'}}/>
-                                <View style={{position : 'absolute', bottom : 10, right : 15}}>
-                                    <TouchableOpacity
-                                        onPress={() => this._deleteImage(index)}
-                                    >
-                                        <FontAwesome5 name='trash-alt' size={30} color={Colors.white}/>
-                                    </TouchableOpacity>
-                                </View>
-                           </View>
+                        {this._imageDisplay()}
                         </Swiper>
                     </View>
                     
@@ -145,6 +421,7 @@ export default class PetUpdateView extends Component{
                                     }}
                                     placeholder='예) 삐삐'
                                     onChangeText={(petName) => this.setState({petName : petName})}
+                                    value={this.state.petName}
                                 />
                             </View>
                         </View>
@@ -200,8 +477,8 @@ export default class PetUpdateView extends Component{
                                         paddingRight : 0, 
                                         fontSize : 15
                                     }}
-                                    placeholder='예) 말티즈'
                                     onChangeText={(petKind) => this.setState({petKind : petKind})}
+                                    value={this.state.petKind}
                                 />
                             </View>
                         </View>
@@ -250,6 +527,7 @@ export default class PetUpdateView extends Component{
                                     keyboardType='numeric'
                                     placeholder='kg단위로 입력'
                                     onChangeText={(petWeight) => this.setState({petWeight : petWeight})}
+                                    value={this.state.petWeight}
                                 />
                             </View>
                         </View>
@@ -435,12 +713,12 @@ export default class PetUpdateView extends Component{
                             </Text>
                         </View>
                     </View>
-                    <PetProfileRegCheckbox checkFunc={() => {}} text='종합백신 7종' isChecked={this.state.petComprehensiveVaccine} disabled={this.state.petNoneVaccine}/>
-                    <PetProfileRegCheckbox checkFunc={() => {}} text='광견병 예방접종' isChecked={this.state.petRabiesVaccination} disabled={this.state.petNoneVaccine}/>
-                    <PetProfileRegCheckbox checkFunc={() => {}} text='심장사사충 (매월 1회)' isChecked={this.state.petHeartWorm} disabled={this.state.petNoneVaccine}/>
-                    <PetProfileRegCheckbox checkFunc={() => {}} text='코로나 장염 (매년 1회)' isChecked={this.state.petCoronaEnteritis} disabled={this.state.petNoneVaccine}/>
-                    <PetProfileRegCheckbox checkFunc={() => {}} text='켄넬 코프 (매년 1회)' isChecked={this.state.petKennelkov} disabled={this.state.petNoneVaccine}/>
-                    <PetProfileRegCheckbox checkFunc={() => {}} text='접종을 아예 하지 않았습니다.' isChecked={this.state.petNoneVaccine}/>
+                    <PetProfileRegCheckbox checkFunc={() => {this.setState({petComprehensiveVaccine : !this.state.petComprehensiveVaccine})}} text='종합백신 7종' isChecked={this.state.petComprehensiveVaccine} disabled={this.state.petNoneVaccine}/>
+                    <PetProfileRegCheckbox checkFunc={() => this.setState({petRabiesVaccination : !this.state.petRabiesVaccination})} text='광견병 예방접종' isChecked={this.state.petRabiesVaccination} disabled={this.state.petNoneVaccine}/>
+                    <PetProfileRegCheckbox checkFunc={() => this.setState({petHeartWorm : !this.state.petHeartWorm})} text='심장사사충 (매월 1회)' isChecked={this.state.petHeartWorm} disabled={this.state.petNoneVaccine}/>
+                    <PetProfileRegCheckbox checkFunc={() => this.setState({petCoronaEnteritis : !this.state.petCoronaEnteritis})} text='코로나 장염 (매년 1회)' isChecked={this.state.petCoronaEnteritis} disabled={this.state.petNoneVaccine}/>
+                    <PetProfileRegCheckbox checkFunc={() => this.setState({petKennelkov : !this.state.petKennelkov})} text='켄넬 코프 (매년 1회)' isChecked={this.state.petKennelkov} disabled={this.state.petNoneVaccine}/>
+                    <PetProfileRegCheckbox checkFunc={this._noneVaccine} text='접종을 아예 하지 않았습니다.' isChecked={this.state.petNoneVaccine}/>
 
                     <View style={{borderBottomWidth : 1, borderBottomColor : Colors.lightGrey, height : 10, marginTop : 10}}></View>
 
@@ -465,8 +743,28 @@ export default class PetUpdateView extends Component{
                                 placeholder='예) 알러지 음식, 슬개골 탈구, 피부병 등'
                                 numberOfLines={2}
                                 onChangeText={(petSpecialMatters) => this.setState({petSpecialMatters : petSpecialMatters})}
+                                value={this.state.petSpecialMatters}
                             />
                                 
+                        </View>
+                    </View>
+
+                    <View style={{borderBottomWidth : 1, borderBottomColor : Colors.lightGrey, height : 10, marginTop : 10}}></View>
+
+                    <View style={{alignItems : 'center', marginTop : 20}}>
+                        <View style={{width : width - 40, height : 50, flexDirection : 'row'}}>
+                            <View style={{alignItems : 'center', justifyContent : 'center', width : '90%', height : '100%'}}>
+                                <Text style={{fontSize : 15, fontWeight : '500', color : Colors.red}}>
+                                    {`사실과 다른 프로필 기재로 사고가 발생한 경우, \n책임은 견주 본인에게 있음에 동의합니다.`}
+                                </Text>
+                            </View>
+                            <View style={{alignItems : 'center', justifyContent : 'center', width : '10%', height : '100%'}}>
+                                <TouchableOpacity
+                                    onPress={() => this.setState({petAccidentAgree : !this.state.petAccidentAgree})}
+                                >
+                                    <FontAwesome5 name='dot-circle' size={30} style={this.state.petAccidentAgree ? {color : Colors.buttonSky} : null}/>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
 
@@ -495,8 +793,8 @@ export default class PetUpdateView extends Component{
                                 numberOfLines={10}
                                 underlineColorAndroid="transparent"
                                 onChangeText={(petReference)=> this.setState({petReference : petReference})}
+                                value={this.state.petReference}
                             />
-                                
                         </View>
                     </View>
                     
@@ -508,9 +806,9 @@ export default class PetUpdateView extends Component{
                         alignItems: 'center'
                         }, 
                         Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
-                        onPress={this._regPetProfile}
+                        onPress={this._updatePetProfile}
                     >
-                        <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>
+                        <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>수정</Text>
                     </TouchableOpacity>
 
                 </ScrollView>
@@ -518,3 +816,5 @@ export default class PetUpdateView extends Component{
         );
     }
 }
+
+

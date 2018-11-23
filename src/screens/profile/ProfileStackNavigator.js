@@ -72,7 +72,7 @@ export default class ProfileStackNavigator extends Component{
                 }
             },
             PetUpdateView : {
-                screen : props => <PetUpdateView {...props} rootStack={this.props.rootStack}/>,
+                screen : PetUpdateView,
                 navigationOptions : {
                     title: '반려동물 상세',
                     headerTitleStyle: {
