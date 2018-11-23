@@ -9,5 +9,6 @@ export default {
     termsBackground : '#E6E6E6',
     lightGrey : '#E6E6E6',
     orange : '#FFBF00',
-    chatGreen : '#7acc00'
+    chatGreen : '#7acc00',
+    red : '#FF0000'
 }

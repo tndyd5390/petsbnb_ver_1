@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image,TouchableHighlight, Button} from 'react-native';
 import {createBottomTabNavigator, BottomTabBar,withNavigation,createStackNavigator} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -81,15 +81,13 @@ const BookingStacks = createStackNavigator({
   Explore : {
     screen : Explore,
     navigationOptions : {
+
     }
   },
   BookingDetail :{
       screen : BookingDetail,
       navigationOptions : {
-          headerTitleStyle: {
-            width: '75%',
-            textAlign: 'center',
-        },
+
       }
   },
 },
@@ -147,5 +145,3 @@ ChatStacks.navigationOptions = ({ navigation }) => {
     tabBarVisible,
   };
 };
-
-
