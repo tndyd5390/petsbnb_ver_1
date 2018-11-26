@@ -21,8 +21,17 @@ const {width, height} = Dimensions.get('window');
 
 export default class ProfileMenu extends Component {
 
+    static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
+        
+        return {
+            headerRight: <Icon name='plus' size={25} onPress={() => params.petRegView()} style={{marginRight : 20}}/>
+        };
+    };
+
     constructor(props){
         super(props);
+
         this.state = {
             userImageURI : '',
             activityIndicator : false
@@ -117,17 +126,8 @@ export default class ProfileMenu extends Component {
         })
     }
 
-
-    _gotoPetSitterMode = () => {
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'PetSitterMode' })],
-          });
-        this.props.navigation.dispatch(resetAction);
-    }
-
     render() {
-        console.log(this.state.userImageURI);
+        console.log(this.props.navigation);
         return (
             <View style={styles.container}>
                 {this.state.activityIndicator ? (
