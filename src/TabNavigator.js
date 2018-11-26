@@ -8,8 +8,8 @@ import Reservation from './screens/Reservation';
 import Colors from './utils/Colors';
 import ProfileMenu from './screens/ProfileMenu';
 import ProfileStackNavigator from './screens/ProfileStackNavigator';
-import Chat from './screens/Chat';
-import ChatRoom from './screens/ChatRoom';
+import Chat from './screens/chat/Chat';
+import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
 
 export default class TabNavigator extends Component {

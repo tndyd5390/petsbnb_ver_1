@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Alert,Platform, StyleSheet, Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import SockJsClient from 'react-stomp';
