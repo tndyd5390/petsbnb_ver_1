@@ -10,7 +10,7 @@ import {
   AsyncStorage,
   Platform
 } from 'react-native';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const{height, width} = Dimensions.get('window');
@@ -65,10 +65,12 @@ class LoginForm extends Component {
                alert('다시 시도해주세요.')
            }
          }else{
-             //가입 실패
-             alert('서버에 문제가 있습니다. 잠시후 다시 시도해주세요.');
+             alert('아이디와 비밀번호를 다시 확인해 주세요.');
          }
     }))
+    .catch((err) => {
+      console.log(err);
+    })
   }
 
   _storeData = async (data) => {

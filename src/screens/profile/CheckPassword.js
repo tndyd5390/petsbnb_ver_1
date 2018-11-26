@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Colors from '../utils/Colors';
-import RoundedButton from './components/buttons/RoundedButton';
+import Colors from '../../utils/Colors';
+import RoundedButton from '../components/buttons/RoundedButton';
 import {
     View,
     Text,
@@ -43,7 +43,6 @@ export default class CheckPassword extends Component{
             })
             .then((response) => response.json())
             .then((res => {
-                console.log(res);
                 if(res.passwordCheck == true){
                     this.props.navigation.navigate(nextView);
                 }else{

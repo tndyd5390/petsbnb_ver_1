@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 
 export default class Chat extends Component {
   render() {

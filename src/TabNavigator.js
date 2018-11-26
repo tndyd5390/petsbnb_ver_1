@@ -6,11 +6,12 @@ import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Reservation from './screens/Reservation';
 import Colors from './utils/Colors';
-import ProfileMenu from './screens/ProfileMenu';
-import ProfileStackNavigator from './screens/ProfileStackNavigator';
 import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
+import ProfileMenu from './screens/profile/ProfileMenu';
+import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
+
 
 export default class TabNavigator extends Component {
   render(){

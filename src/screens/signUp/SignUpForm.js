@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Colors from '../utils/Colors';
+import Colors from '../../utils/Colors';
 import PropTypes from 'prop-types';
 import RoundedButton from './components/buttons/RoundedButton';
 import {
@@ -67,7 +67,7 @@ export default class SignUpForm extends Component{
             return(
                 <ScrollView style={{backgroundColor : Colors.white}}>
                 <View style={{alignItems : 'center'}}>
-                    <Image source={require('../../img/user.png')} style={{width : 150, height : 150, marginTop : 30}}/>
+                    <Image source={require('../../../img/user.png')} style={{width : 150, height : 150, marginTop : 30}}/>
                 </View>
                 <View style={{alignItems : 'center'}}>
                     <View style={{display : 'flex', width : width -40}}>
