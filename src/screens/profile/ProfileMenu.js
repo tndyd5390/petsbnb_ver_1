@@ -11,7 +11,8 @@ import {
     Platform,
     Image,
     TouchableOpacity,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
@@ -23,7 +24,8 @@ export default class ProfileMenu extends Component {
     constructor(props){
         super(props);
         this.state = {
-            userImageURI : ''
+            userImageURI : '',
+            activityIndicator : false
         }
         this._getUserImage();
     }
@@ -79,10 +81,60 @@ export default class ProfileMenu extends Component {
         this.props.navigation.navigate('PetList');
     }
 
+    _petSitterMode = async() => {
+        this.setState({
+            activityIndicator : true
+        })
+
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo : userNo
+        }
+
+        await fetch('http://192.168.0.10:8080/user/checkPetSitter.do', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((resp) => resp.json())
+        .then((res => {
+            console.log(res);
+            if(res.isPetSitter == '1'){
+                //펫시터 모드 활성화
+            }else{
+                alert('회원님은 펫시터가 아닙니다. 펫시터 신청을 먼저 해주세요.');
+            }
+        }))
+        .catch((err) => {
+            alert('서버에러입니다. 잠시후 다시 시도해주세요.');
+        })
+
+        this.setState({
+            activityIndicator : false
+        })
+    }
+
+
+    _gotoPetSitterMode = () => {
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'PetSitterMode' })],
+          });
+        this.props.navigation.dispatch(resetAction);
+    }
+
     render() {
         console.log(this.state.userImageURI);
         return (
             <View style={styles.container}>
+                {this.state.activityIndicator ? (
+                    <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+                ) : (null)}
                 {
                     this.state.userImageURI ? 
                     (
@@ -123,7 +175,10 @@ export default class ProfileMenu extends Component {
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 신청</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        onPress={this._petSitterMode}
+                    >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 모드 변환</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderBottomWidth : 1, borderTopColor: Colors.black, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}} onPress={this._logOut}>

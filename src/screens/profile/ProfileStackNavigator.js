@@ -9,6 +9,7 @@ import ProfileUserUpdate from './ProfileUserUpdate';
 import PetList from './PetList';
 import PetRegView from './PetRegView';
 import PetUpdateView from './PetUpdateView';
+import PetSitterApplyForm from '../petSitter/PetSitterApplyForm';
 import {
     View,
     Text,
@@ -81,6 +82,16 @@ export default class ProfileStackNavigator extends Component{
                     }
                 }
             },
+            PetSitterApplyForm : {
+                screen : PetSitterApplyForm,
+                navigationOptions : {
+                    title: '펫시터 지원',
+                    headerTitleStyle: {
+                        width: '75%',
+                        textAlign: 'center',
+                    }
+                }
+            }
         })
 
         return(
