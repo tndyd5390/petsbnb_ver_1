@@ -10,5 +10,6 @@ export default {
     lightGrey : '#E6E6E6',
     orange : '#FFBF00',
     chatGreen : '#7acc00',
-    red : '#FF0000'
+    red : '#FF0000',
+    grey : '#808080'
 }
