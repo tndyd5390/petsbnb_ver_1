@@ -11,7 +11,9 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Dimensions,
-    TextInput
+    TextInput,
+    SafeAreaView,
+    Platform
 } from 'react-native';
 
 const{width, height} = Dimensions.get('window');
@@ -25,7 +27,7 @@ export default class SignUpEmail extends Component {
         }
     }
 
-    _nextStep = () => {
+    _nextStep = async () => {
         const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         
         if(this.state.email === ''){
@@ -33,14 +35,38 @@ export default class SignUpEmail extends Component {
         }else if(!emailCheckRegex.test(this.state.email)){
             alert('이메일 양식을 확인해 주세요.');
         }else{
-            this.props.navigation.navigate('TmpSignUpNameAndPhone', {email : this.state.email});
+            const params = {
+                email : this.state.email
+            }
+            await fetch('http://192.168.0.10:8080/user/emailCheck.do', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+              })
+              .then((response) => response.json())
+              .then((res => {
+                  console.log(res);
+                  if(res.emailValid === true){
+                    //가입 성공
+                    this.props.navigation.navigate('TmpSignUpNameAndPhone', {email : this.state.email});
+                  }else{
+                      //가입 실패
+                      alert('이미 사용중인 이메일입니다.');
+                      return;
+                  }
+              }))
+            
         }
     }
 
     render(){
         return(
+            
             <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
-                <View style={{display : 'flex'}}>
+                <View style={[{display : 'flex'}, Platform.OS ==='ios' ? {marginTop : 10} : null]}>
                     <TouchableOpacity
                         style={{marginTop : 20, marginLeft : 20, marginBottom : 20}}
                         onPress={()=>this.props.navigation.goBack()}
@@ -63,18 +89,19 @@ export default class SignUpEmail extends Component {
 
                 
                 <TouchableOpacity 
-                    style={{width: width, 
+                    style={[{width: width, 
                     height: 50, 
                     backgroundColor: Colors.buttonSky, 
                     justifyContent: 'center', 
                     alignItems: 'center',
-                    position: 'absolute',
-                    bottom: 0}}
+                    position: 'absolute'}, 
+                    Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
                     onPress={this._nextStep}
                 >
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
+            
         );
     }
 }

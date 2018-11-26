@@ -10,10 +10,63 @@ import FindEmail from './screens/FindEmail';
 import FindPassword from './screens/FindPassword';
 import SignUpNameAndPhone from './screens/SignUpNameAndPhone';
 import TmpSignUpNameAndPhone from './screens/TmpSignUpNameAndPhone';
+import Tabs from './TabNavigator';
+import App from '../App';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {
+  AsyncStorage
+} from 'react-native';
 
-export default createStackNavigator({
+export default class StackNavigator extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      initialScreen : ''
+    }
+    
+  }
+
+  componentWillMount(){
+    this._loginCheck();
+  }
+
+  _loginCheck = async() => {
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    if(userInfo != null){
+      this.setState({
+        initialScreen : 'Tabs'
+      })
+    }else{
+      this.setState({
+        initialScreen : 'Init'
+      })
+    }
+  }
+
+  render(){
+    const Stacks = createStackNavigator({
       Init : {
         screen : Init,
+        navigationOptions : {
+          header : null
+        }
+      },
+      Tabs : {
+        screen : Tabs,
+        navigationOptions : {
+          header : null
+        }
+      },
+      App : {
+        screen : App,
+        navigation : {
+          header : null
+        }
+      },
+      SignUpAddress : {
+        screen : SignUpAddress,
         navigationOptions : {
           header : null
         }
@@ -21,7 +74,7 @@ export default createStackNavigator({
       Reservation : {
         screen : Reservation,
         navigationOptions : {
-          
+
         }
       },
       LoginForm : {
@@ -42,16 +95,7 @@ export default createStackNavigator({
           header : null
         }
       },
-      SignUpNameAndPhone : {
-        screen : SignUpNameAndPhone,
-        navigationOptions: {
-          title: '본인 인증',
-          headerTitleStyle: {
-              width: '75%',
-              textAlign: 'center',
-          },
-        }
-      },
+      
       Terms : {
         screen : Terms,
         navigationOptions: {
@@ -68,12 +112,7 @@ export default createStackNavigator({
           header : null
         }
       },
-      SignUpAddress : {
-        screen : SignUpAddress,
-        navigationOptions : {
-          header : null
-        }
-      },
+      
       FindEmail : {
         screen : FindEmail,
         navigationOptions : {
@@ -86,4 +125,18 @@ export default createStackNavigator({
           header : null
         }
       }
-})
+    },{
+      initialRouteName : this.state.initialScreen
+    }
+  );
+    return(
+      <Stacks/>
+    );
+  }
+}
+
+
+
+
+
+

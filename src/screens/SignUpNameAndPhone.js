@@ -298,12 +298,12 @@ export default class SignUpNameAndPhone extends Component{
                 <TouchableOpacity 
                     style={[{width: width, 
                     height: 50, 
+                    backgroundColor: Colors.buttonSky, 
                     justifyContent: 'center', 
                     alignItems: 'center',
-                    position: 'absolute',
-                    bottom: 0}, this.state.agreeAll ? {backgroundColor : Colors.buttonSky} : {backgroundColor : Colors.buttonBorderGrey}]}
+                    position: 'absolute'}, 
+                    Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
                     onPress={this._nextStep}
-                    disabled={!this.state.agreeAll}
                 >
                     <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>다음</Text>
                 </TouchableOpacity>

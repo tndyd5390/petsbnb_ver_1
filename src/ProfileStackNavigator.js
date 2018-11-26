@@ -1,11 +1,11 @@
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
-import LoginView from './screens/LoginView';
+import LoginForm from './screens/LoginForm';
 import ProfileMenu from './screens/ProfileMenu';
 import SignUpForm from './screens/SignUpForm';
 import Terms from './screens/Terms';
 export default createStackNavigator({
-    LoginView : {
-        screen : LoginView,
+    LoginForm : {
+        screen : LoginForm,
         navigationOptions : {
             header : null
         }

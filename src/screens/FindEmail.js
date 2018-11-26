@@ -10,7 +10,8 @@ import {
     KeyboardAvoidingView,
     ScrollView,
     Image,
-    TextInput
+    TextInput,
+    Platform
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
@@ -18,7 +19,7 @@ export default class FindEmail extends Component{
     render(){
         return(
             <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
-        <View style={{display : 'flex'}}>
+        <View style={[{display : 'flex'}, Platform.OS ==='ios' ? {marginTop : 10} : null]}>
           <TouchableOpacity
             style={{marginTop : 20, marginLeft : 20, marginBottom : 20}}
             onPress={()=>this.props.navigation.goBack()}
@@ -44,13 +45,16 @@ export default class FindEmail extends Component{
           </View>
         </View>
         
-        <TouchableOpacity style={{width: width, 
-                                  height: 50, 
-                                  backgroundColor: Colors.buttonSky, 
-                                  justifyContent: 'center', 
-                                  alignItems: 'center',
-                                  position: 'absolute',
-                                  bottom: 0}}>
+        <TouchableOpacity 
+                    style={[{width: width, 
+                    height: 50, 
+                    backgroundColor: Colors.buttonSky, 
+                    justifyContent: 'center', 
+                    alignItems: 'center',
+                    position: 'absolute'}, 
+                    Platform.OS === 'ios' ? {bottom : 20} : {bottom  : 0}]}
+                    onPress={this._nextStep}
+        >
           <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>이메일 찾기</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
