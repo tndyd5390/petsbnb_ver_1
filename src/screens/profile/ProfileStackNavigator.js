@@ -20,7 +20,87 @@ import {
     TextInput,
 } from 'react-native';
 
-export default class ProfileStackNavigator extends Component{
+export default ProfileStackNavigator = createStackNavigator({
+    ProfileMenu : {
+        screen : ProfileMenu,//props => <ProfileMenu {...props} rootStack={this.props.rootStack}/>,
+        navigationOptions : {
+            header : null
+        }
+    },
+    CheckPassword : {
+        screen : CheckPassword,
+        navigationOptions : {
+            title: '비밀번호 확인',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            },
+        }
+    },
+    ProfileUserUpdate : {
+        screen : ProfileUserUpdate,
+        navigationOptions : {
+            title: '회원정보',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            },
+        }
+    },
+    PetRegView : {
+        screen : PetRegView,
+        navigationOptions : {
+            title: '반려동물 등록',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            },
+        }
+    },
+    PetList : {
+        screen : PetList,
+        navigationOptions : {
+            title: '반려동물 관리',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            }
+        }
+    },
+    PetUpdateView : {
+        screen : PetUpdateView,
+        navigationOptions : {
+            title: '반려동물 상세',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            }
+        }
+    },
+    PetSitterApplyForm : {
+        screen : PetSitterApplyForm,
+        navigationOptions : {
+            title: '펫시터 지원',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            }
+        }
+    }
+})
+
+ProfileStackNavigator.navigationOptions = ({ navigation }) => {
+    let tabBarVisible = false;
+    if (navigation.state.index > 0) {
+      tabBarVisible = false;
+    }
+    return {
+      tabBarVisible,
+    };
+  };
+
+
+/*export default class ProfileStackNavigator extends Component{
     render() {
         console.log("parentNav")
         console.log(this.props.rootStack);
@@ -98,4 +178,4 @@ export default class ProfileStackNavigator extends Component{
             <ProfileStacks/>
         );
     }
-}
+}*/

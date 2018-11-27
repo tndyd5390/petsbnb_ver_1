@@ -10,11 +10,97 @@ import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
 import ProfileMenu from './screens/profile/ProfileMenu';
-import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
+import CheckPassword from './screens/profile/CheckPassword';
+import ProfileUserUpdate from './screens/profile/ProfileUserUpdate';
+import PetList from './screens/profile/PetList';
+import PetRegView from './screens/profile/PetRegView';
+import PetUpdateView from './screens/profile/PetUpdateView';
+import PetSitterApplyForm from './screens/petSitter/PetSitterApplyForm';
+import StackNavigator from './StackNavigator';
+//import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
 
 
 export default class TabNavigator extends Component {
   render(){
+    const ProfileStackNavigator = createStackNavigator({
+      ProfileMenu : {
+          screen : props => <ProfileMenu {...props} rootStack={this.props.navigation}/>,
+          navigationOptions : {
+              header : null
+          }
+      },
+      CheckPassword : {
+          screen : CheckPassword,
+          navigationOptions : {
+              title: '비밀번호 확인',
+              headerTitleStyle: {
+                  width: '75%',
+                  textAlign: 'center',
+              },
+          }
+      },
+      ProfileUserUpdate : {
+          screen : ProfileUserUpdate,
+          navigationOptions : {
+              title: '회원정보',
+              headerTitleStyle: {
+                  width: '75%',
+                  textAlign: 'center',
+              },
+          }
+      },
+      PetRegView : {
+          screen : PetRegView,
+          navigationOptions : {
+              title: '반려동물 등록',
+              headerTitleStyle: {
+                  width: '75%',
+                  textAlign: 'center',
+              },
+          }
+      },
+      PetList : {
+          screen : PetList,
+          navigationOptions : {
+              title: '반려동물 관리',
+              headerTitleStyle: {
+                  width: '75%',
+                  textAlign: 'center',
+              }
+          }
+      },
+      PetUpdateView : {
+          screen : PetUpdateView,
+          navigationOptions : {
+              title: '반려동물 상세',
+              headerTitleStyle: {
+                  width: '75%',
+                  textAlign: 'center',
+              }
+          }
+      },
+      PetSitterApplyForm : {
+          screen : PetSitterApplyForm,
+          navigationOptions : {
+              title: '펫시터 지원',
+              headerTitleStyle: {
+                  width: '75%',
+                  textAlign: 'center',
+              }
+          }
+      }
+    })
+    
+    ProfileStackNavigator.navigationOptions = ({ navigation }) => {
+      let tabBarVisible = false;
+      if (navigation.state.index == 0) {
+        tabBarVisible = true;
+      }
+      return {
+        tabBarVisible,
+      };
+    };
+
     const Tabs = createBottomTabNavigator({
       Explore : {
         screen : BookingStacks,
@@ -45,13 +131,13 @@ export default class TabNavigator extends Component {
         }
       },
       Profile : {
-        screen : props => <ProfileStackNavigator {...props} rootStack={this.props.navigation}/>,
+        screen : ProfileStackNavigator,//props => <ProfileStackNavigator {...props} rootStack={this.props.navigation}/>,
         navigationOptions : {
           tabBarLabel : '프로필',
           tabBarIcon : ({tintColor}) => (
             <IconFontAwesome name='user' color={tintColor} size={24}/>
           )
-        }
+        },
       },
     },
     {
@@ -77,6 +163,8 @@ export default class TabNavigator extends Component {
 
   }
 } 
+
+
 
 const BookingStacks = createStackNavigator({
   Explore : {

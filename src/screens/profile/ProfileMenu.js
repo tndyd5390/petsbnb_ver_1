@@ -21,14 +21,6 @@ const {width, height} = Dimensions.get('window');
 
 export default class ProfileMenu extends Component {
 
-    static navigationOptions = ({ navigation }) => {
-        const { params = {} } = navigation.state;
-        
-        return {
-            headerRight: <Icon name='plus' size={25} onPress={() => params.petRegView()} style={{marginRight : 20}}/>
-        };
-    };
-
     constructor(props){
         super(props);
 
@@ -87,7 +79,7 @@ export default class ProfileMenu extends Component {
     }
 
     _goToPetList = () => {
-        this.props.navigation.navigate('PetList');
+        this.props.navigation.navigate('PetList', {tmp : 'petList'});
     }
 
     _petSitterMode = async() => {
@@ -126,8 +118,11 @@ export default class ProfileMenu extends Component {
         })
     }
 
+    _applyPetSitter = () => {
+        this.props.navigation.navigate('PetSitterApplyForm');
+    }
+
     render() {
-        console.log(this.props.navigation);
         return (
             <View style={styles.container}>
                 {this.state.activityIndicator ? (
@@ -172,7 +167,10 @@ export default class ProfileMenu extends Component {
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>고객센터</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        onPress={this._applyPetSitter}
+                    >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 신청</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
