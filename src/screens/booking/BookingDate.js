@@ -2,9 +2,14 @@ import React, {Component} from 'react';
 import {
     View,
     Text,
-    StyleSheet
+    StyleSheet,
+    TouchableOpacity,
+    SafeAreaView
 } from "react-native";
 import CalendarPicker from 'react-native-calendar-picker';
+import Colors from '../../utils/Colors';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Moment from 'react-moment';
 
 export default class BookingDate extends Component{
     constructor(props) {
@@ -33,47 +38,144 @@ export default class BookingDate extends Component{
     render(){
         const { selectedStartDate, selectedEndDate } = this.state;
         const minDate = new Date(); // Today
-        const maxDate = new Date(2017, 6, 3);
+        const maxDate = new Date(2019, 6, 3);
         const startDate  =  selectedStartDate ? selectedStartDate.toString() : '';
         const endDate = selectedEndDate ? selectedEndDate.toString() : '';
     
         return(
+        <SafeAreaView style={styles.safeAreaViewStyle}>
             <View style={styles.container}>
-        <CalendarPicker
-          startFromMonday={true}
-          allowRangeSelection={true}
-          minDate={minDate}
-          maxDate={maxDate}
-          weekdays={['월', '화', '수', '목', '금', '토', '일']}
-          months={['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']}
-          previousTitle="이전"
-          nextTitle="다음"
-          todayBackgroundColor="#e6ffe6"
-          selectedDayColor="#66ff33"
-          selectedDayTextColor="#000000"
-          scaleFactor={375}
-          textStyle={{
-            fontFamily: 'Cochin',
-            color: '#000000',
-          }}
-          onDateChange={this.onDateChange}
-        />
-    
+                <CalendarPicker
+                startFromMonday={true}
+                allowRangeSelection={true}
+                minDate={minDate}
+                maxDate={maxDate}
+                weekdays={['월', '화', '수', '목', '금', '토', '일']}
+                months={['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']}
+                previousTitle="이전"
+                nextTitle="다음"
+                todayBackgroundColor={Colors.chatGreen}
+                selectedDayColor={Colors.buttonSky}
+                selectedDayTextColor={Colors.white}
+                scaleFactor={375}
+                textStyle={{
+                    fontFamily: 'Cochin',
+                    color: '#000000',
+                }}
+                onDateChange={this.onDateChange}
+                />
             <View>
-              <Text>SELECTED START DATE:{ startDate }</Text>
-              <Text>SELECTED END DATE:{ endDate }</Text>
+              <Caution/>
+              <SelectedDate startDate={startDate} endDate={endDate}/>
             </View>
           </View>
+            <BottomRequest/>
+        </SafeAreaView>
         );
+    };
+};
+
+class Caution extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render(){
+        return(
+            <View style={styles.EnvBar}>
+                <View style={{flex:0.5,alignItems : 'center', flexDirection: 'row',marginLeft : 20 }}>
+                    <View style={styles.blueCircle}/>
+                    <Text style={{fontWeight:'bold'}}>주의사항</Text>
+                </View>
+                <View style={{flex:1,alignItems : 'center', flexDirection: 'row'}}>
+                    <Text>데이케어 이용자는 하루만 선택해주세요!</Text>
+                </View>
+            </View>
+        )
+    };
+};
+
+class SelectedDate extends Component {
+
+    render(){
+        return(
+            <View style={{flexDirection: 'row', flex:1, marginTop : 20}}>
+                <View style={{flex:1,flexDirection :'column', alignItems :'center'}}>
+                    <Text style={{fontSize : 17, fontWeight :'bold'}}>시작일</Text>
+                    <Text>{this.props.startDate}</Text>
+                </View>
+                <View style={{flex:1,flexDirection :'column',alignItems :'center'}}>
+                    <Text style={{fontSize : 17, fontWeight :'bold'}}>종료일</Text>
+                    <Text>{this.props.endDate}</Text>
+                </View>
+            </View>
+        )
+    };
+};
+
+
+class BottomRequest extends Component{
+    constructor(props) {
+        super(props);
+    }
+    render(){
+        return(
+            <View style={styles.bottomRequest}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>console.log('booking')}>
+                    <Text style={styles.bottomText}>선택 완료</Text>
+                </TouchableOpacity>
+            </View>
+        )
     };
 };
 
 
 const styles = StyleSheet.create({
+    safeAreaViewStyle : {
+        flex: 1,
+        backgroundColor : Colors.lightGrey,
+    },
     container: {
-      flex: 1,
-      backgroundColor: '#FFFFFF',
-      marginTop: 100,
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        marginTop: 3,
+    },
+    EnvBar : {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent : 'space-around',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        height : 60,
+        backgroundColor : Colors.white,
+        marginBottom : 20,
+        marginTop : 30
+    },
+    blueCircle:{
+        height: 10,
+        width: 10,
+        backgroundColor: Colors.buttonSky,
+        borderRadius: 50,
+        marginRight : 10
+    },
+    bottomRequest : {
+        justifyContent: 'center', 
+        alignItems: 'center',
+        bottom: 0,
+        width:'100%',
+        height : 70,
+        backgroundColor : Colors.buttonSky
+    },
+    bottomButton : {
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width : '100%',
+        height : '100%'
+    },
+    bottomText : {
+        fontSize : 17,
+        color : Colors.white
     },
   });
   

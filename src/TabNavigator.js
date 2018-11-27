@@ -80,24 +80,28 @@ export default class TabNavigator extends Component {
 } 
 
 const BookingStacks = createStackNavigator({
-  Explore : {
-    screen : Explore,
-    navigationOptions : {
-
-    }
-  },
-  BookingDetail :{
-      screen : BookingDetail,
+    Explore : {
+      screen : Explore,
       navigationOptions : {
 
       }
-  },
-  BookingDate :{
-    screen : BookingDate,
-    navigationOptions : {
+    },
+    BookingDetail :{
+        screen : BookingDetail,
+        navigationOptions : {
 
+        }
+    },
+    BookingDate :{
+      screen : BookingDate,
+      navigationOptions : {
+        title : '예약 날짜',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
     }
-},
+  },
 },
 {
   initialRouteName: 'Explore'
