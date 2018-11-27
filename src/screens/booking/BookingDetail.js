@@ -75,7 +75,7 @@ export default class BookingDetail extends Component{
                 <PetYN/>
                 <Improssible/>
                 </ScrollView>
-                <BottomRequest/>
+                <BottomRequest navigation={this.props.navigation}/>
                 <TouchableOpacity activeOpacity = { 0.8 } style = { styles.stickerBtn }>
                     <IconFontAwesome name='comment-dots' color={Colors.buttonSky} size={25}/>
                 </TouchableOpacity>
@@ -266,10 +266,13 @@ class Improssible extends Component {
 
 
 class BottomRequest extends Component{
+    constructor(props) {
+        super(props);
+    }
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>console.log('얍')}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>console.log(this.props.navigation.navigate('BookingDate'))}>
                     <Text style={styles.bottomText}>예약 요청</Text>
                 </TouchableOpacity>
             </View>

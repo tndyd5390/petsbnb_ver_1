@@ -9,6 +9,7 @@ import Colors from './utils/Colors';
 import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
+import BookingDate from './screens/booking/BookingDate';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
 
@@ -91,6 +92,12 @@ const BookingStacks = createStackNavigator({
 
       }
   },
+  BookingDate :{
+    screen : BookingDate,
+    navigationOptions : {
+
+    }
+},
 },
 {
   initialRouteName: 'Explore'
