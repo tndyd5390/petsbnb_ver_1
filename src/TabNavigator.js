@@ -17,8 +17,7 @@ import PetRegView from './screens/profile/PetRegView';
 import PetUpdateView from './screens/profile/PetUpdateView';
 import PetSitterApplyForm from './screens/petSitter/PetSitterApplyForm';
 import StackNavigator from './StackNavigator';
-//import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
-
+import CustomerCenter from './screens/profile/CustomerCenter';
 
 export default class TabNavigator extends Component {
   render(){
@@ -88,7 +87,17 @@ export default class TabNavigator extends Component {
                   textAlign: 'center',
               }
           }
-      }
+      },
+      CustomerCenter : {
+        screen : CustomerCenter,
+        navigationOptions : {
+            title: '고객 센터',
+            headerTitleStyle: {
+                width: '75%',
+                textAlign: 'center',
+            }
+        }
+    }
     })
     
     ProfileStackNavigator.navigationOptions = ({ navigation }) => {

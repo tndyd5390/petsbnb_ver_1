@@ -122,6 +122,10 @@ export default class ProfileMenu extends Component {
         this.props.navigation.navigate('PetSitterApplyForm');
     }
 
+    _gotoCustomerCenter = () => {
+        console.log("test");
+        this.props.navigation.navigate('CustomerCenter');
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -164,7 +168,10 @@ export default class ProfileMenu extends Component {
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>환경설정</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        onPress={this._gotoCustomerCenter}
+                    >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>고객센터</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
