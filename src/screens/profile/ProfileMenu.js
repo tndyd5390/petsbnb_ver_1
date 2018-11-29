@@ -102,8 +102,7 @@ export default class ProfileMenu extends Component {
         })
         .then((resp) => resp.json())
         .then((res => {
-            console.log(res);
-            if(res.isPetSitter == '1'){
+            if(res.isPetSitter != null){
                 //펫시터 모드 활성화
             }else{
                 alert('회원님은 펫시터가 아닙니다. 펫시터 신청을 먼저 해주세요.');
@@ -118,13 +117,63 @@ export default class ProfileMenu extends Component {
         })
     }
 
-    _applyPetSitter = () => {
-        this.props.navigation.navigate('PetSitterApplyForm');
+    _applyPetSitter = async () => {
+        this.setState({
+            activityIndicator : true
+        })
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo : userNo
+        }
+
+        await fetch('http://192.168.0.10:8080/user/checkAppliedUser.do', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((resp) => resp.json())
+        .then((res => {
+            if(res != null){
+                console.log(res);
+                if(res.result){
+                    alert('이미 신청하셨습니다.');
+                    this.setState({
+                        activityIndicator : false
+                    })
+                    return;
+                }else{
+                    this.setState({
+                        activityIndicator : false
+                    })
+                    this.props.navigation.navigate('PetSitterApplyForm');
+                }
+            }else{
+                this.setState({
+                    activityIndicator : false
+                })
+                alert('서버에러입니다. 잠시후 다시 시도해주세요.');
+            }
+        }))
+        .catch((err) => {
+            this.setState({
+                activityIndicator : false
+            })
+            alert('서버에러입니다. 잠시후 다시 시도해주세요.');
+        })
+
+        
     }
 
     _gotoCustomerCenter = () => {
         console.log("test");
         this.props.navigation.navigate('CustomerCenter');
+    }
+
+    _gotoPreference = () => {
+        this.props.navigation.navigate('Preference');
     }
     render() {
         return (
@@ -165,7 +214,10 @@ export default class ProfileMenu extends Component {
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>반려동물 프로필</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}>
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        onPress={this._gotoPreference}
+                    >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>환경설정</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 

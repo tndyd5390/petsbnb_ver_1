@@ -151,17 +151,28 @@ export default class PetSitterApplyForm extends Component{
             .then((response) => response.json())
             .then((res => {
                 if(res != null){
-                    console.log(res.result);
+                    if(res.result){
+                        alert('펫시터 신청이 완료되었습니다.');
+                        this.setState({
+                            activityIndicator : false
+                        })
+                        this.props.navigation.goBack();
+                    }
                 }else{
-                    
+                    alert("서버 에러입니다. 잠시후 다시 시도해주세요.");    
+                    this.setState({
+                        activityIndicator : false
+                    })
+                    this.props.navigation.goBack();
                 }
             }))
             .catch((err) => {
-                console.log(err);
                 alert("서버 에러입니다. 잠시후 다시 시도해주세요.");
+                this.setState({
+                    activityIndicator : false
+                })
+                this.props.navigation.goBack();
             })
-
-
         }
     }
 
@@ -178,11 +189,14 @@ export default class PetSitterApplyForm extends Component{
                     <View style={{alignItems : 'center', marginTop : 15}}>
                         <View style={{width : width - 40}}>
                             <Text style={{fontSize : 15, color : Colors.black}}>
-                                {`1. 지원자격\n  - 반려동물을 5년이상 키워본 경험 보유\n  - 직업의식을 가지고 열심히 하실 분\n\n2. 우대사항\n  - 반려동물 관련 자격증 소지자, 관련학과 전공 및 졸업\n`}
+                                {`1. 지원자격\n  - 반려동물을 5년 이상 키워본 경험 보유\n  - 직업의식을 가지고 열심히 하실 분\n\n2. 우대사항\n  - 반려동물 관련 자격증 소지자, 관련학과 전공 및 졸업\n`}
                             </Text>
                         </View>
                         <View style={{width : width-40, flexDirection : 'row'}}>
-                            <Text style={{color : Colors.red, fontSize : 15}}>*</Text><Text style={{fontSize : 15, color : Colors.black}}> 1차 신청자 합격 여부는 기재하신 번호로 일주일이내에 개별 연락 드리겠습니다.</Text>
+                            <Text style={{color : Colors.red, fontSize : 15}}>*</Text><Text style={{fontSize : 15, color : Colors.black}}> 1차 신청자 합격 여부는 기재하신 번호로 일주일 이내에 개별 연락드리겠습니다.{`\n`}</Text>
+                        </View>
+                        <View style={{width : width-40, flexDirection : 'row'}}>
+                            <Text style={{color : Colors.red, fontSize : 15}}>*</Text><Text style={{fontSize : 15, color : Colors.black}}> 지원 양식에 사실과 다른 정보를 기입할 경우 펫시터 선정에 불이익을 받을 수 있습니다.</Text>
                         </View>
                     </View>
 
@@ -221,9 +235,9 @@ export default class PetSitterApplyForm extends Component{
                                     <View style={{flexDirection : 'row'}}>
                                         <TouchableOpacity
                                             style={{flexDirection : 'row'}}
-                                            onPress={()=>this.setState({gender : 'male'})}
+                                            onPress={()=>this.setState({gender : 'M'})}
                                         >
-                                            <FontAwesome5 name={'check-square'} size={20} style={[this.state.gender == 'male' ? {color : Colors.buttonSky} : null]}/>
+                                            <FontAwesome5 name={'check-square'} size={20} style={[this.state.gender == 'M' ? {color : Colors.buttonSky} : null]}/>
                                             <Text style={{marginLeft : 10}}>남성</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -232,9 +246,9 @@ export default class PetSitterApplyForm extends Component{
                                     <View style={{flexDirection : 'row'}}>
                                         <TouchableOpacity
                                             style={{flexDirection : 'row'}}
-                                            onPress={()=>this.setState({gender : 'female'})}
+                                            onPress={()=>this.setState({gender : 'F'})}
                                         >
-                                            <FontAwesome5 name={'check-square'} size={20} style={[this.state.gender == 'female' ? {color : Colors.buttonSky} : null]}/>
+                                            <FontAwesome5 name={'check-square'} size={20} style={[this.state.gender == 'F' ? {color : Colors.buttonSky} : null]}/>
                                             <Text style={{marginLeft : 10}}>여성</Text>
                                         </TouchableOpacity>
                                     </View>
