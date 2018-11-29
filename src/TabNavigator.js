@@ -9,6 +9,7 @@ import Colors from './utils/Colors';
 import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
+import BookingDetails from './screens/booking/BookingDetails';
 import BookingDate from './screens/booking/BookingDate';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
@@ -96,6 +97,16 @@ const BookingStacks = createStackNavigator({
       screen : BookingDate,
       navigationOptions : {
         title : '예약 날짜',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    BookingDetails :{
+      screen : BookingDetails,
+      navigationOptions : {
+        title : '예약 세부사항',
         headerTitleStyle: {
           width: '75%',
           textAlign: 'center',
