@@ -14,6 +14,7 @@ import Tabs from './TabNavigator';
 import App from '../App';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import PetSitterTab from './screens/petSitter/PetSitterTab';
 import {
   AsyncStorage
 } from 'react-native';
@@ -32,8 +33,8 @@ export default class StackNavigator extends Component {
     this._loginCheck();
   }
 
-  _loginCheck = async() => {
-    const userInfo = await AsyncStorage.getItem('userInfo');
+  _loginCheck = () => {
+    const userInfo = AsyncStorage.getItem('userInfo');
     if(userInfo != null){
       this.setState({
         initialScreen : 'Tabs'
@@ -124,8 +125,15 @@ export default class StackNavigator extends Component {
         navigationOptions :{
           header : null
         }
-      }
-    },{
+      },
+      PetSitterTab : {
+        screen : PetSitterTab,
+        navigationOptions : {
+          header : null
+        }
+      },
+    },
+    {
       initialRouteName : this.state.initialScreen
     }
   );
