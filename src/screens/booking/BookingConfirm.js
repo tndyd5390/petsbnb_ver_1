@@ -13,33 +13,69 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Button,
-    Modal
+    Modal,
+    FlatList
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Category from '../components/Explore/Category';
 import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import {List, ListItem} from 'react-native-elements';
 
-
-export default class BookingDetails extends Component{
-    constructor(props) {
+export default class BookingConfirm extends Component {
+    constructor(props){
         super(props);
-    }
+        const data = this.props.navigation.getParam('data');
+        this.state = {
+            petList : this.setArrList(data.selected._mapData),
+            stDate : data.stDate,
+            edDate : data.edDate
+        }
+    };
+    
+    setArrList=(data)=>{
+        const arr = [];
+        for(let i=0; i<data.length;i++){
+            if(data[i][1]==true){
+                arr.push(data[i][0]);
+            };
+        };
+        return arr;
+    };
 
     render(){
-        return (
+        return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
+                    <View style={{backgroundColor : Colors.white}}>
+                        <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>펫시터 정보</Text>
+                    </View>
                     <Profile/>
-                    <BookingDate date={this.props.navigation.getParam('date')}/>
+                    <View style={{backgroundColor : Colors.white}}>
+                        <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>맡길 펫 정보</Text>
+                    </View>
+                    <PetList petList={this.state.petList}/>
+                    <View style={{backgroundColor : Colors.white}}>
+                        <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>예약 정보</Text>
+                    </View>
+                    <BookingDateDetail stDate={this.state.stDate} edDate={this.state.edDate}/>
+                    <View style={{backgroundColor : Colors.white}}>
+                        <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>결제 정보</Text>
+                    </View>
+
                 </ScrollView>
                 <BottomRequest navigation={this.props.navigation}/>
             </SafeAreaView>
         );
     };
 };
+
 class Profile extends Component {
+    constructor(props){
+        super(props);
+    };
+
     render(){
         return(
             <View style={styles.listBar}>
@@ -66,88 +102,92 @@ class Profile extends Component {
     };
 };
 
-class BookingDate extends Component {
-    constructor(props) {
+class PetList extends Component{
+    constructor(props){
         super(props);
-    }
+        this.state = {
+            petList : this.props.petList
+        }
+    };
 
-    
+    renderList = (petList) => {
+        return petList.map((key)=>{
+            return(
+                <View style={styles.listBar} key={key}>
+                    <View style={{alignItems : 'center', justifyContent: 'center'}}>
+                            <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                    </View>
+                    <View style={{justifyContent: 'center', marginLeft : 15}}>
+                        <View>
+                            <Text style={{fontSize : 20, fontWeight : 'bold'}}>{key}</Text>
+                        </View>
+                        <View style={{flexDirection: 'column', marginTop : 5}}>
+                            <View style={{alignItems : 'center', flexDirection: 'row'}}>
+                                <View style={styles.blueCircle}/>
+                                <Text>프로필1</Text>
+                            </View>
+                            <View style={{alignItems : 'center', flexDirection: 'row'}}>
+                                <View style={styles.blueCircle}/>
+                                <Text>프로필2</Text>
+                            </View>
+                        </View>
+                    </View>            
+                </View>
+            );
+        });
+    };
     render(){
-        chgDateFormat = (date) =>{
-            const stDate = new Date(date.stDate);
-            const edDate = new Date(date.edDate);
-            const rslt = {'stDate': (stDate.getMonth()+1) + '월 ' +stDate.getDate() +'일', 'edDate' : (edDate.getMonth()+1) + '월 ' +edDate.getDate() +'일'};
-            console.log(rslt)
-            return rslt                 
-        };
-        const rslt = chgDateFormat(this.props.date);
         return(
             <View>
-                <View style={styles.dateBar}>
-                    <View style={{alignItems :'center', justifyContent : 'center', width:'30%'}}>
-                        <Text style={{fontSize : 17}}>예약일</Text>
-                    </View> 
-                    <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 17}}>{rslt.stDate}  ~  {rslt.edDate}</Text>
-                    </View> 
-                </View>
-                <View style={styles.dateBar}>
-                    <View style={{alignItems :'center', justifyContent : 'center', width:'30%'}}>
-                        <Text style={{fontSize : 17}}>체크인</Text>
-                    </View> 
-                    <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>{rslt.stDate} 11:00 부터</Text>
-                    </View> 
-                </View>
-                <View style={styles.dateBar}>
-                    <View style={{alignItems :'center', justifyContent : 'center', width:'30%'}}>
-                        <Text style={{fontSize : 17}}>체크아웃</Text>
-                    </View> 
-                    <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>{rslt.stDate}  09:00 까지</Text>
-                    </View> 
-                </View>
-                <View style={styles.dateBar}>
-                    <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', width:'30%'}}>
-                        <Text style={{fontSize : 17}}>초과시간</Text>
-                        <IconFontAwesome name='question-circle' size={15} style={{marginLeft : 5}}/>
-                    </View>
-                    <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>체크아웃 0시간 초과</Text>
-                    </View> 
-                </View>
-                <View style={styles.endBar}>
-                <View style={{flex:1,flexDirection :'column', alignItems :'center'}}>
-                    <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 15}}>
-                        <Text style={{fontSize : 15, fontWeight : 'bold'}}>24시간 기준 체크아웃 시간 초과시, 추가 비용 부과</Text>
-                    </View> 
-                    <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center'}}>
-                        <Text style={{fontSize : 13, color : Colors.red}}>1시간 당 추가비용 = 해당 펫시터 데이케어 비용의 10%</Text>
-                    </View> 
-                </View>
-                </View>
+                {this.renderList(this.state.petList)}
             </View>
         );
     };
 };
 
+class BookingDateDetail extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            stDate : this.props.stDate,
+            edDate : this.props.edDate
+        }
+    };
+
+    render(){
+        return(
+            <View style={styles.dateBar}>
+                <Text style={{fontSize : 17}}>
+                        {this.state.stDate}  ~  {this.state.edDate}
+                </Text>
+            </View>
+        );
+    };
+};
+
+class Payment extends Component{
+    constructor(props){
+        super(props);
+    }
+    
+
+};
+
 class BottomRequest extends Component{
     constructor(props) {
         super(props);
-    }
-
+    };
 
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date')})}>
-                    <Text style={styles.bottomText}>다음</Text>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>console.log('nextt')}>
+                    <Text style={styles.bottomText}>결제하기</Text>
                 </TouchableOpacity>
             </View>
         )
     };
 };
-
 
 const styles = StyleSheet.create({
     safeAreaViewStyle : {
@@ -187,6 +227,8 @@ const styles = StyleSheet.create({
         height : 60,
         backgroundColor : Colors.white,
         marginBottom : 2,
+        justifyContent: 'center', 
+        alignItems: 'center',
     },
     endBar: {
         flex:1,

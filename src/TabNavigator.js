@@ -11,6 +11,8 @@ import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
 import BookingDetails from './screens/booking/BookingDetails';
 import BookingDate from './screens/booking/BookingDate';
+import BookingPetList from './screens/booking/BookingPetList';
+import BookingConfirm from './screens/booking/BookingConfirm';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
 
@@ -107,6 +109,26 @@ const BookingStacks = createStackNavigator({
       screen : BookingDetails,
       navigationOptions : {
         title : '예약 세부사항',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    BookingPetList :{
+      screen : BookingPetList,
+      navigationOptions : {
+        title : '맡길 반려동물',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    BookingConfirm :{
+      screen : BookingConfirm,
+      navigationOptions : {
+        title : '예약 확인',
         headerTitleStyle: {
           width: '75%',
           textAlign: 'center',
