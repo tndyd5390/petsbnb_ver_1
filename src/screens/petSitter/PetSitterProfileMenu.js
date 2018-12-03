@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import RoundedButton from '../components/buttons/RoundedButton';
+import { StackActions, NavigationActions } from 'react-navigation';
 import {
     View,
     Text,
@@ -15,7 +16,7 @@ import {
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
-export default class PetSitterMenu extends Component{
+export default class PetSitterProfileMenu extends Component{
 
     constructor(props){
         super(props);
@@ -57,6 +58,26 @@ export default class PetSitterMenu extends Component{
 
     _updateUserInfo = () => {
         this.props.navigation.navigate('CheckPassword', {nextView : 'ProfileUserUpdate'});
+    }
+
+    _userMode = async() => {
+        await AsyncStorage.removeItem('petSitterMode');
+        this._gotoInit();
+    }
+
+    _logOut = async () => {
+        await AsyncStorage.removeItem('petSitterMode');
+        await AsyncStorage.removeItem('userInfo');
+        this._gotoInit();
+       
+    }
+
+    _gotoInit = () => {
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Init' })],
+          });
+        this.props.rootStack.dispatch(resetAction);
     }
     render() {
         return(
@@ -111,15 +132,9 @@ export default class PetSitterMenu extends Component{
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
-                        onPress={this._applyPetSitter}
+                        onPress={this._userMode}
                     >
-                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 신청</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
-                        onPress={this._petSitterMode}
-                    >
-                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 모드 변환</Text>
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>사용자 모드 변환</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderBottomWidth : 1, borderTopColor: Colors.black, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}} onPress={this._logOut}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>로그아웃</Text>

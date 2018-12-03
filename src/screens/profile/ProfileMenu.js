@@ -103,7 +103,14 @@ export default class ProfileMenu extends Component {
         .then((resp) => resp.json())
         .then((res => {
             if(res.isPetSitter != null){
-                this._gotoPetSitter();
+                this._storeData();
+            
+                const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: 'Init' })],
+                  });
+                this.props.rootStack.dispatch(resetAction);
+
             }else{
                 alert('회원님은 펫시터가 아닙니다. 펫시터 신청을 먼저 해주세요.');
             }
@@ -111,7 +118,6 @@ export default class ProfileMenu extends Component {
         .catch((err) => {
             alert('서버에러입니다. 잠시후 다시 시도해주세요.');
         })
-
         this.setState({
             activityIndicator : false
         })
@@ -176,10 +182,21 @@ export default class ProfileMenu extends Component {
         this.props.navigation.navigate('Preference');
     }
 
-    _gotoPetSitter = () => {
+    _storeData = async () => {
+        const data = {
+            petSitterMode : true
+        }
+        try{
+          await AsyncStorage.setItem('petSitterMode', JSON.stringify(data));
+        }catch(err){
+    
+        }
+      }
+
+    _gotoPetSitter = async () => {
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'PetSitterTab' })],
+            actions: [NavigationActions.navigate({ routeName: 'Init' })],
           });
         this.props.rootStack.dispatch(resetAction);
     }
