@@ -76,8 +76,8 @@ class BookingDate extends Component {
         chgDateFormat = (date) =>{
             const stDate = new Date(date.stDate);
             const edDate = new Date(date.edDate);
-            const rslt = {'stDate': (stDate.getMonth()+1) + '월 ' +stDate.getDate() +'일', 'edDate' : (edDate.getMonth()+1) + '월 ' +edDate.getDate() +'일'};
-            console.log(rslt)
+            const diffDate = Math.abs(edDate.getTime() - stDate.getTime());
+            const rslt = {'stDate': (stDate.getMonth()+1) + '월 ' +stDate.getDate() +'일', 'edDate' : (edDate.getMonth()+1) + '월 ' +edDate.getDate() +'일', 'diffDate' : Math.ceil(diffDate / (1000*3600*24))+''};
             return rslt                 
         };
         const rslt = chgDateFormat(this.props.date);
@@ -104,7 +104,7 @@ class BookingDate extends Component {
                         <Text style={{fontSize : 17}}>체크아웃</Text>
                     </View> 
                     <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>{rslt.stDate}  09:00 까지</Text>
+                        <Text style={{fontSize : 15}}>{rslt.edDate}  09:00 까지</Text>
                     </View> 
                 </View>
                 <View style={styles.dateBar}>

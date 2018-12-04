@@ -30,16 +30,12 @@ export default class BookingPetList extends Component{
         this.state = {
             stDate : rslt.stDate,
             edDate : rslt.edDate,
+            diffDate : rslt.diffDate,
             petYN : true,
             selected : (new Map():Map<string,boolean>)
         }
-      }
-    chgDateFormat = (date) =>{
-        const stDate = new Date(date.stDate);
-        const edDate = new Date(date.edDate);
-        const rslt = {'stDate': (stDate.getMonth()+1) + '월 ' +stDate.getDate() +'일', 'edDate' : (edDate.getMonth()+1) + '월 ' +edDate.getDate() +'일'};
-        return rslt                 
     };
+
     
     _callBackPetList = (selectedPet) =>{
         this.setState({
@@ -189,18 +185,23 @@ class BottomRequest extends Component{
 
     _onSubmit = () =>{
         const arr = this.props.data.selected._mapData;
+        let count = 0;
         if(arr.length==0){
             alert('맡기실 반려동물을 선택해주세요.');
             return false;
         }else{
             for(let i=0; i<arr.length;i++){
                 if(arr[i][1]==true){
-                    this.props.navigation.navigate('BookingConfirm',{data:this.props.data});
-                    return true;
-                }else{
-                    alert('맡기실 반려동물을 선택해주세요.');
-                    return false;
+                    count++;
                 }
+            }
+            if(count>0){
+                this.props.navigation.navigate('BookingConfirm',{data:this.props.data});
+                return true;
+            }else{
+                alert('맡기실 반려동물을 선택해주세요.');
+                return false;
+                
             }
         }
     };
