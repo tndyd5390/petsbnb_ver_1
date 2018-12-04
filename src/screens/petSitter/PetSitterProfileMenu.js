@@ -79,6 +79,19 @@ export default class PetSitterProfileMenu extends Component{
           });
         this.props.rootStack.dispatch(resetAction);
     }
+
+    _gotoPreference = () => {
+        this.props.navigation.navigate('Preference');
+    }
+
+    _gotoCustomerCenter = () => {
+        this.props.navigation.navigate('CustomerCenter');
+    }
+
+    _gotoPetSitterProfile = () => {
+        this.props.navigation.navigate('PetSitterProfile');
+    }
+
     render() {
         return(
             <View style={styles.container}>
@@ -114,28 +127,53 @@ export default class PetSitterProfileMenu extends Component{
                 </View>
                 <View>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 30}}
-                        onPress={this._goToPetList}
+                        onPress={this._gotoPetList}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>반려동물 프로필</Text>
                     </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        onPress={this._gotoPetSitterProfile}
+                    >
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 프로필</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
                         onPress={this._gotoPreference}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>환경설정</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
                         onPress={this._gotoCustomerCenter}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>고객센터</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
                         onPress={this._userMode}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>사용자 모드 변환</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        
+                    >
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>포인트 조회</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        
+                    >
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>타임라인</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderBottomWidth : 1, borderTopColor: Colors.black, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}} onPress={this._logOut}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>로그아웃</Text>
                     </TouchableOpacity>
