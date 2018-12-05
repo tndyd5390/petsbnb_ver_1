@@ -9,6 +9,11 @@ import Colors from './utils/Colors';
 import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
+import BookingDetails from './screens/booking/BookingDetails';
+import BookingDate from './screens/booking/BookingDate';
+import BookingPetList from './screens/booking/BookingPetList';
+import BookingConfirm from './screens/booking/BookingConfirm';
+import BookingPaymentList from './screens/booking/BookingPaymentList';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import CheckPassword from './screens/profile/CheckPassword';
 import ProfileUserUpdate from './screens/profile/ProfileUserUpdate';
@@ -198,17 +203,67 @@ export default class TabNavigator extends Component {
 
 
 const BookingStacks = createStackNavigator({
-  Explore : {
-    screen : Explore,
-    navigationOptions : {
-
-    }
-  },
-  BookingDetail :{
-      screen : BookingDetail,
+    Explore : {
+      screen : Explore,
       navigationOptions : {
 
       }
+    },
+    BookingDetail :{
+        screen : BookingDetail,
+        navigationOptions : {
+
+        }
+    },
+    BookingDate :{
+      screen : BookingDate,
+      navigationOptions : {
+        title : '예약 날짜',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    BookingDetails :{
+      screen : BookingDetails,
+      navigationOptions : {
+        title : '예약 세부사항',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    BookingPetList :{
+      screen : BookingPetList,
+      navigationOptions : {
+        title : '맡길 반려동물',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    BookingConfirm :{
+      screen : BookingConfirm,
+      navigationOptions : {
+        title : '예약 확인',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+  BookingPaymentList :{
+      screen : BookingPaymentList,
+      navigationOptions : {
+        title : '결제 방법',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
   },
 },
 {

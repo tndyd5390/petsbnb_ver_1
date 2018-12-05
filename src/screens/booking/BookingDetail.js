@@ -12,19 +12,21 @@ import {
     Dimensions,
     TouchableOpacity,
     AsyncStorage,
-    Button
+    Button,
+    Modal
 } from "react-native";
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/Ionicons';
 import Category from '../components/Explore/Category';
 import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import BookingDate from './BookingDate';
 
 export default class BookingDetail extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            heartStatus : false
+            heartStatus : false,
         };
     };
     
@@ -42,7 +44,6 @@ export default class BookingDetail extends Component{
               )
         };
     };
-
 
     render(){
         const images = [
@@ -75,7 +76,7 @@ export default class BookingDetail extends Component{
                 <PetYN/>
                 <Improssible/>
                 </ScrollView>
-                <BottomRequest/>
+                <BottomRequest navigation={this.props.navigation}/>
                 <TouchableOpacity activeOpacity = { 0.8 } style = { styles.stickerBtn }>
                     <IconFontAwesome name='comment-dots' color={Colors.buttonSky} size={25}/>
                 </TouchableOpacity>
@@ -266,10 +267,15 @@ class Improssible extends Component {
 
 
 class BottomRequest extends Component{
+    constructor(props) {
+        super(props);
+    }
+
+
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>console.log('얍')}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props.navigation.navigate('BookingDate')}}>
                     <Text style={styles.bottomText}>예약 요청</Text>
                 </TouchableOpacity>
             </View>
