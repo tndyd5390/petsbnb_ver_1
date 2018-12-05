@@ -58,7 +58,6 @@ class LoginForm extends Component {
         if(res.loginSuccess === true){
             //가입 성공
           try{
-            console.log(res.userNo);
             this._storeData(res.userNo);
             this.props.navigation.navigate('Tabs');
            }catch(error){
@@ -84,7 +83,6 @@ class LoginForm extends Component {
   _checkData = async() => {
     try{
       const data = await AsyncStorage.getItem('userInfo');
-      console.log(data);
     }catch(err){
 
     }

@@ -1,25 +1,22 @@
-import React,{Component} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import Colors from '../../utils/Colors';
-import RestartAndroid from 'react-native-restart-android';
+import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import RoundedButton from '../components/buttons/RoundedButton';
+import { StackActions, NavigationActions } from 'react-navigation';
 import {
     View,
     Text,
+    TouchableOpacity,
     StyleSheet,
     Dimensions,
-    Platform,
     Image,
-    TouchableOpacity,
-    AsyncStorage,
-    ActivityIndicator
+    AsyncStorage
 } from 'react-native';
-import { StackActions, NavigationActions } from 'react-navigation';
+const{width, height} = Dimensions.get('window');
 
-
-const {width, height} = Dimensions.get('window');
-
-export default class ProfileMenu extends Component {
+export default class PetSitterProfileMenu extends Component{
 
     constructor(props){
         super(props);
@@ -41,30 +38,35 @@ export default class ProfileMenu extends Component {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params),
-            })
-            .then((response) => response.json())
-            .then((res => {
-                if(res.result === true){
-                    this.setState({
-                        userImageURI : {uri : 'http://192.168.0.10:8080/userImageFile/' + res.fileInfo.fileName}
-                    })
-                }else{
-                  
-                }
-            }))
-            .catch((err) => {
-                console.log("서버 에러" + err);
-            })
+        },
+         body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+         .then((res => {
+            if(res.result === true){
+                this.setState({
+                    userImageURI : {uri : 'http://192.168.0.10:8080/userImageFile/' + res.fileInfo.fileName}
+                })
+            }else{
+              
+            }
+        }))
+        .catch((err) => {
+             console.log("서버 에러" + err);
+        })
     }
 
     _updateUserInfo = () => {
         this.props.navigation.navigate('CheckPassword', {nextView : 'ProfileUserUpdate'});
     }
 
+    _userMode = async() => {
+        await AsyncStorage.removeItem('petSitterMode');
+        this._gotoInit();
+    }
+
     _logOut = async () => {
-        
+        await AsyncStorage.removeItem('petSitterMode');
         await AsyncStorage.removeItem('userInfo');
         this._gotoInit();
        
@@ -78,131 +80,20 @@ export default class ProfileMenu extends Component {
         this.props.rootStack.dispatch(resetAction);
     }
 
-    _goToPetList = () => {
-        this.props.navigation.navigate('PetList', {tmp : 'petList'});
-    }
-
-    _petSitterMode = async() => {
-        this.setState({
-            activityIndicator : true
-        })
-
-        const userNo = await AsyncStorage.getItem('userInfo');
-        const params = {
-            userNo : userNo
-        }
-
-        await fetch('http://192.168.0.10:8080/user/checkPetSitter.do', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params),
-        })
-        .then((resp) => resp.json())
-        .then((res => {
-            if(res.isPetSitter != null){
-                this._storeData();
-            
-                const resetAction = StackActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({ routeName: 'Init' })],
-                  });
-                this.props.rootStack.dispatch(resetAction);
-
-            }else{
-                alert('회원님은 펫시터가 아닙니다. 펫시터 신청을 먼저 해주세요.');
-            }
-        }))
-        .catch((err) => {
-            alert('서버에러입니다. 잠시후 다시 시도해주세요.');
-        })
-        this.setState({
-            activityIndicator : false
-        })
-    }
-
-    _applyPetSitter = async () => {
-        this.setState({
-            activityIndicator : true
-        })
-        const userNo = await AsyncStorage.getItem('userInfo');
-        const params = {
-            userNo : userNo
-        }
-
-        await fetch('http://192.168.0.10:8080/user/checkAppliedUser.do', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params),
-        })
-        .then((resp) => resp.json())
-        .then((res => {
-            if(res != null){
-                console.log(res);
-                if(res.result){
-                    alert('이미 신청하셨습니다.');
-                    this.setState({
-                        activityIndicator : false
-                    })
-                    return;
-                }else{
-                    this.setState({
-                        activityIndicator : false
-                    })
-                    this.props.navigation.navigate('PetSitterApplyForm');
-                }
-            }else{
-                this.setState({
-                    activityIndicator : false
-                })
-                alert('서버에러입니다. 잠시후 다시 시도해주세요.');
-            }
-        }))
-        .catch((err) => {
-            this.setState({
-                activityIndicator : false
-            })
-            alert('서버에러입니다. 잠시후 다시 시도해주세요.');
-        })
-
-        
-    }
-
-    _gotoCustomerCenter = () => {
-        console.log("test");
-        this.props.navigation.navigate('CustomerCenter');
-    }
-
     _gotoPreference = () => {
         this.props.navigation.navigate('Preference');
     }
 
-    _storeData = async () => {
-        const data = {
-            petSitterMode : true
-        }
-        try{
-          await AsyncStorage.setItem('petSitterMode', JSON.stringify(data));
-        }catch(err){
-    
-        }
-      }
+    _gotoCustomerCenter = () => {
+        this.props.navigation.navigate('CustomerCenter');
+    }
 
-    _gotoPetSitter = async () => {
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Init' })],
-          });
-        this.props.rootStack.dispatch(resetAction);
+    _gotoPetSitterProfile = () => {
+        this.props.navigation.navigate('PetSitterProfile');
     }
 
     render() {
-        return (
+        return(
             <View style={styles.container}>
                 {this.state.activityIndicator ? (
                     <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
@@ -236,34 +127,53 @@ export default class ProfileMenu extends Component {
                 </View>
                 <View>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 30}}
-                        onPress={this._goToPetList}
+                        onPress={this._gotoPetList}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>반려동물 프로필</Text>
                     </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        onPress={this._gotoPetSitterProfile}
+                    >
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 프로필</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
                         onPress={this._gotoPreference}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>환경설정</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
                         onPress={this._gotoCustomerCenter}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>고객센터</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
-                        onPress={this._applyPetSitter}
+                        onPress={this._userMode}
                     >
-                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 신청</Text>
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>사용자 모드 변환</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
-                        onPress={this._petSitterMode}
+                        
                     >
-                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>펫시터 모드 변환</Text>
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>포인트 조회</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
+                        
+                    >
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>타임라인</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderBottomWidth : 1, borderTopColor: Colors.black, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}} onPress={this._logOut}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>로그아웃</Text>
                     </TouchableOpacity>
@@ -272,7 +182,6 @@ export default class ProfileMenu extends Component {
         );
     }
 }
-
 
 const styles = StyleSheet.create({
     container : {
