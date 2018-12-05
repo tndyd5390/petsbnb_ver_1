@@ -13,6 +13,7 @@ import BookingDetails from './screens/booking/BookingDetails';
 import BookingDate from './screens/booking/BookingDate';
 import BookingPetList from './screens/booking/BookingPetList';
 import BookingConfirm from './screens/booking/BookingConfirm';
+import MyBookingList from './screens/myBooking/MyBookingList';
 import BookingPaymentList from './screens/booking/BookingPaymentList';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import CheckPassword from './screens/profile/CheckPassword';
@@ -149,7 +150,7 @@ export default class TabNavigator extends Component {
         }
       },
       Reservation : {
-        screen : Reservation,
+        screen : myBookingStacks,
         navigationOptions : {
           tabBarLabel : '예약보기',
           tabBarIcon : ({tintColor}) => (
@@ -206,7 +207,7 @@ const BookingStacks = createStackNavigator({
     Explore : {
       screen : Explore,
       navigationOptions : {
-
+        header : null
       }
     },
     BookingDetail :{
@@ -279,6 +280,31 @@ BookingStacks.navigationOptions = ({ navigation }) => {
     tabBarVisible,
   };
 };
+
+
+const myBookingStacks = createStackNavigator({
+  MyBookingList : {
+      screen : MyBookingList,
+      navigationOptions : {
+        header : null
+      }
+    },
+  },
+  {
+  initialRouteName: 'MyBookingList'
+  });
+
+  myBookingStacks.navigationOptions = ({ navigation }) => {
+    let tabBarVisible = true;
+    if (navigation.state.index > 0) {
+      tabBarVisible = false;
+    }
+    return {
+      tabBarVisible,
+    };
+  };
+
+
 
 
 const ChatStacks = createStackNavigator({ 
