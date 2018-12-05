@@ -39,7 +39,9 @@ export default class BookingConfirm extends Component {
             price : 50000,
             dayPrice : 30000,
             totalPrice : this.priceCalc(data),
-            termsAccept : false
+            termsAccept : false,
+            paymentIdx : 0,
+            paymentVal : '네이버 페이'
         }
     };
     
@@ -70,6 +72,13 @@ export default class BookingConfirm extends Component {
 
     };
 
+    _callBackPayment = (data) => {
+        this.setState({
+            paymentIdx : data.index,
+            paymentVal : data.value
+        });
+    };
+
     render(){
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -90,6 +99,10 @@ export default class BookingConfirm extends Component {
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>결제 정보</Text>
                     </View>
                     <Price data={this.state} />
+                    <View style={{backgroundColor : Colors.white}}>
+                        <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>결제 방법</Text>
+                    </View>
+                    <Payment navigation={this.props.navigation} data={this.state} _callBackPayment={this._callBackPayment.bind(this)}/>
                     <Terms callBackChecked={this.callBackChecked}/>
                 </ScrollView>
                 <BottomRequest navigation={this.props.navigation} termsAccept={this.state.termsAccept}/>
@@ -251,8 +264,40 @@ class Price extends Component{
 class Payment extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            paymentIdx : this.props.data.paymentIdx,
+            paymentVal : this.props.data.paymentVal
+        }
     };
     
+    _returnPayment = (data) =>{
+        this.setState({
+            paymentIdx : data.index,
+            paymentVal : data.value
+        });
+        this.props._callBackPayment(data);
+    };
+    
+    _goPaymentList = () =>{
+        this.props.navigation.navigate('BookingPaymentList', 
+        {'data': {'idx' : this.state.paymentIdx, 'val' : this.state.paymentVal}, returnPayment:this._returnPayment.bind(this)})
+    };
+    
+    render(){
+        return(
+            <View style={styles.paymentBar}>
+                <View style={{flexDirection:'row',flex:1,justifyContent : 'center',marginLeft:30}}>
+                    <Text style={{fontSize:20, fontWeight:'bold'}}>{this.state.paymentVal}</Text>
+                </View>
+                <View style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={()=> this._goPaymentList()}
+                     style={{borderColor : Colors.lightGrey, borderWidth : 1, marginRight:15,borderRadius:10, backgroundColor : Colors.buttonSky}}>
+                        <Text style={{fontSize : 15, margin : 10, color:Colors.white}}>변경</Text>
+                    </TouchableOpacity>
+                </View> 
+            </View>
+        );
+    };
 };
 
 class Terms extends Component{
@@ -412,14 +457,16 @@ const styles = StyleSheet.create({
         backgroundColor : Colors.white,
         marginBottom : 1,
     },
-    impossibleBar : {
+    paymentBar : {
         flex:1,
         flexDirection: 'row',
         justifyContent : 'space-around',
+        alignItems : 'center',
         paddingHorizontal: 10,
         paddingVertical: 5,
         backgroundColor : Colors.white,
-        marginBottom : 20,
+        marginBottom : 1,
+        height : 70
     },
 
     bottomRequest : {

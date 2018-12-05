@@ -13,6 +13,7 @@ import BookingDetails from './screens/booking/BookingDetails';
 import BookingDate from './screens/booking/BookingDate';
 import BookingPetList from './screens/booking/BookingPetList';
 import BookingConfirm from './screens/booking/BookingConfirm';
+import BookingPaymentList from './screens/booking/BookingPaymentList';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import ProfileStackNavigator from './screens/profile/ProfileStackNavigator';
 
@@ -129,6 +130,16 @@ const BookingStacks = createStackNavigator({
       screen : BookingConfirm,
       navigationOptions : {
         title : '예약 확인',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+  BookingPaymentList :{
+      screen : BookingPaymentList,
+      navigationOptions : {
+        title : '결제 방법',
         headerTitleStyle: {
           width: '75%',
           textAlign: 'center',
