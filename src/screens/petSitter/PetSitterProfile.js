@@ -17,19 +17,151 @@ import {
     Picker,
     Dimensions,
     ActivityIndicator,
-    ScrollView
+    ScrollView,
+    Image,
+    AsyncStorage
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
-
+const options={
+    title : '사진',
+    takePhotoButtonTitle : '사진 촬영',
+    chooseFromLibraryButtonTitle : '갤러리에서 고르기'
+}
 export default class PetSitterProfile extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            activityIndicator : false,
-            tmp : '없음'
+            activityIndicator : true,
+            petSitterName : '',
+            petSitterIntroduceOneLine : '',
+            petSitterEnv : '',
+            petSitterHasPet : '',
+            longTermAvailable : false,
+            walkAvailable : false,
+            bathAvailable : false,
+            firstaidAvailable : false,
+            haircareAvailable : false,
+            markingImpossible : false,
+            bowelImpossible : false,
+            attackImpossible : false,
+            separationImpossible : false,
+            biteImpossible : false,
+            smallPetNightPrice : '',
+            smallPetDayPrice : '',
+            middlePetDayPrice : '',
+            middlePetNightPrice : '',
+            bigPetDayPrice : '',
+            bigPetNightPrice : '',
+            refundAccountName : '',
+            refundBank : '',
+            refundAccountNumber : '',
+            necessaryItem : '',
+            petSitterIntroduce : '',
+            imageDataArr : [],
+            procButton : 'reg'
         }
     }
+
+    componentWillMount(){
+        this._getFirstPetsitterInfo();
+    }
+
+    _getFirstPetsitterInfo = async() => {
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo : userNo
+        }
+        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfo.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            if(res.petSitterInfo != null){
+                this.setState({activityIndicator : false});
+            }else{
+                this.setState({activityIndicator : false});
+                return;
+            }
+        }))
+        .catch((err) => {
+            console.log(err);
+            this.setState({activityIndicator : false});
+        })
+        this.setState({activityIndicator : false});
+    }
+
+    _imageDisplay = () => {
+        let imageView = [];
+        const imageDataArr = this.state.imageDataArr;
+        imageDataArr.forEach((value, index) => {
+            const source = value.imageSource;
+            imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
+                                <Image source={{uri : source}} style={{width : '100%', height : '100%'}}/>
+                                <View style={{position : 'absolute', bottom : 10, right : 15}}>
+                                    <TouchableOpacity
+                                        onPress={() => this._deleteImage(index)}
+                                    >
+                                        <FontAwesome5 name='trash-alt' size={30} color={Colors.white}/>
+                                    </TouchableOpacity>
+                                </View>
+                           </View>)
+        })
+        imageView.push(
+            <View key={imageDataArr.length} style={{ alignItems : 'center', justifyContent : 'center'}}>
+                <RoundedButton
+                    title='사진 등록'
+                    buttonHandleFunc={this._butttonHandleFunc}
+                    buttonColor={{backgroundColor : Colors.white}}
+                    textColor={{color : Colors.buttonBorderGrey}}
+                    textSize={{fontSize:15, fontWeight : '200'}}
+                    customButtonStyle={{width : 90, height : 35, borderWidth : 1, borderColor : Colors.buttonBorderGrey, marginTop : 100}}
+                />
+            </View>
+        )
+        return imageView;
+    }
+
+    _butttonHandleFunc = () => {
+        ImagePicker.showImagePicker(options, (response) => {
+            
+            if (response.didCancel) {
+              console.log('User cancelled image picker');
+            } else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+              alert('사진을 다시 선택해주세요.');
+            } else {
+              const source = { uri: response.uri };
+
+              const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
+              console.log(extension);
+
+              const imageDataObject = {
+                  imageData : response.data,
+                  imageSource : response.uri,
+                  extension : extension
+              }
+
+              const imageDataArr = this.state.imageDataArr;
+              imageDataArr.push(imageDataObject);
+
+              this.setState({
+                  imageDataArr : imageDataArr
+              })
+
+            }
+        });
+    }
+
+    _petSitterRegProc = async() => {
+        console.log(this.state);
+    }
+
     render(){
         return(
             <ScrollView>
@@ -41,17 +173,13 @@ export default class PetSitterProfile extends Component{
                         </View>
                     ) : (null)}
 
-                    <View style={{alignItems : 'center', justifyContent : 'center', width : width, height : 200, backgroundColor : Colors.white, borderBottomWidth : 1, borderBottomColor : Colors.buttonBorderGrey}}>
-                        <View style={{ alignItems : 'center', justifyContent : 'center'}}>
-                            <RoundedButton
-                                title='사진 등록'
-                                buttonHandleFunc={() => {}}
-                                buttonColor={{backgroundColor : Colors.white}}
-                                textColor={{color : Colors.buttonBorderGrey}}
-                                textSize={{fontSize:15, fontWeight : '200'}}
-                                customButtonStyle={{width : 90, height : 35, borderWidth : 1, borderColor : Colors.buttonBorderGrey}}
-                            />
-                        </View>
+                    <View style={{width : width, height : 250, backgroundColor : Colors.white, borderBottomWidth : 1, borderBottomColor : Colors.buttonBorderGrey}}>
+                        <Swiper 
+                            loop={false}
+                            key={this.state.imageDataArr.length}
+                        >
+                        {this._imageDisplay()}
+                        </Swiper>
                     </View>
 
                     <View style={{width : width, height : 40, alignItems : 'center'}}>
@@ -65,7 +193,12 @@ export default class PetSitterProfile extends Component{
                             <Text>이름</Text>
                         </View>
                         <View style={{width : width - 40, height : '60%'}}>
-                            <TextInput style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}/>
+                            <TextInput 
+                                style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
+                                onChangeText={(name) => this.setState({petSitterName : name})}
+                                value={this.state.petSitterName}
+                                placeholder="예)홍길동"
+                            />
                         </View>
                     </View>
 
@@ -74,7 +207,12 @@ export default class PetSitterProfile extends Component{
                             <Text>한줄 소개</Text>
                         </View>
                         <View style={{width : width - 40, height : '60%'}}>
-                            <TextInput style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}/>
+                            <TextInput 
+                                style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
+                                onChangeText={(petSitterIntroduceOneLine) => this.setState({petSitterIntroduceOneLine : petSitterIntroduceOneLine})}
+                                value={this.state.petSitterIntroduceOneLine}
+                                placeholder='펫시터 찾기에 노출되는 한줄의 소개입니다.'
+                            />
                         </View>
                     </View>
 
@@ -83,7 +221,12 @@ export default class PetSitterProfile extends Component{
                             <Text>펫시팅 환경</Text>
                         </View>
                         <View style={{width : width - 40, height : '60%'}}>
-                            <TextInput style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}/>
+                            <TextInput 
+                                style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
+                                onChangeText={(petSitterEnv)=>this.setState({petSitterEnv : petSitterEnv})}
+                                value={this.state.petSitterEnv}
+                                placeholder='가정집, 마당있는 집, 애견카페등'
+                            />
                         </View>
                     </View>
 
@@ -95,11 +238,14 @@ export default class PetSitterProfile extends Component{
 
                     <View style={{alignItems : 'center'}}>
                         <View style={{width : width -30}}>
-                            <RadioGroup>
-                                <RadioButton>
+                            <RadioGroup
+                                onSelect={(index, value) => this.setState({petSitterHasPet : value})}
+                                //selectedIndex={1}
+                            >
+                                <RadioButton value={'1'}>
                                     <Text>반려동물과 함께 살고 있어요</Text>
                                 </RadioButton>
-                                <RadioButton>
+                                <RadioButton value={'0'}>
                                     <Text>현재는 반려동물과 살고 있지 않아요</Text>
                                 </RadioButton>
                             </RadioGroup>
@@ -114,29 +260,64 @@ export default class PetSitterProfile extends Component{
                     
                     <View style={{alignItems : 'center'}}>
                         <View style={{width : width - 30, flexDirection : 'row', flexWrap : 'wrap'}}>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>장기 가능</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}, 
+                                    this.state.longTermAvailable ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => this.setState({longTermAvailable : !this.state.longTermAvailable})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.longTermAvailable ? {color : Colors.white} : null]}>장기 가능</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>산책 가능</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.walkAvailable ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => this.setState({walkAvailable : !this.state.walkAvailable})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.walkAvailable ? {color : Colors.white} : null]}>산책 가능</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>목욕 가능</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.bathAvailable ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={()=>this.setState({bathAvailable : !this.state.bathAvailable})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.bathAvailable ? {color : Colors.white} : null]}>목욕 가능</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>응급 처치</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.firstaidAvailable ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={()=>this.setState({firstaidAvailable : !this.state.firstaidAvailable})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.firstaidAvailable ? {color : Colors.white} : null]}>응급 처치</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>모발 관리</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.haircareAvailable ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => this.setState({haircareAvailable : !this.state.haircareAvailable})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.haircareAvailable ? {color : Colors.white} : null]}>모발 관리</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -150,29 +331,64 @@ export default class PetSitterProfile extends Component{
                     
                     <View style={{alignItems : 'center'}}>
                         <View style={{width : width - 30, flexDirection : 'row', flexWrap : 'wrap'}}>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>마킹이 심한 아이</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.markingImpossible ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={()=>this.setState({markingImpossible : !this.state.markingImpossible})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.markingImpossible ? {color : Colors.white} : null]}>마킹이 심한 아이</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>배변 훈련 안된 아이</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.bowelImpossible ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => this.setState({bowelImpossible : !this.state.bowelImpossible})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.bowelImpossible ? {color : Colors.white} : null]}>배변 훈련 안된 아이</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>공격적인 아이</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.attackImpossible ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => this.setState({attackImpossible : !this.state.attackImpossible})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.attackImpossible ? {color : Colors.white} : null]}>공격적인 아이</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>분리 불안 있는 아이</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.separationImpossible ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky} : null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={()=> this.setState({separationImpossible : !this.state.separationImpossible})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.separationImpossible ? {color : Colors.white} : null]}>분리 불안 있는 아이</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5}}>
-                                <TouchableOpacity>
-                                    <Text style={{margin : 5}}>물어 뜯는 아이</Text>
+                            <View 
+                                style={[
+                                    {borderWidth : 1, borderColor : Colors.black, borderRadius : 5, margin : 5},
+                                    this.state.biteImpossible ? {borderColor : Colors.buttonSky, backgroundColor : Colors.buttonSky}: null
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={()=> this.setState({biteImpossible : !this.state.biteImpossible})}
+                                >
+                                    <Text style={[{margin : 5}, this.state.biteImpossible ? {color : Colors.white} : null]}>물어 뜯는 아이</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -219,48 +435,63 @@ export default class PetSitterProfile extends Component{
                         <View style={{height : '100%', width : '33.333%', alignItems : 'center', justifyContent : 'center'}}>
                             <View style={{ width : '95%', height : 40, borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                 <Picker
-                                    selectedValue={this.state.tmp}
-                                    onValueChange={(itemValue, itemIndex) => {this.setState({tmp : itemValue})}}
+                                    selectedValue={this.state.smallPetNightPrice}
+                                    onValueChange={(itemValue, itemIndex) => {this.setState({smallPetNightPrice : itemValue})}}
                                     style={{width : '100%', height : '100%'}}
                                     textStyle={{fontSize : 5}}
                                     >
-                                    <Picker.Item label="없음" value="없음" />
-                                    <Picker.Item label="10000000" value="10000000" />
-                                    <Picker.Item label="목욕 가능" value="목욕 가능" />
-                                    <Picker.Item label="응급 처치" value="응급 처치" />
-                                    <Picker.Item label="모발 관리" value="모발 관리" />
+                                    <Picker.Item label="1박" value="" />
+                                    <Picker.Item label="10000" value="10000" />
+                                    <Picker.Item label="15000" value="15000" />
+                                    <Picker.Item label="20000" value="20000" />
+                                    <Picker.Item label="25000" value="25000" />
+                                    <Picker.Item label="30000" value="30000" />
+                                    <Picker.Item label="35000" value="35000" />
+                                    <Picker.Item label="40000" value="40000" />
+                                    <Picker.Item label="45000" value="45000" />
+                                    <Picker.Item label="50000" value="50000" />
                                 </Picker>
                             </View>
                         </View>
                         <View style={{height : '100%', width : '33.333%', alignItems : 'center', justifyContent : 'center'}}>
                             <View style={{ width : '95%', height : 40, borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                 <Picker
-                                    selectedValue={'없음'}
-                                    onValueChange={(itemValue, itemIndex) => {}}
+                                    selectedValue={this.state.middlePetNightPrice}
+                                    onValueChange={(itemValue, itemIndex) => {this.setState({middlePetNightPrice : itemValue})}}
                                     style={{width : '100%', height : '100%'}}
                                     textStyle={{fontSize : 5}}
                                     >
-                                    <Picker.Item label="없음" value="없음" />
-                                    <Picker.Item label="10000000" value="10000000" />
-                                    <Picker.Item label="목욕 가능" value="목욕 가능" />
-                                    <Picker.Item label="응급 처치" value="응급 처치" />
-                                    <Picker.Item label="모발 관리" value="모발 관리" />
+                                    <Picker.Item label="1박" value="" />
+                                    <Picker.Item label="10000" value="10000" />
+                                    <Picker.Item label="15000" value="15000" />
+                                    <Picker.Item label="20000" value="20000" />
+                                    <Picker.Item label="25000" value="25000" />
+                                    <Picker.Item label="30000" value="30000" />
+                                    <Picker.Item label="35000" value="35000" />
+                                    <Picker.Item label="40000" value="40000" />
+                                    <Picker.Item label="45000" value="45000" />
+                                    <Picker.Item label="50000" value="50000" />
                                 </Picker>
                             </View>
                         </View>
                         <View style={{height : '100%', width : '33.333%', alignItems : 'center', justifyContent : 'center'}}>
                             <View style={{ width : '95%', height : 40, borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                 <Picker
-                                    selectedValue={'없음'}
-                                    onValueChange={(itemValue, itemIndex) => {}}
+                                    selectedValue={this.state.bigPetNightPrice}
+                                    onValueChange={(itemValue, itemIndex) => {this.setState({bigPetNightPrice : itemValue})}}
                                     style={{width : '100%', height : '100%'}}
                                     textStyle={{fontSize : 5}}
                                     >
-                                    <Picker.Item label="없음" value="없음" />
-                                    <Picker.Item label="산책 가능" value="산책 가능" />
-                                    <Picker.Item label="목욕 가능" value="목욕 가능" />
-                                    <Picker.Item label="응급 처치" value="응급 처치" />
-                                    <Picker.Item label="모발 관리" value="모발 관리" />
+                                    <Picker.Item label="1박" value="" />
+                                    <Picker.Item label="10000" value="10000" />
+                                    <Picker.Item label="15000" value="15000" />
+                                    <Picker.Item label="20000" value="20000" />
+                                    <Picker.Item label="25000" value="25000" />
+                                    <Picker.Item label="30000" value="30000" />
+                                    <Picker.Item label="35000" value="35000" />
+                                    <Picker.Item label="40000" value="40000" />
+                                    <Picker.Item label="45000" value="45000" />
+                                    <Picker.Item label="50000" value="50000" />
                                 </Picker>
                             </View>
                         </View>
@@ -270,45 +501,60 @@ export default class PetSitterProfile extends Component{
                         <View style={{height : '100%', width : '33.333%', alignItems : 'center', justifyContent : 'center'}}>
                             <View style={{ width : '95%', height : 40, borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                 <Picker
-                                    selectedValue={'없음'}
-                                    onValueChange={(itemValue, itemIndex) => {}}
+                                    selectedValue={this.state.smallPetDayPrice}
+                                    onValueChange={(itemValue, itemIndex) => {this.setState({smallPetDayPrice : itemValue})}}
                                     style={{width : '100%', height : '100%'}}
                                     >
-                                    <Picker.Item label="없음" value="없음" />
-                                    <Picker.Item label="산책 가능" value="산책 가능" />
-                                    <Picker.Item label="목욕 가능" value="목욕 가능" />
-                                    <Picker.Item label="응급 처치" value="응급 처치" />
-                                    <Picker.Item label="모발 관리" value="모발 관리" />
+                                    <Picker.Item label="데이" value="" />
+                                    <Picker.Item label="10000" value="10000" />
+                                    <Picker.Item label="15000" value="15000" />
+                                    <Picker.Item label="20000" value="20000" />
+                                    <Picker.Item label="25000" value="25000" />
+                                    <Picker.Item label="30000" value="30000" />
+                                    <Picker.Item label="35000" value="35000" />
+                                    <Picker.Item label="40000" value="40000" />
+                                    <Picker.Item label="45000" value="45000" />
+                                    <Picker.Item label="50000" value="50000" />
                                 </Picker>
                             </View>
                         </View>
                         <View style={{height : '100%', width : '33.333%', alignItems : 'center', justifyContent : 'center'}}>
                             <View style={{ width : '95%', height : 40, borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                 <Picker
-                                    selectedValue={'없음'}
-                                    onValueChange={(itemValue, itemIndex) => {}}
+                                    selectedValue={this.state.middlePetDayPrice}
+                                    onValueChange={(itemValue, itemIndex) => {this.setState({middlePetDayPrice : itemValue})}}
                                     style={{width : '100%', height : '100%'}}
                                     >
-                                    <Picker.Item label="없음" value="없음" />
-                                    <Picker.Item label="산책 가능" value="산책 가능" />
-                                    <Picker.Item label="목욕 가능" value="목욕 가능" />
-                                    <Picker.Item label="응급 처치" value="응급 처치" />
-                                    <Picker.Item label="모발 관리" value="모발 관리" />
+                                    <Picker.Item label="데이" value="" />
+                                    <Picker.Item label="10000" value="10000" />
+                                    <Picker.Item label="15000" value="15000" />
+                                    <Picker.Item label="20000" value="20000" />
+                                    <Picker.Item label="25000" value="25000" />
+                                    <Picker.Item label="30000" value="30000" />
+                                    <Picker.Item label="35000" value="35000" />
+                                    <Picker.Item label="40000" value="40000" />
+                                    <Picker.Item label="45000" value="45000" />
+                                    <Picker.Item label="50000" value="50000" />
                                 </Picker>
                             </View>
                         </View>
                         <View style={{height : '100%', width : '33.333%', alignItems : 'center', justifyContent : 'center'}}>
                             <View style={{ width : '95%', height : 40, borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                 <Picker
-                                    selectedValue={'없음'}
-                                    onValueChange={(itemValue, itemIndex) => {}}
+                                    selectedValue={this.state.bigPetDayPrice}
+                                    onValueChange={(itemValue, itemIndex) => {this.setState({bigPetDayPrice : itemValue})}}
                                     style={{width : '100%', height : '100%'}}
                                     >
-                                    <Picker.Item label="없음" value="없음" />
-                                    <Picker.Item label="산책 가능" value="산책 가능" />
-                                    <Picker.Item label="목욕 가능" value="목욕 가능" />
-                                    <Picker.Item label="응급 처치" value="응급 처치" />
-                                    <Picker.Item label="모발 관리" value="모발 관리" />
+                                    <Picker.Item label="데이" value="" />
+                                    <Picker.Item label="10000" value="10000" />
+                                    <Picker.Item label="15000" value="15000" />
+                                    <Picker.Item label="20000" value="20000" />
+                                    <Picker.Item label="25000" value="25000" />
+                                    <Picker.Item label="30000" value="30000" />
+                                    <Picker.Item label="35000" value="35000" />
+                                    <Picker.Item label="40000" value="40000" />
+                                    <Picker.Item label="45000" value="45000" />
+                                    <Picker.Item label="50000" value="50000" />
                                 </Picker>
                             </View>
                         </View>
@@ -332,7 +578,11 @@ export default class PetSitterProfile extends Component{
                         <View style={{width : width - 40, height : 30, flexDirection : 'row'}}>
                             <View style={{height : '100%', width : '50%', justifyContent : 'center'}}>
                                 <View style={{width : '90%'}}>
-                                    <TextInput style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}/>
+                                    <TextInput 
+                                        style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
+                                        onChangeText={(refundAccountName) => this.setState({refundAccountName : refundAccountName})}
+                                        placeholder='예)홍길동'
+                                    />
                                 </View>
                             </View>
                             <View style={{height : '100%', width : '50%', justifyContent : 'center'}}>
@@ -340,10 +590,10 @@ export default class PetSitterProfile extends Component{
                                     <View style={{ width : '100%', height : '100%', borderWidth : 1, borderColor : Colors.lightGrey, borderRadius : 5}}>
                                         <Picker
                                             selectedValue={'없음'}
-                                            onValueChange={(itemValue, itemIndex) => {}}
+                                            onValueChange={(itemValue, itemIndex) => this.setState({refundBank : itemValue})}
                                             style={{width : '100%', height : '100%'}}
                                             >
-                                            <Picker.Item label="선택" value="선택" />
+                                            <Picker.Item label="선택" value="" />
                                             <Picker.Item label="신한" value="신한" />
                                             <Picker.Item label="하나" value="하나" />
                                             <Picker.Item label="우리" value="우리" />
@@ -359,7 +609,11 @@ export default class PetSitterProfile extends Component{
                                 <Text>계좌번호</Text>
                             </View>
                             <View style={{width : width - 40, height : 30}}>
-                                <TextInput style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}/>
+                                <TextInput 
+                                    style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
+                                    onChangeText={(refundAccountNumber) => this.setState({refundAccountNumber : refundAccountNumber})}
+                                    placeholder='-없이 입력'
+                                />
                             </View>
                         </View>
                         <View style={{width : width - 40}}>
@@ -377,6 +631,8 @@ export default class PetSitterProfile extends Component{
                             <TextInput 
                                 style={{width : '100%', height : '100%', backgroundColor : Colors.lightGrey, borderRadius : 5}}
                                 multiline={true}
+                                onChangeText={(necessaryItem)=>this.setState({necessaryItem : necessaryItem})}
+                                placeholder='사료, 배변패드 등 반려동물 주인이 지참해야할 항목들을 상세히 적어주세요.'
                             />
                         </View>
                     </View>
@@ -391,21 +647,43 @@ export default class PetSitterProfile extends Component{
                             <TextInput 
                                 style={{width : '100%', height : '100%', backgroundColor : Colors.lightGrey, borderRadius : 5}}
                                 multiline={true}
+                                onChangeText={(petSitterIntroduce)=>this.setState({petSitterIntroduce : petSitterIntroduce})}
+                                placeholder='펫시터 소개는 사용자들이 펫시터를 선택하는데 도움이 됩니다.'
                             />
                         </View>
                     </View>
-                    <View style={{marginTop : 10}}>
-                        <TouchableOpacity 
-                            style={{width: width, 
-                            height: 50, 
-                            backgroundColor: Colors.buttonSky, 
-                            justifyContent: 'center', 
-                            alignItems: 'center'}}
-                            onPress={this._nextStep}
-                        >
-                            <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>등록</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {this.state.procButton == 'reg' ? 
+                    (
+                        <View style={{marginTop : 10}}>
+                            <TouchableOpacity 
+                                style={{width: width, 
+                                height: 50, 
+                                backgroundColor: Colors.buttonSky, 
+                                justifyContent: 'center', 
+                                alignItems: 'center'}}
+                                onPress={this._petSitterRegProc}
+                            >
+                                <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>등록</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) 
+                    : 
+                    (
+                        <View style={{marginTop : 10}}>
+                            <TouchableOpacity 
+                                style={{width: width, 
+                                height: 50, 
+                                backgroundColor: Colors.buttonSky, 
+                                justifyContent: 'center', 
+                                alignItems: 'center'}}
+                                onPress={this._petSitterUpdateProc}
+                            >
+                                <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>수정</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                    
+                    <View style={{marginTop : 5}}></View>
                 </View>
             </ScrollView>
         );
