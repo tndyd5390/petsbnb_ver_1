@@ -14,6 +14,7 @@ import BookingDate from './screens/booking/BookingDate';
 import BookingPetList from './screens/booking/BookingPetList';
 import BookingConfirm from './screens/booking/BookingConfirm';
 import MyBookingList from './screens/myBooking/MyBookingList';
+import MyBookingDetail from './screens/myBooking/MyBookingDetail';
 import BookingPaymentList from './screens/booking/BookingPaymentList';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import CheckPassword from './screens/profile/CheckPassword';
@@ -289,6 +290,16 @@ const myBookingStacks = createStackNavigator({
         header : null
       }
     },
+  MyBookingDetail :{
+      screen : MyBookingDetail,
+      navigationOptions : {
+        title : '예약 상세',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+   },
   },
   {
   initialRouteName: 'MyBookingList'
