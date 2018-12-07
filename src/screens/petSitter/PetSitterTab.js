@@ -15,7 +15,7 @@ import PetUpdateView from '../profile/PetUpdateView';
 import CustomerCenter from '../profile/CustomerCenter';
 import Preference from '../profile/Preferences';
 import UsageTerm from '../profile/UsageTerm';
-import PetSitterProfile from './PetSitterProfile';
+import PetSitterProfileReg from './PetSitterProfileReg';
 
 export default class PetSitterTab extends Component{
     render() {
@@ -106,8 +106,8 @@ export default class PetSitterTab extends Component{
                 }
             }
         },
-        PetSitterProfile : {
-          screen : PetSitterProfile,
+        PetSitterProfileReg : {
+          screen : PetSitterProfileReg,
           navigationOptions : {
             title : '펫시터 프로필',
             headerTitleStyle : {

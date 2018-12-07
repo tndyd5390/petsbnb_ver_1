@@ -19,7 +19,8 @@ import {
     ActivityIndicator,
     ScrollView,
     Image,
-    AsyncStorage
+    AsyncStorage,
+    Alert
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 const options={
@@ -27,12 +28,12 @@ const options={
     takePhotoButtonTitle : '사진 촬영',
     chooseFromLibraryButtonTitle : '갤러리에서 고르기'
 }
-export default class PetSitterProfile extends Component{
+export default class PetSitterProfileReg extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            activityIndicator : true,
+            activityIndicator : false,
             petSitterName : '',
             petSitterIntroduceOneLine : '',
             petSitterEnv : '',
@@ -58,42 +59,21 @@ export default class PetSitterProfile extends Component{
             refundAccountNumber : '',
             necessaryItem : '',
             petSitterIntroduce : '',
-            imageDataArr : [],
-            procButton : 'reg'
+            imageDataArr : []
         }
     }
 
     componentWillMount(){
-        this._getFirstPetsitterInfo();
+        //this._getFirstPetsitterInfo();
     }
 
-    _getFirstPetsitterInfo = async() => {
-        const userNo = await AsyncStorage.getItem('userInfo');
-        const params = {
-            userNo : userNo
+    _deleteImage = (index) => {
+        if(this.state.imageDataArr.length < 2){
+            this.setState({imageDataArr : []});    
+            return;
         }
-        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfo.do', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params),
-        })
-        .then((response) => response.json())
-        .then((res => {
-            if(res.petSitterInfo != null){
-                this.setState({activityIndicator : false});
-            }else{
-                this.setState({activityIndicator : false});
-                return;
-            }
-        }))
-        .catch((err) => {
-            console.log(err);
-            this.setState({activityIndicator : false});
-        })
-        this.setState({activityIndicator : false});
+        const imageDataArr = this.state.imageDataArr.splice(index, 1);
+        this.setState({imageDataArr : imageDataArr});
     }
 
     _imageDisplay = () => {
@@ -158,8 +138,145 @@ export default class PetSitterProfile extends Component{
         });
     }
 
-    _petSitterRegProc = async() => {
-        console.log(this.state);
+    _checkAvailable = () => {
+        if(
+            !this.state.longTermAvailable && 
+            !this.state.walkAvailable && 
+            !this.state.bathAvailable &&
+            !this.state.firstaidAvailable &&
+            !this.state.haircareAvailable
+        ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    _checkImpossible = () => {
+        if(
+            !this.state.markingImpossible &&
+            !this.state.bowelImpossible && 
+            !this.state.attackImpossible &&
+            !this.state.separationImpossible &&
+            !this.state.biteImpossible
+        ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    _returnTrue = () => {
+        return true;
+    }
+
+    _returnFalse = () => {
+        return false;
+    }
+
+    _petSitterRegCheck = () => {
+        
+        /*if(this.state.imageDataArr.length < 1){
+            alert('사진을 선택해 주세요.');
+        }else if(this.state.petSitterName == ''){
+            alert('이름을 입력해주세요.');
+        }else if(this.state.petSitterIntroduceOneLine == ''){
+            alert('한줄소개를 입력해주세요.');
+        }else if(this.state.petSitterEnv == ''){
+            alert('펫시팅 환경을 입력해주세요.');
+        }else if(this.state.petSitterHasPet == ''){
+            alert('반려동물 여부를 선택해주세요.');
+        }else if(this.state.smallPetNightPrice == ''){
+            alert('소형 반려동물 1박 금액을 선택해주세요.');
+        }else if(this.state.smallPetDayPrice == ''){
+            alert('소형 반려동물 데이 금액을 선택해주세요.');
+        }else if(this.state.middlePetNightPrice == ''){
+            alert('중형 반려동물 1박 금액을 선택해주세요.');
+        }else if(this.state.middlePetDayPrice == ''){
+            alert('중형 반려동물 데이 금액을 선택해주세요.');
+        }else if(this.state.bigPetNightPrice == ''){
+            alert('대형 반려동물 1박 금액을 선택해주세요.');
+        }else if(this.state.bigPetDayPrice == ''){
+            alert('대형 반려동물 데이 금액을 선택해주세요.');
+        }else if(this.state.refundAccountName == ''){
+            alert('환급계좌 예금주명을 입력해주세요.');
+        }else if(this.state.refundBank == ''){
+            alert('환급계좌 은행을 선택해주세요.')
+        }else if(this.state.refundAccountNumber == ''){
+            alert('환급계좌번호를 입력해주세요.');
+        }else if(this.state.petSitterIntroduce == ''){
+            alert('펫시터 소개를 입력해주세요.');
+        }else if(this._checkAvailable()){
+            Alert.alert(
+                '서비스 확인',
+                '이용가능 서비스를 선택하지 않으셨습니다.\n계속 진행 하시겟습니까?',
+                [
+                  {text: 'Cancel', onPress: () => {}},
+                  {text: 'OK', onPress: this._petSitterRegProc},
+                ],
+                { cancelable: false }
+            )
+        }else */if(this._checkImpossible()){
+            Alert.alert(
+                '서비스 확인',
+                '펫시팅 불가여부를 선택하지 않으셨습니다.\n계속 진행 하시겟습니까?',
+                [
+                  {text: 'Cancel', onPress: ()=>{}},
+                  {text: 'OK', onPress: this._petSitterRegProc},
+                ],
+                { cancelable: false }
+            )
+        }else{
+            this._petSitterRegProc();
+        }
+        
+    }
+
+    _petSitterRegProc = async() =>{
+        this.setState({activityIndicator : true})
+        
+        let arr = [];
+        for(let i = 0; i< this.state.imageDataArr.length; i++){
+            const value = this.state.imageDataArr[i];
+            arr.push({
+                name : 'image' + i,
+                filename : 'image' + i + '.' + value.extension,
+                type : 'image/' + value.extension,
+                data : value.imageData
+            })
+        }
+        Object.keys(this.state).forEach((value, index)=>{
+            if(value=='activityIndicator') return;
+            else arr.push({name : value, data : this.state[value].toString()});
+        })
+        const userNo = await AsyncStorage.getItem('userInfo');
+        arr.push({name : 'userNo', data : userNo});
+
+        await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/petSitter/petSitterRegProc.do', {
+            Authorization : "Bearer access-token",
+            'Content-Type' : 'multipart/form-data',
+        },arr)
+        .then((resp) => resp.json())
+        .then((res => {
+            this.setState({
+                activityIndicator : false
+            })
+            if(res.result == true){
+                this.setState({activityIndicator : false});
+                alert("사진 업로드 성공");
+                //this.props.navigation.navigate('ProfileMenu');
+            }else{
+                this.setState({activityIndicator : false});
+                alert("사진 업로드 실패");
+            }
+        }))
+        .catch((err) => {
+            this.setState({activityIndicator : false});
+            alert("서버 오작동");
+        })
+        this.setState({activityIndicator : false});
+        
+        
     }
 
     render(){
@@ -441,6 +558,7 @@ export default class PetSitterProfile extends Component{
                                     textStyle={{fontSize : 5}}
                                     >
                                     <Picker.Item label="1박" value="" />
+                                    <Picker.Item label="불가" value="0" />
                                     <Picker.Item label="10000" value="10000" />
                                     <Picker.Item label="15000" value="15000" />
                                     <Picker.Item label="20000" value="20000" />
@@ -462,6 +580,7 @@ export default class PetSitterProfile extends Component{
                                     textStyle={{fontSize : 5}}
                                     >
                                     <Picker.Item label="1박" value="" />
+                                    <Picker.Item label="불가" value="0" />
                                     <Picker.Item label="10000" value="10000" />
                                     <Picker.Item label="15000" value="15000" />
                                     <Picker.Item label="20000" value="20000" />
@@ -483,6 +602,7 @@ export default class PetSitterProfile extends Component{
                                     textStyle={{fontSize : 5}}
                                     >
                                     <Picker.Item label="1박" value="" />
+                                    <Picker.Item label="불가" value="0" />
                                     <Picker.Item label="10000" value="10000" />
                                     <Picker.Item label="15000" value="15000" />
                                     <Picker.Item label="20000" value="20000" />
@@ -506,6 +626,7 @@ export default class PetSitterProfile extends Component{
                                     style={{width : '100%', height : '100%'}}
                                     >
                                     <Picker.Item label="데이" value="" />
+                                    <Picker.Item label="불가" value="0" />
                                     <Picker.Item label="10000" value="10000" />
                                     <Picker.Item label="15000" value="15000" />
                                     <Picker.Item label="20000" value="20000" />
@@ -526,6 +647,7 @@ export default class PetSitterProfile extends Component{
                                     style={{width : '100%', height : '100%'}}
                                     >
                                     <Picker.Item label="데이" value="" />
+                                    <Picker.Item label="불가" value="0" />
                                     <Picker.Item label="10000" value="10000" />
                                     <Picker.Item label="15000" value="15000" />
                                     <Picker.Item label="20000" value="20000" />
@@ -546,6 +668,7 @@ export default class PetSitterProfile extends Component{
                                     style={{width : '100%', height : '100%'}}
                                     >
                                     <Picker.Item label="데이" value="" />
+                                    <Picker.Item label="불가" value="0" />
                                     <Picker.Item label="10000" value="10000" />
                                     <Picker.Item label="15000" value="15000" />
                                     <Picker.Item label="20000" value="20000" />
@@ -652,38 +775,22 @@ export default class PetSitterProfile extends Component{
                             />
                         </View>
                     </View>
-                    {this.state.procButton == 'reg' ? 
-                    (
-                        <View style={{marginTop : 10}}>
-                            <TouchableOpacity 
-                                style={{width: width, 
-                                height: 50, 
-                                backgroundColor: Colors.buttonSky, 
-                                justifyContent: 'center', 
-                                alignItems: 'center'}}
-                                onPress={this._petSitterRegProc}
-                            >
-                                <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>등록</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ) 
-                    : 
-                    (
-                        <View style={{marginTop : 10}}>
-                            <TouchableOpacity 
-                                style={{width: width, 
-                                height: 50, 
-                                backgroundColor: Colors.buttonSky, 
-                                justifyContent: 'center', 
-                                alignItems: 'center'}}
-                                onPress={this._petSitterUpdateProc}
-                            >
-                                <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>수정</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
                     
+                    <View style={{marginTop : 10}}>
+                        <TouchableOpacity 
+                            style={{width: width, 
+                            height: 50, 
+                            backgroundColor: Colors.buttonSky, 
+                            justifyContent: 'center', 
+                            alignItems: 'center'}}
+                            onPress={this._petSitterRegCheck}
+                        >
+                            <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>등록</Text>
+                        </TouchableOpacity>
+                    </View>
+
                     <View style={{marginTop : 5}}></View>
+
                 </View>
             </ScrollView>
         );

@@ -12,7 +12,8 @@ import {
     StyleSheet,
     Dimensions,
     Image,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
@@ -88,8 +89,34 @@ export default class PetSitterProfileMenu extends Component{
         this.props.navigation.navigate('CustomerCenter');
     }
 
-    _gotoPetSitterProfile = () => {
-        this.props.navigation.navigate('PetSitterProfile');
+    _gotoPetSitterProfile = async () => {
+        this.setState({activityIndicator : true});
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo : userNo
+        }
+        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfo.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            if(res.petSitterInfo != null){
+                this.setState({activityIndicator : false});
+            }else{
+                this.setState({activityIndicator : false});
+                this.props.navigation.navigate('PetSitterProfileReg');
+            }
+        }))
+        .catch((err) => {
+            console.log(err);
+            this.setState({activityIndicator : false});
+        })
+        this.setState({activityIndicator : false});
     }
 
     render() {
