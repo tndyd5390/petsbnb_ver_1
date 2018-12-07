@@ -162,7 +162,7 @@ class BookingProfile extends Component {
                 marginBottom : 5,
             }}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={require("../../../img/user.png")} style={{width : 60, height : 60, margin : 18}}/>
                 </View>
                 <View style={{flex:1,justifyContent: 'center', marginLeft : 15}}>
                     <View>

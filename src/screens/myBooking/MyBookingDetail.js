@@ -29,7 +29,8 @@ export default class MyBookingDetail extends Component {
             id : data.id,
             sitter : data.sitter,
             date : data.date,
-            status : data.status
+            status : data.status,
+            review : false
         };
     };
 
@@ -40,7 +41,7 @@ export default class MyBookingDetail extends Component {
                     <Profile sitter={this.state.sitter}/>
                     <BookingDate date={this.state.date} status={this.state.status}/>
                 </ScrollView>
-                {this.state.status == '예약 반려' ? null : this.state.status == '케어 완료' ? <CompleteBottomRequest/> : <BottomRequest navigation={this.props.navigation} status={this.state.status}/>}
+                {this.state.status == '예약 반려' ? null : this.state.status == '케어 완료' ? <CompleteBottomRequest navigation={this.props.navigation} review={this.state.review}/> : <BottomRequest navigation={this.props.navigation} status={this.state.status}/>}
             </SafeAreaView>
         );
     };
@@ -188,14 +189,26 @@ class BottomRequest extends Component{
 class CompleteBottomRequest extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            review : this.props.review
+        }
+    };
 
+    _goReviewWrite = (review) => {
+        if(!review){
+            this.props.navigation.navigate('BookingReviewWrite');
+            return true;
+        }else{
+            alert('이미 리뷰를 작성하셨습니다.');
+            return false;
+        };
     };
 
     render(){
         return(
             <View style={styles.bottomRequest}>
                 <View style={{justifyContent : 'center', flex:1}}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>alert('리뷰쓰기')}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>this._goReviewWrite(this.state.review)}>
                     <Text style={styles.bottomText}>리뷰 쓰기</Text>
                 </TouchableOpacity>
                 </View>
@@ -321,5 +334,14 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginRight : 10
     },
-
+    textAreaContainer: {
+        borderColor: Colors.grey,
+        borderWidth: 1,
+        padding: 5
+    },
+    textArea: {
+        height: 150,
+        justifyContent: "flex-start"
+    },
+    
 });
