@@ -241,7 +241,9 @@ export default class PetUpdateView extends Component{
             } else {
 
                 const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
-
+                this.setState({
+                    activityIndicator : true
+                })
                 RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petImageUploadSep.do', {
                     Authorization : "Bearer access-token",
                     'Content-Type' : 'multipart/form-data',

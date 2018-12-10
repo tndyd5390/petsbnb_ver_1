@@ -16,7 +16,7 @@ import CustomerCenter from '../profile/CustomerCenter';
 import Preference from '../profile/Preferences';
 import UsageTerm from '../profile/UsageTerm';
 import PetSitterProfileReg from './PetSitterProfileReg';
-
+import PetSitterProfileUpdateView from './PetSitterProfileUpdateView';
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -115,7 +115,17 @@ export default class PetSitterTab extends Component{
               textAlign : 'center'
             }
           }
-        }
+        },
+        PetSitterProfileUpdateView: {
+            screen : PetSitterProfileUpdateView,
+            navigationOptions : {
+              title : '펫시터 프로필',
+              headerTitleStyle : {
+                width : '75%',
+                textAlign : 'center'
+              }
+            }
+          },
       })
 
       petSitterProfileStackNavigation.navigationOptions = ({ navigation }) => {

@@ -107,6 +107,7 @@ export default class PetSitterProfileMenu extends Component{
         .then((res => {
             if(res.petSitterInfo != null){
                 this.setState({activityIndicator : false});
+                this.props.navigation.navigate('PetSitterProfileUpdateView', {petSitterNo : res.petSitterInfo.petSitterNo});
             }else{
                 this.setState({activityIndicator : false});
                 this.props.navigation.navigate('PetSitterProfileReg');

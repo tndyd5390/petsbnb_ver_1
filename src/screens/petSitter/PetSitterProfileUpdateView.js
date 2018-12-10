@@ -27,12 +27,12 @@ const options={
     takePhotoButtonTitle : '사진 촬영',
     chooseFromLibraryButtonTitle : '갤러리에서 고르기'
 }
-export default class PetSitterProfileReg extends Component{
+export default class PetSitterProfileUpdateView extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            activityIndicator : false,
+            activityIndicator : true,
             petSitterName : '',
             petSitterIntroduceOneLine : '',
             petSitterEnv : '',
@@ -63,28 +63,81 @@ export default class PetSitterProfileReg extends Component{
     }
 
     componentWillMount(){
-        //this._getFirstPetsitterInfo();
+        this._getPetSitterInfo();
     }
 
-    _deleteImage = (index) => {
-        if(this.state.imageDataArr.length < 2){
-            this.setState({imageDataArr : []});    
-            return;
+    _getPetSitterInfo = async() => {
+        const petSitterNo = this.props.navigation.getParam('petSitterNo');
+
+        const params = {
+            petSitterNo : petSitterNo
         }
-        const imageDataArr = this.state.imageDataArr.splice(index, 1);
-        this.setState({imageDataArr : imageDataArr});
+
+        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfoWithImage.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            if(res.petSitterInfo != null){
+                this.setState({activityIndicator : false});
+                const petSitterInfo = res.petSitterInfo;
+                const petSitterImages = res.petSitterImages;
+                this.setState({
+                    petSitterName : petSitterInfo.petSitterName,
+                    petSitterIntroduceOneLine : petSitterInfo.petSitterIntroduceOneLine,
+                    petSitterEnv : petSitterInfo.petSitterEnv,
+                    petSitterHasPet : petSitterInfo.petSitterHasPet,
+                    longTermAvailable : petSitterInfo.longTermAvailable == 'true' ? true : false,
+                    walkAvailable : petSitterInfo.walkAvailable == 'true' ? true : false,
+                    bathAvailable : petSitterInfo.bathAvailable == 'true' ? true : false,
+                    firstaidAvailable : petSitterInfo.firstaidAvailable == 'true' ? true : false,
+                    haircareAvailable : petSitterInfo.haircareAvailable == 'true' ? true : false,
+                    markingImpossible : petSitterInfo.markingImpossible == 'true' ? true : false,
+                    bowelImpossible : petSitterInfo.bowelImpossible == 'true' ? true : false,
+                    attackImpossible : petSitterInfo.attackImpossible == 'true' ? true : false,
+                    separationImpossible : petSitterInfo.separationImpossible == 'true' ? true : false,
+                    biteImpossible : petSitterInfo.biteImpossible == 'true' ? true : false,
+                    smallPetNightPrice : petSitterInfo.smallPetNightPrice,
+                    smallPetDayPrice : petSitterInfo.smallPetDayPrice,
+                    middlePetDayPrice : petSitterInfo.middlePetDayPrice,
+                    middlePetNightPrice : petSitterInfo.middlePetNightPrice,
+                    bigPetDayPrice : petSitterInfo.bigPetDayPrice,
+                    bigPetNightPrice : petSitterInfo.bigPetNightPrice,
+                    refundAccountName : petSitterInfo.refundAccountName,
+                    refundBank : petSitterInfo.refundBank,
+                    refundAccountNumber : petSitterInfo.refundAccountNumber,
+                    necessaryItem : petSitterInfo.necessaryItem,
+                    petSitterIntroduce : petSitterInfo.petSitterIntroduce,
+                    imageDataArr : petSitterImages
+                })
+            }else{
+                this.setState({activityIndicator : false});
+                
+            }
+        }))
+        .catch((err) => {
+            console.log(err);
+            this.setState({activityIndicator : false});
+        })
+        this.setState({activityIndicator : false});
     }
+
 
     _imageDisplay = () => {
         let imageView = [];
         const imageDataArr = this.state.imageDataArr;
         imageDataArr.forEach((value, index) => {
-            const source = value.imageSource;
+            const uri = {uri : 'http://192.168.0.10:8080/petSitterImageFile/' + value.petSitterFileName}
             imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
-                                <Image source={{uri : source}} style={{width : '100%', height : '100%'}}/>
+                                <Image source={uri} style={{width : '100%', height : '100%'}}/>
                                 <View style={{position : 'absolute', bottom : 10, right : 15}}>
                                     <TouchableOpacity
-                                        onPress={() => this._deleteImage(index)}
+                                        onPress={() => this._deleteImage(value.petSitterFileNo)}
                                     >
                                         <FontAwesome5 name='trash-alt' size={30} color={Colors.white}/>
                                     </TouchableOpacity>
@@ -106,7 +159,7 @@ export default class PetSitterProfileReg extends Component{
         return imageView;
     }
 
-    _butttonHandleFunc = () => {
+    _butttonHandleFunc = async () => {
         ImagePicker.showImagePicker(options, (response) => {
             
             if (response.didCancel) {
@@ -115,168 +168,41 @@ export default class PetSitterProfileReg extends Component{
               console.log('ImagePicker Error: ', response.error);
               alert('사진을 다시 선택해주세요.');
             } else {
-              const source = { uri: response.uri };
 
-              const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
-              console.log(extension);
+                const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
 
-              const imageDataObject = {
-                  imageData : response.data,
-                  imageSource : response.uri,
-                  extension : extension
-              }
-
-              const imageDataArr = this.state.imageDataArr;
-              imageDataArr.push(imageDataObject);
-
-              this.setState({
-                  imageDataArr : imageDataArr
-              })
-
+                RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petImageUploadSep.do', {
+                    Authorization : "Bearer access-token",
+                    'Content-Type' : 'multipart/form-data',
+                },[
+                    {name : 'petImage', filename : 'image' + this.state.userNo, type : 'image/' + extension, data : response.data},
+                    {name : 'userNo', data : this.state.userNo},
+                    {name : 'petNo', data : this.state.petNo}
+                  ])
+                .then((resp) => resp.json())
+                .then((res => {
+                    if(res){
+                        this.setState({
+                            imageDataArr : res
+                        })
+                    }else{
+                        alert("사진 업로드 실패");
+                    }
+                    this.setState({
+                        activityIndicator : false
+                    })
+                }))
+                .catch((err) => {
+                    alert("서버 오작동");
+                })
             }
         });
     }
 
-    _checkAvailable = () => {
-        if(
-            !this.state.longTermAvailable && 
-            !this.state.walkAvailable && 
-            !this.state.bathAvailable &&
-            !this.state.firstaidAvailable &&
-            !this.state.haircareAvailable
-        ){
-            return true;
-        }else{
-            return false;
-        }
+    _tmp = () => {
+        console.log(this.state);
     }
-
-    _checkImpossible = () => {
-        if(
-            !this.state.markingImpossible &&
-            !this.state.bowelImpossible && 
-            !this.state.attackImpossible &&
-            !this.state.separationImpossible &&
-            !this.state.biteImpossible
-        ){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    _returnTrue = () => {
-        return true;
-    }
-
-    _returnFalse = () => {
-        return false;
-    }
-
-    _petSitterRegCheck = () => {
-        
-        if(this.state.imageDataArr.length < 1){
-            alert('사진을 선택해 주세요.');
-        }else if(this.state.petSitterName == ''){
-            alert('이름을 입력해주세요.');
-        }else if(this.state.petSitterIntroduceOneLine == ''){
-            alert('한줄소개를 입력해주세요.');
-        }else if(this.state.petSitterEnv == ''){
-            alert('펫시팅 환경을 입력해주세요.');
-        }else if(this.state.petSitterHasPet == ''){
-            alert('반려동물 여부를 선택해주세요.');
-        }else if(this.state.smallPetNightPrice == ''){
-            alert('소형 반려동물 1박 금액을 선택해주세요.');
-        }else if(this.state.smallPetDayPrice == ''){
-            alert('소형 반려동물 데이 금액을 선택해주세요.');
-        }else if(this.state.middlePetNightPrice == ''){
-            alert('중형 반려동물 1박 금액을 선택해주세요.');
-        }else if(this.state.middlePetDayPrice == ''){
-            alert('중형 반려동물 데이 금액을 선택해주세요.');
-        }else if(this.state.bigPetNightPrice == ''){
-            alert('대형 반려동물 1박 금액을 선택해주세요.');
-        }else if(this.state.bigPetDayPrice == ''){
-            alert('대형 반려동물 데이 금액을 선택해주세요.');
-        }else if(this.state.refundAccountName == ''){
-            alert('환급계좌 예금주명을 입력해주세요.');
-        }else if(this.state.refundBank == ''){
-            alert('환급계좌 은행을 선택해주세요.')
-        }else if(this.state.refundAccountNumber == ''){
-            alert('환급계좌번호를 입력해주세요.');
-        }else if(this.state.petSitterIntroduce == ''){
-            alert('펫시터 소개를 입력해주세요.');
-        }else if(this._checkAvailable()){
-            Alert.alert(
-                '서비스 확인',
-                '이용가능 서비스를 선택하지 않으셨습니다.\n계속 진행 하시겟습니까?',
-                [
-                  {text: 'Cancel', onPress: () => {}},
-                  {text: 'OK', onPress: this._petSitterRegProc},
-                ],
-                { cancelable: false }
-            )
-        }else if(this._checkImpossible()){
-            Alert.alert(
-                '서비스 확인',
-                '펫시팅 불가여부를 선택하지 않으셨습니다.\n계속 진행 하시겟습니까?',
-                [
-                  {text: 'Cancel', onPress: ()=>{}},
-                  {text: 'OK', onPress: this._petSitterRegProc},
-                ],
-                { cancelable: false }
-            )
-        }else{
-            this._petSitterRegProc();
-        }
-        
-    }
-
-    _petSitterRegProc = async() =>{
-        this.setState({activityIndicator : true})
-        
-        let arr = [];
-        for(let i = 0; i< this.state.imageDataArr.length; i++){
-            const value = this.state.imageDataArr[i];
-            arr.push({
-                name : 'image' + i,
-                filename : 'image' + i + '.' + value.extension,
-                type : 'image/' + value.extension,
-                data : value.imageData
-            })
-        }
-
-        Object.keys(this.state).forEach((value, index)=>{
-            if(value=='activityIndicator') return;
-            else arr.push({name : value, data : this.state[value].toString()});
-        })
-
-        const userNo = await AsyncStorage.getItem('userInfo');
-        arr.push({name : 'userNo', data : userNo});
-        
-        await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/petSitter/petSitterRegProc.do', {
-            Authorization : "Bearer access-token",
-            'Content-Type' : 'multipart/form-data',
-        },arr)
-        .then((resp) => resp.json())
-        .then((res => {
-            this.setState({
-                activityIndicator : false
-            })
-            if(res.result == true){
-                this.setState({activityIndicator : false});
-                alert("사진 업로드 성공");
-                this.props.navigation.goBack();
-            }else{
-                this.setState({activityIndicator : false});
-                alert("사진 업로드 실패");
-            }
-        }))
-        .catch((err) => {
-            this.setState({activityIndicator : false});
-            alert("서버 오작동");
-        })
-        this.setState({activityIndicator : false});
-    }
+    
 
     render(){
         return(
@@ -356,6 +282,7 @@ export default class PetSitterProfileReg extends Component{
                         <View style={{width : width -30}}>
                             <RadioGroup
                                 onSelect={(index, value) => this.setState({petSitterHasPet : value})}
+                                selectedIndex={this.state.petSitterHasPet}
                             >
                                 <RadioButton value={'0'}>
                                     <Text>현재는 반려동물과 살고 있지 않아요</Text>
@@ -703,6 +630,7 @@ export default class PetSitterProfileReg extends Component{
                                         style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
                                         onChangeText={(refundAccountName) => this.setState({refundAccountName : refundAccountName})}
                                         placeholder='예)홍길동'
+                                        value={this.state.refundAccountName}
                                     />
                                 </View>
                             </View>
@@ -734,6 +662,7 @@ export default class PetSitterProfileReg extends Component{
                                     style={{backgroundColor : Colors.lightGrey, paddingLeft : 10, paddingRight : 0, paddingTop : 0, paddingBottom : 0, borderRadius : 5}}
                                     onChangeText={(refundAccountNumber) => this.setState({refundAccountNumber : refundAccountNumber})}
                                     placeholder='-없이 입력'
+                                    value={this.state.refundAccountNumber}
                                 />
                             </View>
                         </View>
@@ -754,6 +683,7 @@ export default class PetSitterProfileReg extends Component{
                                 multiline={true}
                                 onChangeText={(necessaryItem)=>this.setState({necessaryItem : necessaryItem})}
                                 placeholder='사료, 배변패드 등 반려동물 주인이 지참해야할 항목들을 상세히 적어주세요.'
+                                value={this.state.necessaryItem}
                             />
                         </View>
                     </View>
@@ -770,6 +700,7 @@ export default class PetSitterProfileReg extends Component{
                                 multiline={true}
                                 onChangeText={(petSitterIntroduce)=>this.setState({petSitterIntroduce : petSitterIntroduce})}
                                 placeholder='펫시터 소개는 사용자들이 펫시터를 선택하는데 도움이 됩니다.'
+                                value={this.state.petSitterIntroduce}
                             />
                         </View>
                     </View>
@@ -781,9 +712,9 @@ export default class PetSitterProfileReg extends Component{
                             backgroundColor: Colors.buttonSky, 
                             justifyContent: 'center', 
                             alignItems: 'center'}}
-                            onPress={this._petSitterRegCheck}
+                            onPress={this._tmp}
                         >
-                            <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>등록</Text>
+                            <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>수정</Text>
                         </TouchableOpacity>
                     </View>
 
