@@ -1,6 +1,8 @@
 package com.petsbnb_ver_1;
 
 import com.facebook.react.ReactActivity;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 
 public class MainActivity extends ReactActivity {
 

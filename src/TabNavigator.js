@@ -17,6 +17,7 @@ import BookingPaymentList from './screens/booking/BookingPaymentList';
 import MyBookingList from './screens/myBooking/MyBookingList';
 import MyBookingDetail from './screens/myBooking/MyBookingDetail';
 import BookingReviewWrite from './screens/myBooking/BookingReviewWrite';
+import Timeline from './screens/timeline/Timeline';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import CheckPassword from './screens/profile/CheckPassword';
 import ProfileUserUpdate from './screens/profile/ProfileUserUpdate';
@@ -305,6 +306,16 @@ const myBookingStacks = createStackNavigator({
       screen : BookingReviewWrite,
       navigationOptions : {
         title : '리뷰 쓰기',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+   },
+  Timeline :{
+      screen : Timeline,
+      navigationOptions : {
+        title : '타임 라인',
         headerTitleStyle: {
           width: '75%',
           textAlign: 'center',

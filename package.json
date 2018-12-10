@@ -20,7 +20,9 @@
     "react-native-flexi-radio-button": "^0.2.2",
     "react-native-image-picker": "^0.27.1",
     "react-native-image-slider": "^2.0.3",
+    "react-native-ionicons": "^4.4.6",
     "react-native-modal": "^7.0.0",
+    "react-native-module": "0.0.1",
     "react-native-navigation": "^1.1.492",
     "react-native-phone-call": "^1.0.9",
     "react-native-restart": "0.0.7",
@@ -28,6 +30,7 @@
     "react-native-swiper": "^1.5.13",
     "react-native-textarea": "^1.0.2",
     "react-native-vector-icons": "^6.0.2",
+    "react-native-video": "^4.1.0",
     "react-native-webview-bridge": "^0.40.1",
     "react-navigation": "^2.18.2",
     "react-stomp": "^3.3.0"

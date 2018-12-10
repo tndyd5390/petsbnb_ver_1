@@ -38,6 +38,9 @@ export default class TimeLine extends Component{
 };
 
 
+
+
+
 const styles = StyleSheet.create({
     safeAreaViewStyle : {
         flex: 1,

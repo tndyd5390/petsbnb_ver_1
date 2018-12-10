@@ -213,7 +213,7 @@ class CompleteBottomRequest extends Component{
                 </TouchableOpacity>
                 </View>
                 <View style={{justifyContent : 'center', flex:1}}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>alert('타임라인')}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('Timeline')}>
                     <Text style={styles.bottomText}>타임라인</Text>
                 </TouchableOpacity>
                 </View>
@@ -333,15 +333,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.buttonSky,
         borderRadius: 50,
         marginRight : 10
-    },
-    textAreaContainer: {
-        borderColor: Colors.grey,
-        borderWidth: 1,
-        padding: 5
-    },
-    textArea: {
-        height: 150,
-        justifyContent: "flex-start"
     },
     
 });
