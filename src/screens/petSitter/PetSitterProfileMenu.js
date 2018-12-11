@@ -13,7 +13,8 @@ import {
     Dimensions,
     Image,
     AsyncStorage,
-    ActivityIndicator
+    ActivityIndicator,
+    ScrollView
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
@@ -89,6 +90,10 @@ export default class PetSitterProfileMenu extends Component{
         this.props.navigation.navigate('CustomerCenter');
     }
 
+    _gotoPetList = () => {
+        this.props.navigation.navigate('PetList');
+    }
+
     _gotoPetSitterProfile = async () => {
         this.setState({activityIndicator : true});
         const userNo = await AsyncStorage.getItem('userInfo');
@@ -153,7 +158,7 @@ export default class PetSitterProfileMenu extends Component{
                         customButtonStyle={{width : 170, height : 30, borderWidth : 2, borderRadius:40, borderColor : Colors.buttonBorderGrey}}
                     />
                 </View>
-                <View>
+                <ScrollView>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 30}}
                         onPress={this._gotoPetList}
                     >
@@ -205,7 +210,7 @@ export default class PetSitterProfileMenu extends Component{
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderBottomWidth : 1, borderTopColor: Colors.black, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}} onPress={this._logOut}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>로그아웃</Text>
                     </TouchableOpacity>
-                </View>
+                </ScrollView>
             </View>
         );
     }

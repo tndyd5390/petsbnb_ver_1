@@ -121,12 +121,21 @@ export default class PetUpdateView extends Component{
         this._getPetInfo();
     }
 
-    _gotoMenu = () => {
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'ProfileMenu' })],
-          });
-        this.props.navigation.dispatch(resetAction);
+    _gotoMenu = async () => {
+        const petSitterMode = await AsyncStorage.getItem('petSitterMode');
+        if(petSitterMode == null){
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: 'ProfileMenu' })],
+              });
+            this.props.navigation.dispatch(resetAction);
+        }else{
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: 'PetSitterProfileMenu' })],
+              });
+            this.props.navigation.dispatch(resetAction);
+        }
     }
 
     _getPetInfo = async() => {

@@ -32,6 +32,7 @@ export default class PetSitterProfileUpdateView extends Component{
     constructor(props){
         super(props);
         this.state = {
+            petSitterNo : '',
             activityIndicator : true,
             petSitterName : '',
             petSitterIntroduceOneLine : '',
@@ -84,10 +85,13 @@ export default class PetSitterProfileUpdateView extends Component{
         .then((response) => response.json())
         .then((res => {
             if(res.petSitterInfo != null){
+                console.log(res.petSitterInfo);
                 this.setState({activityIndicator : false});
                 const petSitterInfo = res.petSitterInfo;
                 const petSitterImages = res.petSitterImages;
                 this.setState({
+                    petSitterNo : petSitterInfo.petSitterNo,
+                    userNo : petSitterInfo.userNo,
                     petSitterName : petSitterInfo.petSitterName,
                     petSitterIntroduceOneLine : petSitterInfo.petSitterIntroduceOneLine,
                     petSitterEnv : petSitterInfo.petSitterEnv,
@@ -159,6 +163,38 @@ export default class PetSitterProfileUpdateView extends Component{
         return imageView;
     }
 
+    _deleteImage = async(petSitterFileNo) => {
+
+        this.setState({activityIndicator : true});
+        const params = {
+            petSitterFileNo : petSitterFileNo,
+            petSitterNo : this.state.petSitterNo
+        }
+        await fetch('http://192.168.0.10:8080/petSitter/deletePetSitterImage.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            if(res){
+                this.setState({
+                    imageDataArr : res
+                })
+            }else{
+                alert('사진 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
+            }
+            this.setState({activityIndicator : false});
+        }))
+        .catch((err) => {
+            alert("서버 에러");
+        })
+        this.setState({activityIndicator : false});
+    }
+
     _butttonHandleFunc = async () => {
         ImagePicker.showImagePicker(options, (response) => {
             
@@ -168,39 +204,181 @@ export default class PetSitterProfileUpdateView extends Component{
               console.log('ImagePicker Error: ', response.error);
               alert('사진을 다시 선택해주세요.');
             } else {
+                this.setState({activityIndicator : true});
+                if(this.state.imageDataArr.length >= 11){
+                    alert('사진은 최대 10장까지만 등록할 수 있습니다.');
+                }else {
+                    const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
 
-                const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
-
-                RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petImageUploadSep.do', {
-                    Authorization : "Bearer access-token",
-                    'Content-Type' : 'multipart/form-data',
-                },[
-                    {name : 'petImage', filename : 'image' + this.state.userNo, type : 'image/' + extension, data : response.data},
-                    {name : 'userNo', data : this.state.userNo},
-                    {name : 'petNo', data : this.state.petNo}
-                  ])
-                .then((resp) => resp.json())
-                .then((res => {
-                    if(res){
+                    RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/petSitter/petSitterImageUpload.do', {
+                        Authorization : "Bearer access-token",
+                        'Content-Type' : 'multipart/form-data',
+                    },[
+                        {name : 'petSitterImage', filename : 'image' + this.state.userNo, type : 'image/' + extension, data : response.data},
+                        {name : 'userNo', data : this.state.userNo},
+                        {name : 'petSitterNo', data : this.state.petSitterNo}
+                    ])
+                    .then((resp) => resp.json())
+                    .then((res => {
+                        if(res){
+                            this.setState({
+                                imageDataArr : res
+                            })
+                        }else{
+                            alert("사진 업로드 실패");
+                        }
                         this.setState({
-                            imageDataArr : res
+                            activityIndicator : false
                         })
-                    }else{
-                        alert("사진 업로드 실패");
-                    }
+                    }))
+                    .catch((err) => {
+                        alert("서버 오작동");
+                    })
                     this.setState({
                         activityIndicator : false
                     })
-                }))
-                .catch((err) => {
-                    alert("서버 오작동");
-                })
+                }
             }
         });
     }
 
-    _tmp = () => {
-        console.log(this.state);
+    _checkAvailable = () => {
+        if(
+            !this.state.longTermAvailable && 
+            !this.state.walkAvailable && 
+            !this.state.bathAvailable &&
+            !this.state.firstaidAvailable &&
+            !this.state.haircareAvailable
+        ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    _checkImpossible = () => {
+        if(
+            !this.state.markingImpossible &&
+            !this.state.bowelImpossible && 
+            !this.state.attackImpossible &&
+            !this.state.separationImpossible &&
+            !this.state.biteImpossible
+        ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    _updatePetSitterInfoProc = async() => {
+        if(this.state.imageDataArr.length < 1){
+            alert('사진을 선택해 주세요.');
+        }else if(this.state.petSitterName == ''){
+            alert('이름을 입력해주세요.');
+        }else if(this.state.petSitterIntroduceOneLine == ''){
+            alert('한줄소개를 입력해주세요.');
+        }else if(this.state.petSitterEnv == ''){
+            alert('펫시팅 환경을 입력해주세요.');
+        }else if(this.state.petSitterHasPet == ''){
+            alert('반려동물 여부를 선택해주세요.');
+        }else if(this.state.smallPetNightPrice == ''){
+            alert('소형 반려동물 1박 금액을 선택해주세요.');
+        }else if(this.state.smallPetDayPrice == ''){
+            alert('소형 반려동물 데이 금액을 선택해주세요.');
+        }else if(this.state.middlePetNightPrice == ''){
+            alert('중형 반려동물 1박 금액을 선택해주세요.');
+        }else if(this.state.middlePetDayPrice == ''){
+            alert('중형 반려동물 데이 금액을 선택해주세요.');
+        }else if(this.state.bigPetNightPrice == ''){
+            alert('대형 반려동물 1박 금액을 선택해주세요.');
+        }else if(this.state.bigPetDayPrice == ''){
+            alert('대형 반려동물 데이 금액을 선택해주세요.');
+        }else if(this.state.refundAccountName == ''){
+            alert('환급계좌 예금주명을 입력해주세요.');
+        }else if(this.state.refundBank == ''){
+            alert('환급계좌 은행을 선택해주세요.')
+        }else if(this.state.refundAccountNumber == ''){
+            alert('환급계좌번호를 입력해주세요.');
+        }else if(this.state.petSitterIntroduce == ''){
+            alert('펫시터 소개를 입력해주세요.');
+        }else if(this._checkAvailable()){
+            Alert.alert(
+                '서비스 확인',
+                '이용가능 서비스를 선택하지 않으셨습니다.\n계속 진행 하시겟습니까?',
+                [
+                  {text: 'Cancel', onPress: () => {}},
+                  {text: 'OK', onPress: this._petSitterRegProc},
+                ],
+                { cancelable: false }
+            )
+        }else if(this._checkImpossible()){
+            Alert.alert(
+                '서비스 확인',
+                '펫시팅 불가여부를 선택하지 않으셨습니다.\n계속 진행 하시겟습니까?',
+                [
+                  {text: 'Cancel', onPress: ()=>{}},
+                  {text: 'OK', onPress: this._petSitterRegProc},
+                ],
+                { cancelable: false }
+            )
+        }else{
+            this.setState({activityIndicator : true});
+            const state = this.state;
+            const params = {
+                petSitterNo : state.petSitterNo.toString(),
+                userNo : state.userNo.toString(),
+                petSitterName : state.petSitterName.toString(),
+                petSitterIntroduceOneLine : state.petSitterIntroduceOneLine.toString(),
+                petSitterEnv : state.petSitterEnv.toString(),
+                petSitterHasPet : state.petSitterHasPet.toString(),
+                longTermAvailable : state.longTermAvailable.toString(),
+                walkAvailable : state.walkAvailable.toString(),
+                bathAvailable : state.bathAvailable.toString(),
+                firstaidAvailable : state.firstaidAvailable.toString(),
+                haircareAvailable : state.haircareAvailable.toString(),
+                markingImpossible : state.markingImpossible.toString(),
+                bowelImpossible : state.bowelImpossible.toString(),
+                attackImpossible : state.attackImpossible.toString(),
+                separationImpossible : state.separationImpossible.toString(),
+                biteImpossible : state.biteImpossible.toString(),
+                smallPetNightPrice : state.smallPetNightPrice.toString(),
+                smallPetDayPrice : state.smallPetDayPrice.toString(),
+                middlePetDayPrice : state.middlePetDayPrice.toString(),
+                middlePetNightPrice : state.middlePetNightPrice.toString(),
+                bigPetDayPrice : state.bigPetDayPrice.toString(),
+                bigPetNightPrice : state.bigPetNightPrice.toString(),
+                refundAccountName : state.refundAccountName.toString(),
+                refundBank : state.refundBank.toString(),
+                refundAccountNumber : state.refundAccountNumber.toString(),
+                necessaryItem : state.necessaryItem.toString(),
+                petSitterIntroduce : state.petSitterIntroduce.toString()
+            }
+    
+            await fetch('http://192.168.0.10:8080/petSitter/updatePetSitterProc.do', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+            })
+            .then((response) => response.json())
+            .then((res => {
+                if(res.result === true){
+                    alert("펫시터 프로필이 변경되었습니다.");
+                    this.setState({activityIndicator : false});
+                    this.props.navigation.goBack();
+                }else{
+                    //가입 실패
+                    alert('서버에 문제가 있습니다. 잠시후 다시 시도해주세요.');
+                }
+                this.setState({activityIndicator : false});
+            }))
+            .catch((err) => {
+                alert(err, "잠시후 다시 시도해 주세요.");
+            })
+            this.setState({activityIndicator : false});
+        }
     }
     
 
@@ -712,7 +890,7 @@ export default class PetSitterProfileUpdateView extends Component{
                             backgroundColor: Colors.buttonSky, 
                             justifyContent: 'center', 
                             alignItems: 'center'}}
-                            onPress={this._tmp}
+                            onPress={this._updatePetSitterInfoProc}
                         >
                             <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>수정</Text>
                         </TouchableOpacity>
