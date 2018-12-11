@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
 import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-ionicons'
 
 const { width } = Dimensions.get('window');
 
 export default class Feed extends Component {
-  state = {
-    rate: 1,
-    volume: 1,
-    muted: false,
-    resizeMode: 'contain',
-    duration: 0.0,
-    currentTime: 0.0,
-    controls: false,
-    paused: true,
-    skin: 'custom',
-    ignoreSilentSwitch: null,
-    isBuffering: false,
-    imageHeight: 0
-  }
-
+  
   constructor(props) {
     super(props);
+    this.state = {
+        rate: 1,
+        volume: 1,
+        muted: false,
+        resizeMode: 'contain',
+        duration: 0.0,
+        currentTime: 0.0,
+        controls: false,
+        paused: true,
+        skin: 'custom',
+        ignoreSilentSwitch: null,
+        isBuffering: false,
+        imageHeight: 0
+      };
     this.onLoad = this.onLoad.bind(this);
     this.onProgress = this.onProgress.bind(this);
     this.onBuffer = this.onBuffer.bind(this);
@@ -83,7 +83,7 @@ export default class Feed extends Component {
           repeat={true}
         />
       <View style={{ position: 'absolute', right: 10, top: 10, backgroundColor: 'rgba(0, 0, 0, 0.6)', height: 40, width: 40, borderRadius: 20 }}>
-        <Ionicons name="ios-videocam-outline" size={24} color="white" style={{ backgroundColor: 'transparent', lineHeight: 40, marginLeft: 10 }} />
+        <Icon name="videocam" size={24} color="white" style={{ backgroundColor: 'transparent', lineHeight: 40, marginLeft: 10 }} />
       </View>
       </TouchableOpacity>
     )

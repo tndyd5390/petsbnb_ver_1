@@ -24,7 +24,7 @@ export default class Timeline extends Component {
           key: 3,
           username: 'cathy',
           type: 'video',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/videos/sky.mov',
+          source: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
           avatarUrl: 'https://unsplash.it/100?image=996'
         },
          {
@@ -44,7 +44,7 @@ export default class Timeline extends Component {
           key: 6,
           username: 'anna',
           type: 'video',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/videos/garden.mov',
+          source: 'https://sample-videos.com/video123/mkv/720/big_buck_bunny_720p_1mb.mkv',
           avatarUrl: 'https://unsplash.it/100?image=823'
         },
          {
@@ -57,6 +57,7 @@ export default class Timeline extends Component {
     
     return (
       <FlatList
+        keyExtractor = { (item, index) => index.toString() }
         style={{ flex: 1 }}
         data={data}
         renderItem={({ item }) => (
