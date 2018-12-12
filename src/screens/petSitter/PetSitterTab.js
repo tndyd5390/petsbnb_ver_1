@@ -18,6 +18,7 @@ import UsageTerm from '../profile/UsageTerm';
 import PetSitterProfileReg from './PetSitterProfileReg';
 import PetSitterProfileUpdateView from './PetSitterProfileUpdateView';
 import PetSitterReservationMenu from './PetSitterReservationMenu';
+import PetSitterReservationExposure from './PetSitterReservationExposure';
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -146,6 +147,16 @@ export default class PetSitterTab extends Component{
             title : '예약관리',
             headerTitleStyle : {
               width : '90%',
+              textAlign : 'center'
+            }
+          }
+        },
+        PetSitterReservationExposure : {
+          screen : PetSitterReservationExposure,
+          navigationOptions : {
+            title : '노출 설정',
+            headerTitleStyle : {
+              width : '80%',
               textAlign : 'center'
             }
           }

@@ -24,21 +24,19 @@ export default class PetSitterReservationMenu extends Component{
             <View style={styles.container}>
                 <ScrollView>
                     <TouchableOpacity style={{width : width, height : 50, borderBottomWidth : 1, borderBottomColor : Colors.black, justifyContent : 'center'}}
-                        
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>요청 예약보기</Text>
                     </TouchableOpacity>
                     
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderBottomWidth : 1, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}}
-                        
+                        onPress={()=>{this.props.navigation.navigate('PetSitterReservationExposure')}}
                     >
-                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>예약 가능 날짜 설정</Text>
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>예약 노출 설정</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderBottomWidth : 1, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}}
-                        
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>고객리뷰</Text>
                     </TouchableOpacity>
