@@ -154,7 +154,7 @@ export default class PetSitterTab extends Component{
         PetSitterReservationExposure : {
           screen : PetSitterReservationExposure,
           navigationOptions : {
-            title : '노출 설정',
+            title : '예약 게시 설정',
             headerTitleStyle : {
               width : '80%',
               textAlign : 'center'

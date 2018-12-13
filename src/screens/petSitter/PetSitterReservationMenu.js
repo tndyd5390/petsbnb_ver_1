@@ -32,7 +32,7 @@ export default class PetSitterReservationMenu extends Component{
                         style={{width : width, height : 50, borderBottomWidth : 1, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}}
                         onPress={()=>{this.props.navigation.navigate('PetSitterReservationExposure')}}
                     >
-                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>예약 노출 설정</Text>
+                        <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>예약 게시 설정</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity 

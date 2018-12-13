@@ -21,6 +21,7 @@
     "react-native-image-picker": "^0.27.1",
     "react-native-image-slider": "^2.0.3",
     "react-native-modal": "^7.0.0",
+    "react-native-modal-datetime-picker": "^6.0.0",
     "react-native-navigation": "^1.1.492",
     "react-native-phone-call": "^1.0.9",
     "react-native-restart": "0.0.7",
