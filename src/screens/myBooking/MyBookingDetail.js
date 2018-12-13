@@ -169,7 +169,7 @@ class BottomRequest extends Component{
             alert('예약 취소');
         }else{
             text = '타임 라인';
-            alert('타임 라인');
+            this.props.navigation.navigate('Timeline');
         }
     };
 

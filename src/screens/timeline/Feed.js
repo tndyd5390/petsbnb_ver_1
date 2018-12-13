@@ -81,6 +81,9 @@ export default class Feed extends Component {
           onProgress={this.onProgress}
           onEnd={() => null}
           repeat={true}
+          onError={err =>requestAnimationFrame(()=>{
+            console.log(err);
+          })}
         />
       <View style={{ position: 'absolute', right: 10, top: 10, backgroundColor: 'rgba(0, 0, 0, 0.6)', height: 40, width: 40, borderRadius: 20 }}>
         <Icon name="videocam" size={24} color="white" style={{ backgroundColor: 'transparent', lineHeight: 40, marginLeft: 10 }} />
