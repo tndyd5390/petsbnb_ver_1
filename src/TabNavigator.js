@@ -14,6 +14,11 @@ import BookingDate from './screens/booking/BookingDate';
 import BookingPetList from './screens/booking/BookingPetList';
 import BookingConfirm from './screens/booking/BookingConfirm';
 import BookingPaymentList from './screens/booking/BookingPaymentList';
+import MyBookingList from './screens/myBooking/MyBookingList';
+import MyBookingDetail from './screens/myBooking/MyBookingDetail';
+import BookingReviewWrite from './screens/myBooking/BookingReviewWrite';
+import Timeline from './screens/timeline/Timeline';
+import TLComments from './screens/timeline/TLComments';
 import ProfileMenu from './screens/profile/ProfileMenu';
 import CheckPassword from './screens/profile/CheckPassword';
 import ProfileUserUpdate from './screens/profile/ProfileUserUpdate';
@@ -149,7 +154,7 @@ export default class TabNavigator extends Component {
         }
       },
       Reservation : {
-        screen : Reservation,
+        screen : myBookingStacks,
         navigationOptions : {
           tabBarLabel : '예약보기',
           tabBarIcon : ({tintColor}) => (
@@ -206,7 +211,7 @@ const BookingStacks = createStackNavigator({
     Explore : {
       screen : Explore,
       navigationOptions : {
-
+        header : null
       }
     },
     BookingDetail :{
@@ -279,6 +284,71 @@ BookingStacks.navigationOptions = ({ navigation }) => {
     tabBarVisible,
   };
 };
+
+
+const myBookingStacks = createStackNavigator({
+  MyBookingList : {
+      screen : MyBookingList,
+      navigationOptions : {
+        header : null
+      }
+    },
+  MyBookingDetail :{
+      screen : MyBookingDetail,
+      navigationOptions : {
+        title : '예약 상세',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+   },
+  BookingReviewWrite :{
+      screen : BookingReviewWrite,
+      navigationOptions : {
+        title : '리뷰 쓰기',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+   },
+  Timeline :{
+      screen : Timeline,
+      navigationOptions : {
+        title : '타임 라인',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+   },
+   TLComments :{
+      screen : TLComments,
+      navigationOptions : {
+        title : '댓글',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+   },
+  },
+  {
+  initialRouteName: 'MyBookingList'
+  });
+
+  myBookingStacks.navigationOptions = ({ navigation }) => {
+    let tabBarVisible = true;
+    if (navigation.state.index > 0) {
+      tabBarVisible = false;
+    }
+    return {
+      tabBarVisible,
+    };
+  };
+
+
 
 
 const ChatStacks = createStackNavigator({ 
