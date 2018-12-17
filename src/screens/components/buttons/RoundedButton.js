@@ -19,13 +19,13 @@ export default class RoundedButton extends Component{
         const textColor = this.props.textColor || {color : Colors.black};
         const textSize = this.props.textSize || {fontSize :17};
         const customButtonStyle = this.props.customButtonStyle || {};
-        const width = this.props.width || {width : width - 40}
-        const radius = this.props.radius || 40
+        const propWidth = this.props.width || width - 40;
+        const radius = this.props.radius || 40;
         return(
             <View>
                 <TouchableOpacity
                     onPress={buttonHandleFunc}
-                    style={[{ height : 50, justifyContent : 'center', alignItems : 'center', borderRadius : radius, marginTop : 15, fontSize : 20}, buttonColor, customButtonStyle, width]}
+                    style={[{ height : 50, justifyContent : 'center', alignItems : 'center', borderRadius : radius, marginTop : 15, fontSize : 20, width : propWidth}, buttonColor, customButtonStyle]}
                 >
                     <Text style={[textColor, textSize, {fontWeight : '700'}]}>{title}</Text>
                 </TouchableOpacity>
