@@ -13,7 +13,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Button,
-    Modal
+    FlatList
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Category from '../components/Explore/Category';
@@ -21,12 +21,17 @@ import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import BookingDate from './BookingDate';
+import StarRating from 'react-native-star-rating';
+
+
+const { width } = Dimensions.get('window');
 
 export default class BookingDetail extends Component{
     constructor(props) {
         super(props);
         this.state = {
             heartStatus : false,
+            starCount : 4
         };
     };
     
@@ -69,12 +74,14 @@ export default class BookingDetail extends Component{
                             )}
                             style={{height:200}}
                     />
-                <Profile/>
+                <Profile starCount={this.state.starCount}/>
                 <Certificate/>
                 <Price/>
                 <Enviroment/>
                 <PetYN/>
                 <Improssible/>
+                {this.state.starCount == 0 ? null : <Review/>}
+                <View style={{backgroundColor : Colors.white, height : 30}}/>
                 </ScrollView>
                 <BottomRequest navigation={this.props.navigation}/>
                 <TouchableOpacity activeOpacity = { 0.8 } style = { styles.stickerBtn }>
@@ -87,6 +94,13 @@ export default class BookingDetail extends Component{
     
 }
 class Profile extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            starCount : this.props.starCount
+        };
+    };
+
     render(){
         return(
         <View style={styles.listBar}>
@@ -102,6 +116,16 @@ class Profile extends Component {
                     <TouchableOpacity style={{marginLeft:10}}>
                         <Text style={{color : Colors.buttonSky}}>프로필 보기</Text>
                     </TouchableOpacity>
+                </View>
+                <View style={{flexDirection: 'row', marginTop:2}}>
+                    <StarRating
+                        disabled={true}
+                        maxStars={5}
+                        rating={this.state.starCount}
+                        fullStarColor={Colors.buttonSky}
+                        starSize={22}
+                    />
+                    <Text>   {this.state.starCount}</Text>
                 </View>
             </View>            
         </View>
@@ -265,11 +289,146 @@ class Improssible extends Component {
     };
 };
 
+class Review extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            nowCount : 5,
+            allCount : 6
+        }
+        
+    };
+
+    _renderItem = ({item}) => (
+        <ReviewContents
+            key = {item.key}
+            starCount = {item.starCount}
+            avatarUrl = {item.avatarUrl}
+            userName = {item.userName}
+            reviewText = {item.reviewText}
+        />
+    );
+
+    render(){
+        const data = [
+            {
+                key : 1,
+                starCount : 3,
+                avatarUrl: 'https://unsplash.it/100?image=1027',
+                userName : '이필원',
+                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.' 
+            },
+            {
+                key : 2,
+                starCount : 4,
+                avatarUrl: 'https://unsplash.it/100?image=1027',
+                userName : '이필원2',
+                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
+            },
+            {
+                key : 3,
+                starCount : 4,
+                avatarUrl: 'https://unsplash.it/100?image=1027',
+                userName : '이필원3',
+                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
+            },
+            {
+                key : 4,
+                starCount : 4,
+                avatarUrl: 'https://unsplash.it/100?image=1027',
+                userName : '이필원4',
+                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
+            },
+            {
+                key : 5,
+                starCount : 5,
+                avatarUrl: 'https://unsplash.it/100?image=1027',
+                userName : '이필원4',
+                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
+            },
+            
+        ];
+
+        return(
+            <View style={{flexDirection:'column', marginTop : 6}}>
+                <View style={styles.reviewBar}>
+                    <View style={{flex:1,alignItems : 'center', flexDirection: 'row',marginLeft : 10}}>
+                        <View style={styles.blueCircle}/>
+                        <Text style={{fontWeight:'bold', fontSize : 15}}>리뷰</Text>
+                    </View>
+                </View>
+                <View style={{flex:1}}>
+                    <FlatList
+                        data={data}
+                        renderItem={this._renderItem} 
+                        keyExtractor={ (item, index) => index.toString() }
+                    />
+                </View>
+                {this.state.allCount >= 5 ? <MoreReview/> : null}
+            </View>
+        );
+    };
+};
+
+class MoreReview extends Component{
+    constructor(props){
+        super(props);
+    
+    };
+
+    render(){
+        return(
+            <View style={{backgroundColor : Colors.white, alignItems : 'center', paddingTop:5}}>
+                    <TouchableOpacity style={{width : '85%', height : 40, backgroundColor : Colors.buttonSky,borderRadius:10, justifyContent : 'center', alignItems : 'center'}}>
+                        <Text style={{color:Colors.white}}>더보기</Text>
+                    </TouchableOpacity>
+            </View>
+        );
+    };
+};
+
+class ReviewContents extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            userName : this.props.userName,
+            avatarUrl : this.props.avatarUrl,
+            reviewText : this.props.reviewText,
+            starCount : this.props.starCount
+        };
+    };
+
+    render(){
+        return(
+            <View style={styles.reviewContentsBar}>
+                <View style={{alignItems : 'center', justifyContent: 'center'}}>
+                        <Image source={{ uri : this.state.avatarUrl}} style={{width : 30, height : 30, margin : 10}}/>
+                </View>
+                <View style={{justifyContent: 'center', marginLeft : 15}}>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={{fontWeight : 'bold'}}>{this.state.userName}   </Text>
+                        <StarRating
+                            disabled={true}
+                            maxStars={5}
+                            rating={this.state.starCount}
+                            fullStarColor={Colors.buttonSky}
+                            starSize={15}
+                        />
+                        <Text>   {this.state.starCount}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', marginTop:2}}>
+                        <Text>{this.state.reviewText}</Text>
+                    </View>
+                </View>
+            </View>
+        );
+    };
+}
 
 class BottomRequest extends Component{
     constructor(props) {
         super(props);
-    }
+    };
 
 
     render(){
@@ -312,6 +471,7 @@ const styles = StyleSheet.create({
         height : 130,
         backgroundColor : Colors.white,
         marginBottom : 5,
+        width : width
     },
     priceBar: {
         flex:1,
@@ -351,9 +511,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         backgroundColor : Colors.white,
-        marginBottom : 20,
+        marginBottom : 2,
     },
-
+    reviewBar : {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent : 'space-around',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        height : 30,
+        backgroundColor : Colors.white,
+    },
+    reviewContentsBar : {
+        flex:1,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor : Colors.white,
+        width : width
+    },
     bottomRequest : {
         justifyContent: 'center', 
         alignItems: 'center',
