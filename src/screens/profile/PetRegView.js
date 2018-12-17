@@ -133,7 +133,12 @@ export default class PetRegView extends Component{
     }
 
     _deleteImage = (index) => {
-        alert(index);
+        if(this.state.imageDataArr.length < 2){
+            this.setState({imageDataArr : []});    
+            return;
+        }
+        const imageDataArr = this.state.imageDataArr.splice(index, 1);
+        this.setState({imageDataArr : imageDataArr});
     }
 
     _noneVaccine = () => {
