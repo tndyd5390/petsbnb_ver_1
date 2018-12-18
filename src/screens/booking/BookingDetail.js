@@ -29,7 +29,10 @@ const { width } = Dimensions.get('window');
 export default class BookingDetail extends Component{
     constructor(props) {
         super(props);
+
+        const petsitterNo = this.props.navigation.getParam('petsitterNo');
         this.state = {
+            petsitterNo : petsitterNo,
             heartStatus : false,
             starCount : 4
         };

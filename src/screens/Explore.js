@@ -11,15 +11,73 @@ import {
     Image,
     Dimensions,
     TouchableOpacity,
-    AsyncStorage
+    AsyncStorage,
+    FlatList
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'
 import Category from './components/Explore/Category';
 import Colors from '../utils/Colors';
+import RNFetchBlob from 'react-native-fetch-blob';
+import StarRating from 'react-native-star-rating';
 
 const{height, width} = Dimensions.get('window');
 
-class Explore extends Component {
+export default class Explore extends Component {
+    constructor(props){
+        super(props)
+
+        this.state = {
+            data : []
+        }
+    };
+
+    componentWillMount(){
+        this._getBookingList();
+    }
+
+    _getBookingList = async() => {
+        const params = {
+            search : '1'
+        }
+
+        await fetch('http://192.168.0.8:8091/booking/getBookingList.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+        })
+        .then((response) => response.json())
+        .then((res => {
+            console.log(res);
+            this.setState({
+                data : res
+            });
+        }))
+        .catch((err) => {
+            console.log(err);
+        })
+
+    };
+
+    _onPressItem = (item) => {
+        console.log(item);
+        this.props.navigation.navigate('BookingDetail',{heart : false, petsitterNo: item.petsitterNo})
+    };
+
+    _renderItem = ({item}) => (
+        <BookingsContents
+            onPressItem = {this._onPressItem}
+            petsitterNo = {item.petsitterNo}
+            petsitterName = {item.petsitterName}
+            petsitterIntroduceOneline = {item.petsitterIntroduceOneline}
+            starCount = {item.starCount}
+            reviewCount = {item.reviewCount}
+            petsitterFileName = {item.petsitterFileName}
+            petsitterFilePath = {item.petsitterFilePath}
+        />
+    )
+
     render() {
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -38,65 +96,82 @@ class Explore extends Component {
                     <ScrollView
                         scrollEventThrottle={16}
                     >
-                    <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('BookingDetail',{heart : false})}
-                    >
-                        <View style={styles.exploreContainer}>
-                            <View style={styles.exploreWrapper}>
-                                <View style={styles.exploreImageView}>
-                                    <Image
-                                        source={require('../../assets/home.jpg')}
-                                        style={styles.exploreImage}
-                                    />
-                                </View>
-                                <Text style={styles.exploreImageTitle}>
-                                    펫시터 알바 입니다.
-                                </Text>
-                                <Text style={styles.exploreImageDescription}>
-                                    성남시 분당구 불곡산 산책을 시키며...
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                        <View style={styles.exploreContainer}>
-                            <View style={styles.exploreWrapper}>
-                                <View style={styles.exploreImageView}>
-                                    <Image
-                                        source={require('../../assets/home.jpg')}
-                                        style={styles.exploreImage}
-                                    />
-                                </View>
-                                <Text style={styles.exploreImageTitle}>
-                                    펫시터 알바 입니다.
-                                </Text>
-                                <Text style={styles.exploreImageDescription}>
-                                    성남시 분당구 불곡산 산책을 시키며...
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.exploreContainer}>
-                            <View style={styles.exploreWrapper}>
-                                <View style={styles.exploreImageView}>
-                                    <Image
-                                        source={require('../../assets/home.jpg')}
-                                        style={styles.exploreImage}
-                                    />
-                                </View>
-                                <Text style={styles.exploreImageTitle}>
-                                    펫시터 알바 입니다.
-                                </Text>
-                                <Text style={styles.exploreImageDescription}>
-                                    성남시 분당구 불곡산 산책을 시키며...
-                                </Text>
-                            </View>
-                        </View>
+                        <FlatList
+                            data={this.state.data}
+                            extraData={this.state} 
+                            renderItem={this._renderItem} 
+                            keyExtractor={ (item, index) => index.toString() }
+                        />
                     </ScrollView>
                 </View>
             </SafeAreaView>
         );
     }
 }
-export default Explore;
+
+class BookingsContents extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            petsitterNo : this.props.petsitterNo,
+            petsitterName : this.props.petsitterName,
+            petsitterIntroduceOneline : this.props.petsitterIntroduceOneline,
+            starCount : this.props.starCount,
+            reviewCount : this.props.reviewCount,
+            petsitterFileName : this.props.petsitterFileName,
+            petsitterFilePath : this.props.petsitterFilePath,
+            userAddress : this.props.userAddress,
+            userAddressDetail : this.props.userAddressDetail
+        }
+    };
+    
+    _onPress = () => {
+        this.props.onPressItem(this.state);
+    };
+
+
+    render(){
+        return(
+            <TouchableOpacity
+                onPress={() => this._onPress()}
+            >
+                <View style={styles.exploreContainer}>
+                    <View style={styles.exploreWrapper}>
+                        <View style={styles.exploreImageView}>
+                            <Image
+                                source={require('../../assets/home.jpg')}
+                                style={styles.exploreImage}
+                            />
+                        </View>
+                        <Text style={styles.exploreImageTitle}>
+                            {this.state.petsitterIntroduceOneline}
+                        </Text>
+                        <Text style={{color : Colors.grey}}>
+                            주소들어갈곳이다.
+                        </Text>
+                        <Text style={styles.exploreImageDescription}>
+                            {this.state.petsitterName}
+                        </Text>
+                        {this.state.starCount == 0 ?  (<Text style={{fontSize:12, color:Colors.grey}}>아직 등록된 리뷰가 없어요!</Text>) :
+                            (
+                                <View style={{flexDirection :'row'}}>
+                                <StarRating
+                                    disabled={true}
+                                    maxStars={5}
+                                    rating={this.state.starCount}
+                                    fullStarColor={Colors.buttonSky}
+                                    starSize={18}
+                                />
+                                <Text>  {this.state.starCount} ({this.state.reviewCount})</Text>
+                                </View>
+                            )
+                        }
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    };
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -140,7 +215,8 @@ const styles = StyleSheet.create({
     exploreContainer : {
         flex : 1, 
         backgroundColor : 'white', 
-        paddingTop : 20
+        paddingTop : 20,
+        paddingBottom : 10
     },
     exploreWrapper : {
         paddingHorizontal : 20
