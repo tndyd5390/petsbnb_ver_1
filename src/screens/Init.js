@@ -23,10 +23,6 @@ export default class Init extends Component{
     _nextView = async() => {
         const userNo = await AsyncStorage.getItem('userInfo');
         const petSitterMode = await AsyncStorage.getItem('petSitterMode');
-        console.log('1');
-        console.log(userNo);
-        console.log('2');
-        console.log(petSitterMode);
         /**
          * 여기서 세가지의 경우의 수가 있음
          * 1. 로그인을 안한 상태

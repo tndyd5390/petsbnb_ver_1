@@ -12,7 +12,9 @@ import {
     StyleSheet,
     Dimensions,
     Image,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator,
+    ScrollView
 } from 'react-native';
 const{width, height} = Dimensions.get('window');
 
@@ -88,8 +90,39 @@ export default class PetSitterProfileMenu extends Component{
         this.props.navigation.navigate('CustomerCenter');
     }
 
-    _gotoPetSitterProfile = () => {
-        this.props.navigation.navigate('PetSitterProfile');
+    _gotoPetList = () => {
+        this.props.navigation.navigate('PetList');
+    }
+
+    _gotoPetSitterProfile = async () => {
+        this.setState({activityIndicator : true});
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo : userNo
+        }
+        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfo.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            if(res.petSitterInfo != null){
+                this.setState({activityIndicator : false});
+                this.props.navigation.navigate('PetSitterProfileUpdateView', {petSitterNo : res.petSitterInfo.petSitterNo});
+            }else{
+                this.setState({activityIndicator : false});
+                this.props.navigation.navigate('PetSitterProfileReg');
+            }
+        }))
+        .catch((err) => {
+            console.log(err);
+            this.setState({activityIndicator : false});
+        })
+        this.setState({activityIndicator : false});
     }
 
     render() {
@@ -125,7 +158,7 @@ export default class PetSitterProfileMenu extends Component{
                         customButtonStyle={{width : 170, height : 30, borderWidth : 2, borderRadius:40, borderColor : Colors.buttonBorderGrey}}
                     />
                 </View>
-                <View>
+                <ScrollView>
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 30}}
                         onPress={this._gotoPetList}
                     >
@@ -177,7 +210,7 @@ export default class PetSitterProfileMenu extends Component{
                     <TouchableOpacity style={{width : width, height : 50, borderTopWidth : 1, borderBottomWidth : 1, borderTopColor: Colors.black, borderBottomColor : Colors.black, justifyContent : 'center', marginTop : 0}} onPress={this._logOut}>
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>로그아웃</Text>
                     </TouchableOpacity>
-                </View>
+                </ScrollView>
             </View>
         );
     }
