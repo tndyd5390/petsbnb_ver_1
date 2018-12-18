@@ -15,8 +15,10 @@ import PetUpdateView from '../profile/PetUpdateView';
 import CustomerCenter from '../profile/CustomerCenter';
 import Preference from '../profile/Preferences';
 import UsageTerm from '../profile/UsageTerm';
-import PetSitterProfile from './PetSitterProfile';
-
+import PetSitterProfileReg from './PetSitterProfileReg';
+import PetSitterProfileUpdateView from './PetSitterProfileUpdateView';
+import PetSitterReservationMenu from './PetSitterReservationMenu';
+import PetSitterReservationExposure from './PetSitterReservationExposure';
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -106,8 +108,8 @@ export default class PetSitterTab extends Component{
                 }
             }
         },
-        PetSitterProfile : {
-          screen : PetSitterProfile,
+        PetSitterProfileReg : {
+          screen : PetSitterProfileReg,
           navigationOptions : {
             title : '펫시터 프로필',
             headerTitleStyle : {
@@ -115,7 +117,17 @@ export default class PetSitterTab extends Component{
               textAlign : 'center'
             }
           }
-        }
+        },
+        PetSitterProfileUpdateView: {
+            screen : PetSitterProfileUpdateView,
+            navigationOptions : {
+              title : '펫시터 프로필',
+              headerTitleStyle : {
+                width : '75%',
+                textAlign : 'center'
+              }
+            }
+          },
       })
 
       petSitterProfileStackNavigation.navigationOptions = ({ navigation }) => {
@@ -127,6 +139,29 @@ export default class PetSitterTab extends Component{
           tabBarVisible,
         };
       };
+
+      const petSitterReservationStackNavigator = createStackNavigator({
+        PetSitterReservationMenu : {
+          screen : PetSitterReservationMenu,
+          navigationOptions : {
+            title : '예약관리',
+            headerTitleStyle : {
+              width : '90%',
+              textAlign : 'center'
+            }
+          }
+        },
+        PetSitterReservationExposure : {
+          screen : PetSitterReservationExposure,
+          navigationOptions : {
+            title : '예약 게시 설정',
+            headerTitleStyle : {
+              width : '80%',
+              textAlign : 'center'
+            }
+          }
+        },
+      })
 
       const Tabs = createBottomTabNavigator({
           Explore : {
@@ -140,9 +175,9 @@ export default class PetSitterTab extends Component{
             }
           },
           Reservation : {
-            screen : Reservation,
+            screen : petSitterReservationStackNavigator,
             navigationOptions : {
-              tabBarLabel : '예약보기',
+              tabBarLabel : '예약관리',
               tabBarIcon : ({tintColor}) => (
                 <IconFontAwesome name='calendar' color={tintColor} size={24}/>
               )
