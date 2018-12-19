@@ -12,7 +12,8 @@ import {
     Dimensions,
     TouchableOpacity,
     AsyncStorage,
-    FlatList
+    FlatList,
+    ActivityIndicator
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'
 import Category from './components/Explore/Category';
@@ -27,7 +28,8 @@ export default class Explore extends Component {
         super(props)
 
         this.state = {
-            data : []
+            data : [],
+            activityIndicator : true
         }
     };
 
@@ -49,8 +51,8 @@ export default class Explore extends Component {
         })
         .then((response) => response.json())
         .then((res => {
-            console.log(res);
             this.setState({
+                activityIndicator : false,
                 data : res
             });
         }))
@@ -61,7 +63,6 @@ export default class Explore extends Component {
     };
 
     _onPressItem = (item) => {
-        console.log(item);
         this.props.navigation.navigate('BookingDetail',{heart : false, petsitterNo: item.petsitterNo})
     };
 
@@ -96,12 +97,19 @@ export default class Explore extends Component {
                     <ScrollView
                         scrollEventThrottle={16}
                     >
+                    {this.state.activityIndicator && (
+                    <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+                     )}
+                    {!this.state.activityIndicator && (
                         <FlatList
                             data={this.state.data}
                             extraData={this.state} 
                             renderItem={this._renderItem} 
                             keyExtractor={ (item, index) => index.toString() }
                         />
+                    )}
                     </ScrollView>
                 </View>
             </SafeAreaView>
