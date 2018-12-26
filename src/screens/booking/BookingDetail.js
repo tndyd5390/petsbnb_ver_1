@@ -63,7 +63,8 @@ export default class BookingDetail extends Component{
 
     _getBookingDetail = async() => {
         const params = {
-            petsitterNo : this.state.petsitterNo
+            petsitterNo : this.state.petsitterNo,
+            reviewNow : 0
         }
         await fetch('http://192.168.0.8:8091/booking/getBookingDetail.do', {
             method: 'POST',
@@ -117,7 +118,7 @@ export default class BookingDetail extends Component{
                     <Enviroment petsitterEnv={this.state.bookingDetail.petsitterEnv}/>
                     <PetYN petsitterHasPet={this.state.bookingDetail.petsitterHasPet}/>
                     <Improssible impoData={this.state.bookingDetail}/>
-                    {this.state.bookingDetail.starCount == 0 ? null : <Review reviews={this.state.reviews}/>}
+                    {this.state.bookingDetail.starCount == 0 ? null : <Review petsitterNo={this.state.petsitterNo} reviews={this.state.reviews} reviewCount={this.state.bookingDetail.reviewCount}/>}
                     <View style={{backgroundColor : Colors.white, height : 30}}/>
                     </ScrollView>
                 )}
@@ -432,9 +433,10 @@ class Review extends Component{
     constructor(props){
         super(props);
         this.state = {
-            nowCount : 5,
-            allCount : 6,
-            reviews : this.props.reviews
+            nowCount : 0,
+            allCount : this.props.reviewCount,
+            reviews : this.props.reviews,
+            petsitterNo : this.props.petsitterNo
         };
     };
 
@@ -448,46 +450,13 @@ class Review extends Component{
         />
     );
 
-    render(){
-        const data = [
-            {
-                key : 1,
-                starCount : 3,
-                avatarUrl: 'https://unsplash.it/100?image=1027',
-                userName : '이필원',
-                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.' 
-            },
-            {
-                key : 2,
-                starCount : 4,
-                avatarUrl: 'https://unsplash.it/100?image=1027',
-                userName : '이필원2',
-                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
-            },
-            {
-                key : 3,
-                starCount : 4,
-                avatarUrl: 'https://unsplash.it/100?image=1027',
-                userName : '이필원3',
-                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
-            },
-            {
-                key : 4,
-                starCount : 4,
-                avatarUrl: 'https://unsplash.it/100?image=1027',
-                userName : '이필원4',
-                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
-            },
-            {
-                key : 5,
-                starCount : 5,
-                avatarUrl: 'https://unsplash.it/100?image=1027',
-                userName : '이필원4',
-                reviewText : '맡겼는데 너무 좋았습니다. 추천합니다 사랑해요.123213213' 
-            },
-            
-        ];
+    _moreReivew = (reviews) => {
+        this.setState((prevState)=>({
+            reviews : prevState.reviews.concat(reviews)
+        }))
+    }
 
+    render(){
         return(
             <View style={{flexDirection:'column', marginTop : 6}}>
                 <View style={styles.reviewBar}>
@@ -503,7 +472,7 @@ class Review extends Component{
                         keyExtractor={ (item, index) => index.toString() }
                     />
                 </View>
-                {this.state.allCount >= 5 ? <MoreReview/> : null}
+                {this.state.allCount > 3 ? this.state.allCount != this.state.reviews.length ? <MoreReview moreReviewRt={this._moreReivew} reviewNow={this.state.nowCount} petsitterNo={this.state.petsitterNo}/>  : null : null}
             </View>
         );
     };
@@ -512,13 +481,45 @@ class Review extends Component{
 class MoreReview extends Component{
     constructor(props){
         super(props);
-    
+        this.state = {
+            reviewNow : this.props.reviewNow + 3,
+            petsitterNo : this.props.petsitterNo 
+        };
+    };
+
+    _moreReviewRt = async() => {
+        const params = {
+            petsitterNo : this.state.petsitterNo,
+            reviewNow : this.state.reviewNow
+        }
+        await fetch('http://192.168.0.8:8091/booking/getMoreReview.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            this.props.moreReviewRt(res);
+            this.setState((prevState)=>({
+                reviewNow : prevState.reviewNow + 3
+            }))
+        }))
+        .catch((err) => {
+            console.log(err);
+        })
+
     };
 
     render(){
         return(
             <View style={{backgroundColor : Colors.white, alignItems : 'center', paddingTop:5}}>
-                    <TouchableOpacity style={{width : '85%', height : 40, backgroundColor : Colors.buttonSky,borderRadius:10, justifyContent : 'center', alignItems : 'center'}}>
+                    <TouchableOpacity 
+                        style={{width : '85%', height : 40, backgroundColor : Colors.buttonSky,borderRadius:10, justifyContent : 'center', alignItems : 'center'}}
+                        onPress={this._moreReviewRt}    
+                    >
                         <Text style={{color:Colors.white}}>더보기</Text>
                     </TouchableOpacity>
             </View>
