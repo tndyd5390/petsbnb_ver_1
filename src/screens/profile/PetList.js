@@ -112,7 +112,8 @@ export default class PetList extends Component{
 class PetFlatList extends Component{
     render() {
         const{petName, petNo, petKind, petFileName, age, petGender} = this.props.item;
-        const uri = {uri : 'http://192.168.0.10:8080/petImageFile/' + this.props.item.petFileName};
+        const uri = petFileName ? {uri : 'http://192.168.0.10:8080/petImageFile/' + this.props.item.petFileName} : require("../../../img/user.png");
+        //const uri = {uri : 'http://192.168.0.10:8080/petImageFile/' + this.props.item.petFileName};
         return(
             <View>
                 <View style={{height : 80, alignItems : 'center', marginTop : 10}}>
