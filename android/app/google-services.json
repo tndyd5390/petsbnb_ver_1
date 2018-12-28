@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "167028498814",
+    "firebase_url": "https://petsbnb-a0fa3.firebaseio.com",
+    "project_id": "petsbnb-a0fa3",
+    "storage_bucket": "petsbnb-a0fa3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167028498814:android:d4eff7eb4b238865",
+        "android_client_info": {
+          "package_name": "com.petsbnb_ver_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167028498814-61sp2kbcua0ip1jhnm26viu9jilkpmrp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApMQtlmobkvzyo70-Q64OzppF8e8N-Ybo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
