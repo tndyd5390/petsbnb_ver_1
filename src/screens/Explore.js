@@ -13,7 +13,8 @@ import {
     TouchableOpacity,
     AsyncStorage,
     FlatList,
-    ActivityIndicator
+    ActivityIndicator,
+    RefreshControl
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons'
 import Category from './components/Explore/Category';
@@ -29,7 +30,9 @@ export default class Explore extends Component {
 
         this.state = {
             data : [],
-            activityIndicator : true
+            activityIndicator : true,
+            refreshing : false,
+            isLoading : false
         }
     };
 
@@ -42,6 +45,11 @@ export default class Explore extends Component {
             search : '1'
         }
 
+        this.setState({
+            refreshing : true, 
+            activityIndicator : true
+        });
+
         await fetch('http://192.168.0.8:8091/booking/getBookingList.do', {
             method: 'POST',
             headers: {
@@ -52,6 +60,7 @@ export default class Explore extends Component {
         .then((response) => response.json())
         .then((res => {
             this.setState({
+                refreshing: false,
                 activityIndicator : false,
                 data : res
             });
@@ -65,6 +74,7 @@ export default class Explore extends Component {
     _onPressItem = (item) => {
         this.props.navigation.navigate('BookingDetail',{heart : false, petsitterNo: item.petsitterNo})
     };
+     
 
     _renderItem = ({item}) => (
         <BookingsContents
@@ -95,7 +105,16 @@ export default class Explore extends Component {
                         </View>
                     </View>
                     <ScrollView
+                        ref={ 'scroll' }
+                        horizontal={ true }
+                        onScrollAnimationEnd={ () => console.log( 'anim end' ) }           
                         scrollEventThrottle={16}
+                        refreshControl={
+                            <RefreshControl
+                              refreshing={this.state.refreshing}
+                              onRefresh={this._getBookingList}
+                            />
+                        }
                     >
                     {this.state.activityIndicator && (
                     <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
@@ -105,9 +124,10 @@ export default class Explore extends Component {
                     {!this.state.activityIndicator && (
                         <FlatList
                             data={this.state.data}
-                            extraData={this.state} 
+                            extraData={this.state.refreshing} 
                             renderItem={this._renderItem} 
                             keyExtractor={ (item, index) => index.toString() }
+                            refreshing={this.state.refreshing}
                         />
                     )}
                     </ScrollView>
