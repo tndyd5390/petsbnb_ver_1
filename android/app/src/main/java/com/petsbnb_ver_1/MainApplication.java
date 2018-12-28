@@ -3,6 +3,8 @@ package com.petsbnb_ver_1;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
+import io.invertase.firebase.RNFirebasePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.rnrestartandroid.RNRestartAndroidPackage;
@@ -12,10 +14,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.brentvatne.react.ReactVideoPackage;
-
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
-
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -28,11 +30,15 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BackgroundTaskPackage(),
+            new RNFirebasePackage(),
           new RNFetchBlobPackage(),
           new ImagePickerPackage(),
           new RNRestartAndroidPackage(),
           new VectorIconsPackage(),
-          new ReactVideoPackage()
+          new ReactVideoPackage(),
+              new RNFirebaseMessagingPackage(),
+              new RNFirebaseNotificationsPackage()
       );
     }
 
@@ -51,5 +57,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    BackgroundTaskPackage.useContext(this);
   }
 }
