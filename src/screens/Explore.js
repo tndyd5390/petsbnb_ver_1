@@ -30,9 +30,13 @@ export default class Explore extends Component {
 
         this.state = {
             data : [],
+            page: 0,
+            firstLoad : true,
             activityIndicator : true,
             refreshing : false,
-            isLoading : false
+            isLoading : false,
+            footerLoading : true,
+            enableScrollViewScroll: true,
         }
     };
 
@@ -45,11 +49,18 @@ export default class Explore extends Component {
             search : '1'
         }
 
-        this.setState({
-            refreshing : true, 
-            activityIndicator : true
-        });
-
+        if(this.state.page==0){
+            this.setState({
+                refreshing : true, 
+                activityIndicator : true,
+            });
+        }else{
+            this.setState({
+                refreshing : true, 
+                footerLoading : false,
+            });
+        }
+        
         await fetch('http://192.168.0.8:8091/booking/getBookingList.do', {
             method: 'POST',
             headers: {
@@ -59,11 +70,21 @@ export default class Explore extends Component {
         })
         .then((response) => response.json())
         .then((res => {
-            this.setState({
-                refreshing: false,
-                activityIndicator : false,
-                data : res
-            });
+            if(this.state.page==0){
+                this.setState({
+                    refreshing: false,
+                    firstLoad : false,
+                    activityIndicator : false,
+                    data : res
+                });
+            }else{
+                this.setState((prevState)=>({
+                    refreshing: false,
+                    activityIndicator : false,
+                    footerLoading : true,
+                    data : prevState.data.concat(res)
+                }))
+            }
         }))
         .catch((err) => {
             console.log(err);
@@ -89,6 +110,14 @@ export default class Explore extends Component {
         />
     )
 
+    handleEnd = () => {
+        if(!this.state.firstLoad){
+            this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
+        }
+    };
+
+
+r
     render() {
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -104,10 +133,8 @@ export default class Explore extends Component {
                             />
                         </View>
                     </View>
-                    <ScrollView
-                        ref={ 'scroll' }
+                    {/* <ScrollView
                         horizontal={ true }
-                        onScrollAnimationEnd={ () => console.log( 'anim end' ) }           
                         scrollEventThrottle={16}
                         refreshControl={
                             <RefreshControl
@@ -115,22 +142,31 @@ export default class Explore extends Component {
                               onRefresh={this._getBookingList}
                             />
                         }
-                    >
+                    > */}
                     {this.state.activityIndicator && (
                     <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
                         <ActivityIndicator size="large" color="#10b5f1"/>
                     </View>
                      )}
                     {!this.state.activityIndicator && (
+                        <View style={{flex:1}}>
                         <FlatList
                             data={this.state.data}
                             extraData={this.state.refreshing} 
                             renderItem={this._renderItem} 
                             keyExtractor={ (item, index) => index.toString() }
                             refreshing={this.state.refreshing}
+                            onEndReached={() => this.handleEnd()}
+                            onEndReachedThreshold={0.0000000000000000000000001}
+                            ListFooterComponent={() =>
+                              this.state.footerLoading
+                                ? null
+                                : <ActivityIndicator size="large" animating />}
+                
                         />
+                        </View>
                     )}
-                    </ScrollView>
+                    {/* </ScrollView> */}
                 </View>
             </SafeAreaView>
         );
