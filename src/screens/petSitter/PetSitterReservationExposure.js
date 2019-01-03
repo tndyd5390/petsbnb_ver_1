@@ -19,6 +19,7 @@ const{width, height} = Dimensions.get('window');
 
 export default class PetSitterReservationExposure extends Component{
 
+
     constructor(props){
         super(props);
         this.state={
@@ -37,6 +38,7 @@ export default class PetSitterReservationExposure extends Component{
     }
 
     _getPetSitterInfo = async() => {
+        console.log('getpetsitterinfo');
         const userNo = await AsyncStorage.getItem('userInfo');
         const params = {
             userNo
@@ -51,18 +53,19 @@ export default class PetSitterReservationExposure extends Component{
         })
         .then((response) => response.json())
         .then((res => {
-            if(res){
+            console.log(res);
+            if(res.pDTO){
                 this.setState({
-                    petSitterName : res.petSitterName,
-                    petSitterNo : res.petSitterNo,
-                    exposure : res.exposure === 'true' ? true : false,
-                    exposureStr : res.exposure === 'true' ? `${res.petSitterName}님은 현재 펫시터 매칭중입니다.` : `${res.petSitterName}님은 현재 펫시터 매칭중이 아닙니다.`,
-                    buttonTitle : res.exposure === 'true' ? '매칭 중지' : '매칭 시작',
-                    userNo : res.userNo,
+                    petSitterName : res.pDTO.petSitterName,
+                    petSitterNo : res.pDTO.petSitterNo,
+                    exposure : res.pDTO.exposure === 'true' ? true : false,
+                    exposureStr : res.pDTO.exposure === 'true' ? `${res.petSitterName}님은 현재 펫시터 매칭중입니다.` : `${res.petSitterName}님은 현재 펫시터 매칭중이 아닙니다.`,
+                    buttonTitle : res.pDTO.exposure === 'true' ? '매칭 중지' : '매칭 시작',
+                    userNo : res.pDTO.userNo,
                     activityIndicator : false
                 })
             }else{
-                alert('잠시후 다시 시도해주세요.');
+                alert('프로필 메뉴에서 펫시터 프로필을 먼저 작성해 주세요.');
                 this.setState({activityIndicator : false})
                 this.props.navigation.goBack();
             }
@@ -71,11 +74,13 @@ export default class PetSitterReservationExposure extends Component{
             console.log(err);
             this.setState({activityIndicator : false});
         })
-        this.setState({activityIndicator : false});
+        //this.setState({activityIndicator : false});
     }
 
     _toggleMatching = async() => {
+
         this.setState({activityIndicator : true});
+
         const params = {
             userNo : this.state.userNo,
             exposure : (!this.state.exposure).toString(),

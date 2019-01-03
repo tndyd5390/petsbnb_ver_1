@@ -102,7 +102,8 @@ export default class ProfileMenu extends Component {
         })
         .then((resp) => resp.json())
         .then((res => {
-            if(res.isPetSitter != null){
+            console.log(res);
+            if(res.isPetSitter != '0'){
                 this._storeData();
             
                 const resetAction = StackActions.reset({

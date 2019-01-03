@@ -8,10 +8,12 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   AsyncStorage,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import firebase from 'react-native-firebase';
 
 const{height, width} = Dimensions.get('window');
 
@@ -22,7 +24,8 @@ class LoginForm extends Component {
     super(props);
     this.state = {
       email : '',
-      password : ''
+      password : '',
+      activityIndicator : false
     }
   }
 
@@ -38,13 +41,20 @@ class LoginForm extends Component {
     }
   }
 
-  _loginProc = () => {
+  _loginProc = async () => {
+    this.setState({activityIndicator : true});
+    let loginFcmToken = await firebase.messaging().getToken();
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    if(loginFcmToken !== fcmToken){
+      await AsyncStorage.setItem('fcmToken', loginFcmToken);
+    }
     const {email, password} = this.state;
     const params = {
       email : email,
-      password : password
+      password : password,
+      deviceToken : loginFcmToken
     }
-    fetch('http://192.168.0.10:8080/user/loginProc.do', {
+    await fetch('http://192.168.0.10:8080/user/loginProc.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -54,9 +64,7 @@ class LoginForm extends Component {
     })
     .then((response) => response.json())
     .then((res => {
-        console.log(res);
         if(res.loginSuccess === true){
-            //가입 성공
           try{
             this._storeData(res.userNo);
             this.props.navigation.navigate('Tabs');
@@ -65,6 +73,7 @@ class LoginForm extends Component {
            }
          }else{
              alert('아이디와 비밀번호를 다시 확인해 주세요.');
+             this.setState({activityIndicator :false});
          }
     }))
     .catch((err) => {
@@ -91,6 +100,11 @@ class LoginForm extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={{flex : 1, backgroundColor : Colors.white}}>
+        {this.state.activityIndicator ? (
+            <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                <ActivityIndicator size="large" color="#10b5f1"/>
+            </View>
+        ) : (null)}
         <View style={[{display : 'flex'}, Platform.OS ==='ios' ? {marginTop : 10} : null]}>
           <TouchableOpacity
             style={{marginTop : 20, marginLeft : 20, marginBottom : 20}}
