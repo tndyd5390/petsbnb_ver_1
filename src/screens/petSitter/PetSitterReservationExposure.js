@@ -59,7 +59,7 @@ export default class PetSitterReservationExposure extends Component{
                     petSitterName : res.pDTO.petSitterName,
                     petSitterNo : res.pDTO.petSitterNo,
                     exposure : res.pDTO.exposure === 'true' ? true : false,
-                    exposureStr : res.pDTO.exposure === 'true' ? `${res.petSitterName}님은 현재 펫시터 매칭중입니다.` : `${res.petSitterName}님은 현재 펫시터 매칭중이 아닙니다.`,
+                    exposureStr : res.pDTO.exposure === 'true' ? `${res.pDTO.petSitterName}님은 현재 펫시터 매칭중입니다.` : `${res.pDTO.petSitterName}님은 현재 펫시터 매칭중이 아닙니다.`,
                     buttonTitle : res.pDTO.exposure === 'true' ? '매칭 중지' : '매칭 시작',
                     userNo : res.pDTO.userNo,
                     activityIndicator : false
@@ -128,6 +128,110 @@ export default class PetSitterReservationExposure extends Component{
                 ) : (null)}
                 <View style={{alignItems : 'center', justifyContent : 'center', height : 50}}>
                     <Text style={{fontSize : 15}}>{this.state.exposureStr}</Text>
+                </View>
+
+                <View style={{alignItems : 'center'}}>
+                    <View style={{width : width - 20}}>
+                        <Text style={{fontSize : 17, color : Colors.black}}>데이케어 시간 설정</Text>
+                    </View>
+                </View>
+                <View style={{alignItems : 'center'}}>
+                    <View style={{flexDirection : 'row', width : width - 10}}>
+                        <View style={{height : 45, width : '20%', justifyContent : 'center', alignItems : 'center'}}>
+                            <Text>시작시간</Text>                
+                        </View>
+                        <View style={{height : 45, width : '30%', borderWidth : 1, borderRadius : 1, borderColor : Colors.lightGrey}}>
+                            <Picker
+                                //selectedValue={this.state.middlePetNightPrice}
+                                //onValueChange={(itemValue, itemIndex) => {this.setState({middlePetNightPrice : itemValue})}}
+                                style={{width : '100%', height : '100%'}}
+                                textStyle={{fontSize : 5}}
+                                >
+                                <Picker.Item label="1박" value="" />
+                                <Picker.Item label="불가" value="0" />
+                                
+                            </Picker>
+                        </View>
+                        <View style={{height : 45, width : '20%', justifyContent : 'center', alignItems : 'center'}}>
+                            <Text>종료시간</Text>                        
+                        </View>
+                        <View style={{height : 45, width : '30%', borderWidth : 1, borderRadius : 1, borderColor : Colors.lightGrey}}>
+                            <Picker
+                                //selectedValue={this.state.middlePetNightPrice}
+                                //onValueChange={(itemValue, itemIndex) => {this.setState({middlePetNightPrice : itemValue})}}
+                                style={{width : '100%', height : '100%'}}
+                                textStyle={{fontSize : 5}}
+                                >
+                                <Picker.Item label="1박" value="" />
+                                <Picker.Item label="불가" value="0" />
+                                
+                            </Picker>   
+                        </View>
+                    </View>
+                </View>
+
+                <View style={{alignItems : 'center', marginTop :15}}>
+                    <View style={{width : width - 20}}>
+                        <Text style={{fontSize : 17, color : Colors.black}}>1박 체크인 체크아웃 설정</Text>
+                    </View>
+                </View>
+                <View style={{alignItems : 'center', marginBottom : 15}}>
+                    <View style={{flexDirection : 'row', width : width - 10}}>
+                        <View style={{height : 45, width : '20%', justifyContent : 'center', alignItems : 'center'}}>
+                            <Text>체크인</Text>                
+                        </View>
+                        <View style={{height : 45, width : '30%', borderWidth : 1, borderRadius : 1, borderColor : Colors.lightGrey}}>
+                            <Picker
+                                //selectedValue={this.state.middlePetNightPrice}
+                                //onValueChange={(itemValue, itemIndex) => {this.setState({middlePetNightPrice : itemValue})}}
+                                style={{width : '100%', height : '100%'}}
+                                textStyle={{fontSize : 5}}
+                                >
+                                <Picker.Item label="1박" value="" />
+                                <Picker.Item label="불가" value="0" />
+                                
+                            </Picker>
+                        </View>
+                        <View style={{height : 45, width : '20%', justifyContent : 'center', alignItems : 'center'}}>
+                            <Text>체크아웃</Text>                        
+                        </View>
+                        <View style={{height : 45, width : '30%', borderWidth : 1, borderRadius : 1, borderColor : Colors.lightGrey}}>
+                            <Picker
+                                //selectedValue={this.state.middlePetNightPrice}
+                                //onValueChange={(itemValue, itemIndex) => {this.setState({middlePetNightPrice : itemValue})}}
+                                style={{width : '100%', height : '100%'}}
+                                textStyle={{fontSize : 5}}
+                                >
+                                <Picker.Item label="1박" value="" />
+                                <Picker.Item label="불가" value="0" />
+                                
+                            </Picker>   
+                        </View>
+                    </View>
+                </View>
+                
+
+
+
+
+                
+                <View style={{alignItems : 'center'}}>
+                    <View style={{width : width, flexDirection : 'row'}}>
+                        <View style={{width : '50%', height : 50, alignItems : 'center'}}>
+                            <TouchableOpacity
+                                style={{justifyContent : 'center', alignItems : 'center', width : '95%', height : '100%', borderRadius : 30, backgroundColor : Colors.buttonSky}}
+                            >
+                                <Text style={{color : Colors.white, fontSize : 17, fontWeight : '700'}}>매칭 시작</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{width : '50%', height : 50, alignItems : 'center'}}>
+                        <TouchableOpacity
+                            style={{justifyContent : 'center', alignItems : 'center', width : '95%', height : '100%', borderRadius : 30, backgroundColor : Colors.white, borderWidth : 1, borderColor : Colors.grey}}
+                        >
+                            <Text style={{color : Colors.grey, fontSize : 17, fontWeight : '700'}}>매칭 중지</Text>
+                        </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
 
                 <View style={{alignItems : 'center'}}>
