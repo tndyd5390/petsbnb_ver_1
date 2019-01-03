@@ -13,7 +13,8 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Button,
-    Modal
+    FlatList,
+    ActivityIndicator
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Category from '../components/Explore/Category';
@@ -21,13 +22,28 @@ import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import BookingDate from './BookingDate';
+import StarRating from 'react-native-star-rating';
+
+
+const{width, height} = Dimensions.get('window');
 
 export default class BookingDetail extends Component{
     constructor(props) {
         super(props);
+        const petsitterNo = this.props.navigation.getParam('petsitterNo');
         this.state = {
+            activityIndicator : true,
+            petsitterNo : petsitterNo,
             heartStatus : false,
+            headImages : [],
+            bookingDetail : {},
+            reviews : []
         };
+    };
+    
+
+    componentWillMount(){
+        this._getBookingDetail();
     };
     
     static navigationOptions = ({navigation}) => {
@@ -45,6 +61,34 @@ export default class BookingDetail extends Component{
         };
     };
 
+    _getBookingDetail = async() => {
+        const params = {
+            petsitterNo : this.state.petsitterNo,
+            reviewNow : 0
+        }
+        await fetch('http://192.168.0.8:8091/booking/getBookingDetail.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            this.setState({
+                activityIndicator : false,
+                headImages : res.images,
+                bookingDetail : res.details,
+                reviews : res.reviews
+            });
+        }))
+        .catch((err) => {
+            console.log(err);
+        })
+
+    };
+
     render(){
         const images = [
             'https://s-i.huffpost.com/gen/5563994/images/n-DOG-MOUTH-628x314.jpg',
@@ -53,33 +97,40 @@ export default class BookingDetail extends Component{
         ];
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
-                <ScrollView>
+                {this.state.activityIndicator && (
+                    <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+                )}
+                {!this.state.activityIndicator && (
+                    <ScrollView>
                     <ImageSlider images={images}
-                            customSlide={({ index, item, style, width }) => (
-                                // It's important to put style here because it's got offset inside
-                                <View
-                                key={index}
-                                style={[
-                                    style,
-                                    styles.customSlide,
-                                    { backgroundColor: index % 2 === 0 ? 'yellow' : 'green' },
-                                ]}>
-                                <Image source={{ uri: item }} style={styles.customImage} />
+                                customSlide={({ index, item, style, width }) => (
+                                             // It's important to put style here because it's got offset inside
+                                <View key={index} style={[style,styles.customSlide,{ backgroundColor: index % 2 === 0 ? 'yellow' : 'green' },]}>
+                                    <Image source={{ uri: item }} style={styles.customImage} />
                                 </View>
-                            )}
-                            style={{height:200}}
-                    />
-                <Profile/>
-                <Certificate/>
-                <Price/>
-                <Enviroment/>
-                <PetYN/>
-                <Improssible/>
-                </ScrollView>
-                <BottomRequest navigation={this.props.navigation}/>
-                <TouchableOpacity activeOpacity = { 0.8 } style = { styles.stickerBtn }>
-                    <IconFontAwesome name='comment-dots' color={Colors.buttonSky} size={25}/>
-                </TouchableOpacity>
+                                )}
+                                style={{height:200}} />
+                    <Profile profileData={this.state.bookingDetail}/>
+                    <Certificate/>
+                    <Price priceData={this.state.bookingDetail}/>
+                    <Enviroment petsitterEnv={this.state.bookingDetail.petsitterEnv}/>
+                    <PetYN petsitterHasPet={this.state.bookingDetail.petsitterHasPet}/>
+                    <Improssible impoData={this.state.bookingDetail}/>
+                    {this.state.bookingDetail.starCount == 0 ? null : <Review petsitterNo={this.state.petsitterNo} reviews={this.state.reviews} reviewCount={this.state.bookingDetail.reviewCount}/>}
+                    <View style={{backgroundColor : Colors.white, height : 30}}/>
+                    </ScrollView>
+                )}
+                {!this.state.activityIndicator ? (
+                        <BottomRequest navigation={this.props.navigation} petsitterNo={this.state.bookingDetail.petsitterNo}/>
+                ) : null}
+                {!this.state.activityIndicator ? (
+                        <TouchableOpacity activeOpacity={0.8} style={styles.stickerBtn}>
+                             <IconFontAwesome name='comment-dots' color={Colors.buttonSky} size={25}/>
+                        </TouchableOpacity>
+                ) : null}
+
             </SafeAreaView>
 
         )
@@ -87,6 +138,19 @@ export default class BookingDetail extends Component{
     
 }
 class Profile extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            petsitterNo : this.props.profileData.petsitterNo,
+            petsitterName : this.props.profileData.petsitterName,
+            petsitterIntroduceOneline : this.props.profileData.petsitterIntroduceOneline,
+            reviewCount : this.props.profileData.reviewCount,
+            starCount : this.props.profileData.starCount,
+            petsitterFileName : this.props.profileData.petsitterFileName,
+            petsitterFilePath : this.props.profileData.petsitterFilePath
+        };
+    };
+
     render(){
         return(
         <View style={styles.listBar}>
@@ -95,14 +159,28 @@ class Profile extends Component {
             </View>
             <View style={{justifyContent: 'center', marginLeft : 15}}>
                 <View>
-                    <Text style={{fontSize : 17, fontWeight : 'bold'}}>정성을 다해 사랑으로 돌봐드려요</Text>
+                    <Text style={{fontSize : 17, fontWeight : 'bold'}}>{this.state.petsitterIntroduceOneline}</Text>
                 </View>
                 <View style={{flexDirection: 'row'}}>
-                    <Text>유혜진</Text>
+                    <Text>{this.state.petsitterName}</Text>
                     <TouchableOpacity style={{marginLeft:10}}>
                         <Text style={{color : Colors.buttonSky}}>프로필 보기</Text>
                     </TouchableOpacity>
                 </View>
+                {this.state.starCount == 0 ?  (<Text style={{fontSize:12, color:Colors.grey, paddingTop :10}}>아직 등록된 리뷰가 없어요!</Text>) :
+                    (
+                        <View style={{flexDirection :'row', paddingTop :10}}>
+                            <StarRating
+                                disabled={true}
+                                maxStars={5}
+                                rating={this.state.starCount}
+                                fullStarColor={Colors.buttonSky}
+                                starSize={18}
+                            />
+                            <Text>  {this.state.starCount} ({this.state.reviewCount})</Text>
+                        </View>
+                    )
+                }
             </View>            
         </View>
         )
@@ -143,6 +221,28 @@ class Certificate extends Component {
 };
 
 class Price extends Component {
+    constructor(props){
+        super(props)
+        this.state={
+            smallpetDayPrice : this.props.priceData.smallpetDayPrice, 
+            smallpetNightPrice : this.props.priceData.smallpetNightPrice,
+            middlepetDayPrice : this.props.priceData.middlepetDayPrice,
+            middlepetNightPrice : this.props.priceData.middlepetNightPrice,
+            bigpetDayPrice : this.props.priceData.bigpetDayPrice,
+            bigpetNightPrice : this.props.priceData.bigpetNightPrice
+        }
+    }
+
+    _addCommma = (price) =>{
+        let rslt = '';
+        if(price == 0){
+            rslt = '이용불가';
+        }else{
+            rslt = '₩ ' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        return rslt
+    };
+
     render(){
         return(
             <View>
@@ -182,13 +282,13 @@ class Price extends Component {
                             <Text style={styles.priceText}>1박</Text>
                         </View>
                         <View style={{flex:1}}>
-                            <Text style={styles.priceText}>₩ 40,000</Text>
+                            <Text style={styles.priceText}>{this._addCommma(this.state.smallpetNightPrice)}</Text>
                         </View>
                         <View style={{flex:1}}>
-                            <Text style={styles.priceText}>₩ 40,000</Text>
+                            <Text style={styles.priceText}>{this._addCommma(this.state.middlepetNightPrice)}</Text>
                         </View>
                         <View style={{flex:1}}>
-                            <Text style={styles.priceText}>₩ 50,000</Text>
+                            <Text style={styles.priceText}>{this._addCommma(this.state.bigpetNightPrice)}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection:'row', justifyContent : 'space-between', marginTop : 10}}>
@@ -196,13 +296,13 @@ class Price extends Component {
                             <Text style={styles.priceText}>데이</Text>
                         </View>
                         <View style={{flex:1}}>
-                            <Text style={styles.priceText}>₩ 40,000</Text>
+                            <Text style={styles.priceText}>{this._addCommma(this.state.smallpetDayPrice)}</Text>
                         </View>
                         <View style={{flex:1}}>
-                            <Text style={styles.priceText}>₩ 40,000</Text>
+                            <Text style={styles.priceText}>{this._addCommma(this.state.middlepetDayPrice)}</Text>
                         </View>
                         <View style={{flex:1}}>
-                            <Text style={styles.priceText}>₩ 50,000</Text>
+                            <Text style={styles.priceText}>{this._addCommma(this.state.bigpetDayPrice)}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection:'row',marginTop : 25, marginBottom:10}}>
@@ -218,6 +318,13 @@ class Price extends Component {
 };
 
 class Enviroment extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            petsitterEnv : this.props.petsitterEnv
+        };
+    };
+
     render(){
         return(
             <View style={styles.EnvBar}>
@@ -226,7 +333,7 @@ class Enviroment extends Component {
                     <Text style={{fontWeight:'bold'}}>펫시팅 환경</Text>
                 </View>
                 <View style={{flex:1,alignItems : 'center', flexDirection: 'row'}}>
-                    <Text>아파트</Text>
+                    <Text>{this.state.petsitterEnv}</Text>
                 </View>
             </View>
         )
@@ -234,6 +341,13 @@ class Enviroment extends Component {
 };
 
 class PetYN extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            petsitterHasPet : this.props.petsitterHasPet
+        }
+    };
+
     render(){
         return(
             <View style={styles.EnvBar}>
@@ -242,7 +356,14 @@ class PetYN extends Component {
                     <Text style={{fontWeight:'bold'}}>반려동물 여부</Text>
                 </View>
                 <View style={{flex:1,alignItems : 'center', flexDirection: 'row'}}>
-                    <Text>현재는 반려동물을 키우지 않아요</Text>
+                    {this.state.petsitterHasPet == 0 ? 
+                    (
+                        <Text>현재는 반려동물을 키우지 않아요</Text>
+
+                    ) : (
+                        <Text>{this.state.petsitterHasPet}마리 키우고 있어요.</Text>
+                    )}
+                    
                 </View>
             </View>
         )
@@ -250,6 +371,49 @@ class PetYN extends Component {
 };
 
 class Improssible extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            markingImpossible : this.props.impoData.markingImpossible,
+            bowelImpossible : this.props.impoData.bowelImpossible,
+            attackImpossible : this.props.impoData.attackImpossible, 
+            separationImpossible : this.props.impoData.separationImpossible,
+            biteImpossible : this.props.impoData.biteImpossible,
+        };
+    };
+
+    componentDidMount(){
+        this._impossibleConv(this.props.impoData);
+    }
+
+    _impossibleConv = (impoData) =>{
+        let rsltStr = '';
+        let impoArr = [];
+        let mark = impoData.markingImpossible=='true' ? '마킹 심한 아이' : '';
+        let bowel = impoData.bowelImpossible=='true' ? '중성화하지 않은 아이' : '';
+        let attack = impoData.attackImpossible=='true' ? '공격적인 아이' : '';
+        let separation = impoData.separationImpossible=='true' ? '분리불안이 심한 아이' : '';
+        let bite = impoData.biteImpossible=='true' ? '물건을 심하게 물어 뜯는 아이' : '';
+
+        impoArr.push(mark);
+        impoArr.push(bowel);
+        impoArr.push(attack);
+        impoArr.push(separation);
+        impoArr.push(bite);
+
+        for(let i = 0;i < impoArr.length; i++){
+            if(i!=(impoArr.length-1)){
+                if(impoArr[i]!=''){
+                    rsltStr = rsltStr + impoArr[i] + ", "; 
+                }
+            }else{
+                rsltStr = rsltStr + impoArr[i];
+            }
+        }
+        return rsltStr;
+    };
+
+
     render(){
         return(
             <View style={styles.impossibleBar}>
@@ -258,18 +422,153 @@ class Improssible extends Component {
                     <Text style={{fontWeight:'bold'}}>펫시팅 불가</Text>
                 </View>
                 <View style={{flex:1,alignItems : 'center', flexDirection: 'row',marginTop:15,marginBottom:15}}>
-                    <Text>중성화하지 않은 아이, 하울링이 심한아이, 마킹 심한 아이, 물건을 심하게 물어 뜯는 아이</Text>
+                    <Text>{this._impossibleConv(this.state)}</Text>
                 </View>
             </View>
         )
     };
 };
 
+class Review extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            nowCount : 0,
+            allCount : this.props.reviewCount,
+            reviews : this.props.reviews,
+            petsitterNo : this.props.petsitterNo
+        };
+    };
+
+    _renderItem = ({item}) => (
+        <ReviewContents
+            key = {item.reviewNo}
+            starCount = {item.starCount}
+            avatarUrl = {item.fileName} 
+            userName = {item.userName}
+            reviewText = {item.reviewText}
+        />
+    );
+
+    _moreReivew = (reviews) => {
+        this.setState((prevState)=>({
+            reviews : prevState.reviews.concat(reviews)
+        }))
+    }
+
+    render(){
+        return(
+            <View style={{flexDirection:'column', marginTop : 6}}>
+                <View style={styles.reviewBar}>
+                    <View style={{flex:1,alignItems : 'center', flexDirection: 'row',marginLeft : 10}}>
+                        <View style={styles.blueCircle}/>
+                        <Text style={{fontWeight:'bold', fontSize : 15}}>리뷰</Text>
+                    </View>
+                </View>
+                <View style={{flex:1}}>
+                    <FlatList
+                        data={this.state.reviews}
+                        renderItem={this._renderItem} 
+                        keyExtractor={ (item, index) => index.toString() }
+                    />
+                </View>
+                {this.state.allCount > 3 ? this.state.allCount != this.state.reviews.length ? <MoreReview moreReviewRt={this._moreReivew} reviewNow={this.state.nowCount} petsitterNo={this.state.petsitterNo}/>  : null : null}
+            </View>
+        );
+    };
+};
+
+class MoreReview extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            reviewNow : this.props.reviewNow + 3,
+            petsitterNo : this.props.petsitterNo 
+        };
+    };
+
+    _moreReviewRt = async() => {
+        const params = {
+            petsitterNo : this.state.petsitterNo,
+            reviewNow : this.state.reviewNow
+        }
+        await fetch('http://192.168.0.8:8091/booking/getMoreReview.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            this.props.moreReviewRt(res);
+            this.setState((prevState)=>({
+                reviewNow : prevState.reviewNow + 3
+            }))
+        }))
+        .catch((err) => {
+            console.log(err);
+        })
+
+    };
+
+    render(){
+        return(
+            <View style={{backgroundColor : Colors.white, alignItems : 'center', paddingTop:5}}>
+                    <TouchableOpacity 
+                        style={{width : '85%', height : 40, backgroundColor : Colors.buttonSky,borderRadius:10, justifyContent : 'center', alignItems : 'center'}}
+                        onPress={this._moreReviewRt}    
+                    >
+                        <Text style={{color:Colors.white}}>더보기</Text>
+                    </TouchableOpacity>
+            </View>
+        );
+    };
+};
+
+class ReviewContents extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            userName : this.props.userName,
+            avatarUrl : this.props.avatarUrl,
+            reviewText : this.props.reviewText,
+            starCount : this.props.starCount
+        };
+    };
+
+    render(){
+        return(
+            <View style={styles.reviewContentsBar}>
+                <View style={{alignItems : 'center', justifyContent: 'center'}}>
+                        <Image source={{ uri : this.state.avatarUrl}} style={{width : 30, height : 30, margin : 10}}/>
+                </View>
+                <View style={{justifyContent: 'center', marginLeft : 15}}>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={{fontWeight : 'bold'}}>{this.state.userName}   </Text>
+                        <StarRating
+                            disabled={true}
+                            maxStars={5}
+                            rating={this.state.starCount}
+                            fullStarColor={Colors.buttonSky}
+                            starSize={15}
+                        />
+                        <Text>   {this.state.starCount}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', marginTop:2}}>
+                        <Text>{this.state.reviewText}</Text>
+                    </View>
+                </View>
+            </View>
+        );
+    };
+}
 
 class BottomRequest extends Component{
     constructor(props) {
         super(props);
-    }
+    };
 
 
     render(){
@@ -312,6 +611,7 @@ const styles = StyleSheet.create({
         height : 130,
         backgroundColor : Colors.white,
         marginBottom : 5,
+        width : width
     },
     priceBar: {
         flex:1,
@@ -351,9 +651,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         backgroundColor : Colors.white,
-        marginBottom : 20,
+        marginBottom : 2,
     },
-
+    reviewBar : {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent : 'space-around',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        height : 30,
+        backgroundColor : Colors.white,
+    },
+    reviewContentsBar : {
+        flex:1,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor : Colors.white,
+        width : width
+    },
     bottomRequest : {
         justifyContent: 'center', 
         alignItems: 'center',

@@ -21,18 +21,26 @@ import Colors from '../../utils/Colors';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {List, ListItem} from 'react-native-elements';
 import Textarea from 'react-native-textarea';
+import StarRating from 'react-native-star-rating';
 
 export default class BookingReviewWrite extends Component{
     constructor(props){
         super(props);
         this.state = {
-            text : ''
+            text : '',
+            starCount : 0
         }
     };
 
     _onChangeText = (txt) =>{
         this.setState({
             text : txt
+        });
+    };
+
+    _onStarRatingPress(rating) {
+        this.setState({
+          starCount: rating
         });
     };
 
@@ -46,6 +54,16 @@ export default class BookingReviewWrite extends Component{
                                 <View style={styles.blueCircle}/>
                                 <Text style={{fontWeight:'bold', fontSize : 20}}>리뷰</Text>
                             </View>
+                        </View>
+                        <View style={{alignItems:'center'}}>
+                            <StarRating
+                                disabled={false}
+                                maxStars={5}
+                                rating={this.state.starCount}
+                                selectedStar={(rating) => this._onStarRatingPress(rating)}
+                                fullStarColor={Colors.buttonSky}
+                                starSize={25}
+                            />
                         </View>
                         <View style={styles.textAreaContainer1}>
                             <Textarea
@@ -64,7 +82,7 @@ export default class BookingReviewWrite extends Component{
                         </View>
                     </View>
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} text={this.state.text}/>
+                <BottomRequest navigation={this.props.navigation} text={this.state.text} starCount={this.state.starCount}/>
             </SafeAreaView>
         );
     };
@@ -82,9 +100,13 @@ class BottomRequest extends Component{
             alert('최소 10자 이상 작성해주세요.');
             return false;
         }else{
-
-            this.props.navigation.goBack();
-            return true;
+            if(this.props.starCount==0){
+                alert('별점을 선택해주세요.');
+                return false;
+            }else{
+                this.props.navigation.goBack();
+                return true;
+            };
         };
     };
 
