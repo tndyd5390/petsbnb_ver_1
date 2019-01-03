@@ -37,6 +37,7 @@ export default class Explore extends Component {
             isLoading : false,
             footerLoading : true,
             enableScrollViewScroll: true,
+            search : ''
         }
     };
 
@@ -44,20 +45,26 @@ export default class Explore extends Component {
         this._getBookingList();
     }
 
+    _refreshList = () =>{
+        this.setState(state => ({ page: 0 }), () => this._getBookingList());
+    }
+
     _getBookingList = async() => {
         const params = {
-            search : '1',
-            page : (this.state.page * 2)
+            search : this.state.search,
+            page : (this.state.page * 2),
         }
+
+        console.log(this.state.page);
 
         if(this.state.page==0){
             this.setState({
                 refreshing : true, 
                 activityIndicator : true,
+                firstLoad : false
             });
         }else{
             this.setState({
-                refreshing : true, 
                 footerLoading : false,
             });
         }
@@ -80,12 +87,19 @@ export default class Explore extends Component {
                     data : res
                 });
             }else{
-                this.setState((prevState)=>({
-                    refreshing: false,
-                    activityIndicator : false,
-                    footerLoading : true,
-                    data : prevState.data.concat(res)
-                }))
+                if(res.length!=0){
+                    this.setState((prevState)=>({
+                        footerLoading : true,
+                        refreshing: false,
+                        activityIndicator : false,
+                        data : prevState.data.concat(res)
+                    }))
+                }else{
+                    this.setState({
+                        firstLoad : true,
+                        footerLoading : true,
+                    })
+                }
             }
         }))
         .catch((err) => {
@@ -115,12 +129,17 @@ export default class Explore extends Component {
     )
 
     handleEnd = () => {
-        // if(!this.state.firstLoad){
-        //     this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
-        // }
+        if(!this.state.firstLoad){
+            this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
+        }
     };
 
-
+    _onChangeText = (text) =>{
+        console.log(text);
+        this.setState({
+            search : text
+        })
+    }
 r
     render() {
         return (
@@ -134,6 +153,7 @@ r
                                 placeholder="Try New Delhi"
                                 placeholderTextColor="grey"
                                 style={{ flex: 1, fontWeight: '700', backgroundColor: 'white' }}
+                                onChangeText={this._onChangeText}
                             />
                         </View>
                     </View>
@@ -160,7 +180,7 @@ r
                             renderItem={this._renderItem} 
                             keyExtractor={ (item, index) => index.toString() }
                             refreshing={this.state.refreshing}
-                            onRefresh={this._getBookingList}
+                            onRefresh={this._refreshList}
                             onEndReached={() => this.handleEnd()}
                             onEndReachedThreshold={0.0000000000000000000000001}
                             ListFooterComponent={() =>
