@@ -46,7 +46,8 @@ export default class Explore extends Component {
 
     _getBookingList = async() => {
         const params = {
-            search : '1'
+            search : '1',
+            page : (this.state.page * 2)
         }
 
         if(this.state.page==0){
@@ -67,6 +68,7 @@ export default class Explore extends Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
+            body: JSON.stringify(params),
         })
         .then((response) => response.json())
         .then((res => {
@@ -103,6 +105,8 @@ export default class Explore extends Component {
             petsitterNo = {item.petsitterNo}
             petsitterName = {item.petsitterName}
             petsitterIntroduceOneline = {item.petsitterIntroduceOneline}
+            userAddress = {item.userAddress}
+            userAddressDetail = {item.userAddressDetail}
             starCount = {item.starCount}
             reviewCount = {item.reviewCount}
             petsitterFileName = {item.petsitterFileName}
@@ -111,9 +115,9 @@ export default class Explore extends Component {
     )
 
     handleEnd = () => {
-        if(!this.state.firstLoad){
-            this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
-        }
+        // if(!this.state.firstLoad){
+        //     this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
+        // }
     };
 
 
@@ -156,6 +160,7 @@ r
                             renderItem={this._renderItem} 
                             keyExtractor={ (item, index) => index.toString() }
                             refreshing={this.state.refreshing}
+                            onRefresh={this._getBookingList}
                             onEndReached={() => this.handleEnd()}
                             onEndReachedThreshold={0.0000000000000000000000001}
                             ListFooterComponent={() =>
@@ -211,7 +216,7 @@ class BookingsContents extends Component{
                             {this.state.petsitterIntroduceOneline}
                         </Text>
                         <Text style={{color : Colors.grey}}>
-                            주소들어갈곳이다.
+                            {this.state.userAddress}
                         </Text>
                         <Text style={styles.exploreImageDescription}>
                             {this.state.petsitterName}
