@@ -42,6 +42,10 @@ export default class DayBookingDetails extends Component{
         }
     }
 
+    _gotoPetList = async() => {
+        
+    }
+
     render(){
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -54,7 +58,7 @@ export default class DayBookingDetails extends Component{
                         checkout={this.state.checkout}
                     />
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation}/>
+                <BottomRequest navigation={this.props.navigation} onPressButton={this._gotoPetList}/>
             </SafeAreaView>
         );
     };
@@ -199,7 +203,7 @@ class BottomRequest extends Component{
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date')})}>
+                <TouchableOpacity style={styles.bottomButton} onPress={this.props.onPressButton}/*onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date')})}*/>
                     <Text style={styles.bottomText}>다음</Text>
                 </TouchableOpacity>
             </View>
