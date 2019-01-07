@@ -9,7 +9,7 @@ import Colors from './utils/Colors';
 import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
-import BookingDetails from './screens/booking/BookingDetails';
+import DayBookingDetails from './screens/booking/DayBookingDetails';
 import BookingDate from './screens/booking/BookingDate';
 import BookingPetList from './screens/booking/BookingPetList';
 import BookingConfirm from './screens/booking/BookingConfirm';
@@ -30,6 +30,7 @@ import StackNavigator from './StackNavigator';
 import CustomerCenter from './screens/profile/CustomerCenter';
 import Preference from './screens/profile/Preferences';
 import UsageTerm from './screens/profile/UsageTerm';
+import NightBookingDetails from './screens/booking/NightBookingDetails';
 
 export default class TabNavigator extends Component {
   render(){
@@ -230,8 +231,18 @@ const BookingStacks = createStackNavigator({
       },
     }
   },
-    BookingDetails :{
-      screen : BookingDetails,
+    DayBookingDetails :{
+      screen : DayBookingDetails,
+      navigationOptions : {
+        title : '예약 세부사항',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    NightBookingDetails :{
+      screen : NightBookingDetails,
       navigationOptions : {
         title : '예약 세부사항',
         headerTitleStyle: {

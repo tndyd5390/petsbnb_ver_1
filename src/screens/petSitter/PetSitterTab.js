@@ -20,11 +20,12 @@ import PetSitterProfileUpdateView from './PetSitterProfileUpdateView';
 import PetSitterReservationMenu from './PetSitterReservationMenu';
 import PetSitterReservationExposure from './PetSitterReservationExposure';
 import BookingDetail from '../booking/BookingDetail';
-import BookingDetails from '../booking/BookingDetails';
+import DayBookingDetails from '../booking/DayBookingDetails';
 import BookingDate from '../booking/BookingDate';
 import BookingPetList from '../booking/BookingPetList';
 import BookingConfirm from '../booking/BookingConfirm';
 import BookingPaymentList from '../booking/BookingPaymentList';
+import NightBookingDetails from '../booking/NightBookingDetails';
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -169,6 +170,17 @@ export default class PetSitterTab extends Component{
         },
       })
 
+      petSitterReservationStackNavigator.navigationOptions = ({ navigation }) => {
+        let tabBarVisible = true;
+        if (navigation.state.index > 0) {
+          tabBarVisible = false;
+        }
+        return {
+          tabBarVisible,
+        };
+      };
+
+
       const BookingStacks = createStackNavigator({
         Explore : {
           screen : Explore,
@@ -192,8 +204,8 @@ export default class PetSitterTab extends Component{
           },
         }
       },
-        BookingDetails :{
-          screen : BookingDetails,
+        DayBookingDetails :{
+          screen : DayBookingDetails,
           navigationOptions : {
             title : '예약 세부사항',
             headerTitleStyle: {
@@ -202,6 +214,16 @@ export default class PetSitterTab extends Component{
           },
         }
       },
+      NightBookingDetails :{
+        screen : NightBookingDetails,
+        navigationOptions : {
+          title : '예약 세부사항',
+          headerTitleStyle: {
+            width: '75%',
+            textAlign: 'center',
+        },
+      }
+    },
         BookingPetList :{
           screen : BookingPetList,
           navigationOptions : {
@@ -302,7 +324,15 @@ export default class PetSitterTab extends Component{
               shadowOpacity : 0.5,
               elevation : 5
             }
+          },
+          //탭네비게이션안의 스택네비게이션에서 스택을 쌓고 다른데로 가면 스택 비우는 코드
+          /*navigationOptions : {
+            tabBarOnPress : ({navigation, defaultHandler}) => {
+              navigation.dispatch(StackActions.popToTop());
+              defaultHandler();
+            }
           }
+          */
         })
 
         return(

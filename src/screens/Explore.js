@@ -62,7 +62,7 @@ export default class Explore extends Component {
             });
         }
         
-        await fetch('http://192.168.0.8:8091/booking/getBookingList.do', {
+        await fetch('http://192.168.0.10:8080/booking/getBookingList.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -96,7 +96,7 @@ export default class Explore extends Component {
 
     _onPressItem = (item) => {
         this.props.navigation.navigate('BookingDetail',{heart : false, petsitterNo: item.petsitterNo});
-
+        
     };
      
 

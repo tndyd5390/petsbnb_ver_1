@@ -44,7 +44,6 @@ export default class BookingDate extends Component{
         const startDate  =  selectedStartDate ? selectedStartDate.toString() : '';
         const endDate = selectedEndDate ? selectedEndDate.toString() : '';
         const date = {stDate : startDate, edDate : endDate};
-
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
             <View style={styles.container}>
@@ -72,7 +71,7 @@ export default class BookingDate extends Component{
               <SelectedDate startDate={startDate} endDate={endDate}/>
             </View>
           </View>
-            <BottomRequest navigation={this.props.navigation} date={date} />
+            <BottomRequest navigation={this.props.navigation} date={date} petsitterNo={this.props.navigation.getParam('petsitterNo')}/>
         </SafeAreaView>
         );
     };
@@ -142,7 +141,7 @@ class BottomRequest extends Component{
         super(props);
     }
 
-    onSubmit = () => {
+    onSubmit = async() => {
         if(this.props.date.stDate==''){
             alert('시작일을 선택해주세요.');
             return false;
@@ -150,7 +149,61 @@ class BottomRequest extends Component{
             alert('종료일을 선택해주세요.');
             return false;
         }else{
-            return this.props.navigation.navigate('BookingDetails', {date : this.props.date});
+            if(this.props.date.stDate === this.props.date.edDate){
+                    const params = {
+                        petSitterNo : this.props.petsitterNo.toString()
+                    }
+                    await fetch('http://192.168.0.10:8080/petSitter/getPDTO.do', {
+                        method: 'POST',
+                        headers: {
+                          Accept: 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(params),
+                    })
+                    .then((response) => response.json())
+                    .then((res => {
+                        console.log(res);
+                        if(res){
+                            this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res});
+                        }else{
+                            alert('잠시후 다시 시도해주세요.');
+                            this.props.navigation.goBack();
+                        }
+                        
+                    }))
+                    .catch((err) => {
+                        console.log(err);
+                        this.setState({activityIndicator : false});
+                    })
+            }else{
+                const params = {
+                    petSitterNo : this.props.petsitterNo.toString()
+                }
+                await fetch('http://192.168.0.10:8080/petSitter/getPDTO.do', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params),
+                })
+                .then((response) => response.json())
+                .then((res => {
+                    console.log(res);
+                    if(res){
+                        this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res});
+                    }else{
+                        alert('잠시후 다시 시도해주세요.');
+                        this.props.navigation.goBack();
+                    }
+                    
+                }))
+                .catch((err) => {
+                    console.log(err);
+                    this.setState({activityIndicator : false});
+                })
+            }
         }
     }
 

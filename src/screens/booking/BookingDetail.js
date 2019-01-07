@@ -66,7 +66,7 @@ export default class BookingDetail extends Component{
             petsitterNo : this.state.petsitterNo,
             reviewNow : 0
         }
-        await fetch('http://192.168.0.8:8091/booking/getBookingDetail.do', {
+        await fetch('http://192.168.0.10:8080/booking/getBookingDetail.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -95,6 +95,7 @@ export default class BookingDetail extends Component{
             'http://pet.chosun.com/images/news/healthchosun_pet_201611/20161117212109_708_1630_347.jpg',
             'https://s-i.huffpost.com/gen/5563994/images/n-DOG-MOUTH-628x314.jpg',
         ];
+        
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 {this.state.activityIndicator && (
@@ -574,7 +575,7 @@ class BottomRequest extends Component{
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props.navigation.navigate('BookingDate')}}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props.navigation.navigate('BookingDate', {petsitterNo : this.props.petsitterNo})}}>
                     <Text style={styles.bottomText}>예약 요청</Text>
                 </TouchableOpacity>
             </View>
