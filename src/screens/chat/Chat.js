@@ -1,27 +1,115 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet,Image, Text, View, FlatList, TouchableOpacity, SafeAreaView,AsyncStorage} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
 
 export default class Chat extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      userNo : '',
+      data : [{id : '1', sub: 'ss'}, {id : '2', sub:'dd'}],
+    }
+  };
+
+  componentDidMount(){
+    this._getUserInfo();
+  }
+
+  componentWillMount(){
+
+  }
+
+  _getUserInfo = async() =>{
+    const userNo = await AsyncStorage.getItem('userInfo');
+    this.setState({
+      userNo : userNo
+    })
+  };
+
+  _getChatList = async() =>{
+
+  };
+
+  _renderItem = ({item}) => (
+    <ChatList
+      id={item.id}
+      onPressItem={this._onPressItem}
+    />
+  );
+
+  _onPressItem = (item) => {
+    this.props.navigation.navigate('ChatRoom',{'key': item.id});
+  };
+
   render() {
     return (
-        <List>
+        <SafeAreaView style={styles.safeAreaViewStyle}>
           <FlatList
-            data={[{key: 'a', sub:'안녕'}, {key: 'b',sub:'하이'}]}
-            renderItem={({item}) => 
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate('ChatRoom',{'key': item.key}); console.log(item.key)}}>
-              <View>
-                <ListItem roundAvatar title={item.key} subtitle={item.sub} style={ styles.container }>{item.key}</ListItem>
-              </View>
-            </TouchableOpacity>
-            }
+            data={this.state.data}
+            renderItem={this._renderItem}
           />
-        </List>
+        </SafeAreaView>
     );
   }
 }
 
+class ChatList extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      id : this.props.id,
+    }
+
+  };
+  
+  _onPress = () => {
+    this.props.onPressItem(this.state.id);
+  };
+
+  render(){
+    return(
+      <TouchableOpacity onPress={this._onPress}>
+        <ChatRoomList/>
+      </TouchableOpacity>
+      );
+  };
+};
+
+class ChatRoomList extends Component {
+  constructor(props){
+      super(props);
+  };
+  
+  render(){
+      return(
+          <View style={{
+              flex:1,
+              flexDirection: 'row',
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              marginBottom : 5,
+          }}>
+              <View style={{alignItems : 'center', justifyContent: 'center'}}>
+                      <Image source={require("../../../img/user.png")} style={{width : 45, height : 45, margin : 13}}/>
+              </View>
+              <View style={{flex:1,justifyContent: 'center', marginLeft : 15}}>
+                  <View>
+                      <Text style={{fontSize : 15, fontWeight : 'bold'}}>반려견 예약</Text>
+                  </View>
+                  <View style={{alignItems : 'center', flexDirection: 'row', justifyContent : 'space-between', marginTop : 5}}>
+                      <View style={{flexDirection: 'row'}}>
+                      <Text style={{fontSize : 13, fontWeight :'bold'}}>123123</Text>
+                      </View>
+                      <View style={{flexDirection: 'row'}}>
+                      <Text style={{fontSize : 13, color : Colors.grey}}>123213</Text>
+                      </View>
+                  </View>
+              </View>            
+          </View>
+      );
+  };
+};
 
 
 const styles = StyleSheet.create({
@@ -30,6 +118,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-  }
+  },
+  safeAreaViewStyle : {
+    flex: 1,
+    backgroundColor : Colors.white,
+  },
 
 });

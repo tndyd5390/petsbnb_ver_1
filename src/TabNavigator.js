@@ -355,8 +355,12 @@ const ChatStacks = createStackNavigator({
   Chat : {
       screen : Chat,
       navigationOptions : {
-          header : null
-      }
+        title : '대화하기',
+        headerTitleStyle: {
+          width: '90%',
+          textAlign: 'center',
+      },
+  }
   },
   ChatRoom : {
       screen : ChatRoom,
