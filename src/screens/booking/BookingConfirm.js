@@ -213,11 +213,11 @@ class PetList extends Component{
                         <View style={{flexDirection: 'column', marginTop : 5}}>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>{pDTO.petKind}</Text>
+                                <Text>{`종류 ${pDTO.petKind}`}</Text>
                             </View>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>{pDTO.petWeight}</Text>
+                                <Text>{`몸무게 ${pDTO.petWeight}`}</Text>
                             </View>
                         </View>
                     </View>            
