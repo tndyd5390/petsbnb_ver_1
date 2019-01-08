@@ -21,6 +21,7 @@ import Category from '../components/Explore/Category';
 import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import PropTypes from 'prop-types';
 import {
     List, 
     ListItem, 
@@ -28,24 +29,72 @@ import {
 } from 'react-native-elements';
 
 export default class BookingConfirm extends Component {
+    
     constructor(props){
         super(props);
         const data = this.props.navigation.getParam('data');
+        const pDTO = this.props.navigation.getParam('pDTO');
         this.state = {
-            petList : this.setArrList(data.selected._mapData),
+            petList : [],
             stDate : data.stDate,
             edDate : data.edDate,
             diffDate : data.diffDate,
-            price : 50000,
+            price : -1,
             dayPrice : 30000,
+            smallPetNightPrice: pDTO.smallPetNightPrice,
+            smallPetDayPrice: pDTO.smallPetDayPrice,
+            middlePetNightPrice: pDTO.middlePetNightPrice,
+            middlePetDayPrice: pDTO.middlePetDayPrice,
+            bigPetNightPrice: pDTO.bigPetNightPrice,
+            bigPetDayPrice: pDTO.bigPetDayPrice,
             totalPrice : this.priceCalc(data),
             termsAccept : false,
             paymentIdx : 0,
             paymentVal : '네이버 페이'
         }
     };
+
+    async componentWillMount() {
+        const petList = await this._getSelectedPetList();
+        this.setState({
+            petList
+        })
+    }
+
+    _getSelectedPetList = async () =>{
+        const petNoMapArr = this.props.navigation.getParam('data').selected._mapData;
+        let petNoArr = [];
+        let petNoMap = petNoMapArr.reduce(function(map, obj) {
+            petNoArr.push(obj[0]);
+        }, {});
+        
+        const params = {
+            petNoArr
+        }
+
+        const selectedPetList = await fetch('http://192.168.0.10:8080/pet/getSelectedPetList.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            return res
+        }))
+        .catch((err) => {
+            this.setState({activityIndicator : false});
+        })
+
+        return selectedPetList;
+        
+    }
+
     
-    priceCalc = (data) =>{
+    
+    priceCalc = async (data) =>{
         let price = 0;
         if(data.diffDate == 0){
             price = data.dayPrice;
@@ -80,13 +129,14 @@ export default class BookingConfirm extends Component {
     };
 
     render(){
+        const pDTO = this.props.navigation.getParam('pDTO');
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>펫시터 정보</Text>
                     </View>
-                    <Profile/>
+                    <Profile pDTO={pDTO}/>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>맡길 펫 정보</Text>
                     </View>
@@ -117,6 +167,7 @@ class Profile extends Component {
     };
 
     render(){
+        const pDTO = this.props.pDTO;
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
@@ -124,16 +175,12 @@ class Profile extends Component {
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
-                        <Text style={{fontSize : 20, fontWeight : 'bold'}}>유혜진</Text>
+                        <Text style={{fontSize : 20, fontWeight : 'bold'}}>{pDTO.petSitterName}</Text>
                     </View>
                     <View style={{flexDirection: 'column', marginTop : 5}}>
                         <View style={{alignItems : 'center', flexDirection: 'row'}}>
                             <View style={styles.blueCircle}/>
-                            <Text>프로필1</Text>
-                        </View>
-                        <View style={{alignItems : 'center', flexDirection: 'row'}}>
-                            <View style={styles.blueCircle}/>
-                            <Text>프로필2</Text>
+                            <Text>{pDTO.petSitterIntroduceOneLine}</Text>
                         </View>
                     </View>
                 </View>            
@@ -142,33 +189,35 @@ class Profile extends Component {
     };
 };
 
+Profile.propTypes = {
+    pDTO : PropTypes.object.isRequired
+}
+
 class PetList extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            petList : this.props.petList
-        }
     };
 
     renderList = (petList) => {
-        return petList.map((key)=>{
+        console.log(petList);
+        return petList.map((pDTO, index)=>{
             return(
-                <View style={styles.listBar} key={key}>
+                <View style={styles.listBar} key={index}>
                     <View style={{alignItems : 'center', justifyContent: 'center'}}>
                             <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
                     </View>
                     <View style={{justifyContent: 'center', marginLeft : 15}}>
                         <View>
-                            <Text style={{fontSize : 20, fontWeight : 'bold'}}>{key}</Text>
+                            <Text style={{fontSize : 20, fontWeight : 'bold'}}>{pDTO.petName}</Text>
                         </View>
                         <View style={{flexDirection: 'column', marginTop : 5}}>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>프로필1</Text>
+                                <Text>{pDTO.petKind}</Text>
                             </View>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>프로필2</Text>
+                                <Text>{pDTO.petWeight}</Text>
                             </View>
                         </View>
                     </View>            
@@ -179,7 +228,7 @@ class PetList extends Component{
     render(){
         return(
             <View>
-                {this.renderList(this.state.petList)}
+                {this.renderList(this.props.petList)}
             </View>
         );
     };

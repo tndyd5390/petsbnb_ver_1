@@ -34,7 +34,7 @@ export default class NightBookingDetails extends Component{
                     <Profile pDTO={this.props.navigation.getParam('pDTO')}/>
                     <BookingDate date={this.props.navigation.getParam('date')} pDTO={this.props.navigation.getParam('pDTO')}/>
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation}/>
+                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')}/>
             </SafeAreaView>
         );
     };
@@ -139,7 +139,7 @@ class BottomRequest extends Component{
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date')})}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date'), pDTO : this.props.pDTO})}>
                     <Text style={styles.bottomText}>다음</Text>
                 </TouchableOpacity>
             </View>

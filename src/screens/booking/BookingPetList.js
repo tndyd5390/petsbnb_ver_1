@@ -21,11 +21,16 @@ import Category from '../components/Explore/Category';
 import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import PropTypes from 'prop-types';
 import {List, ListItem} from 'react-native-elements';
 
 export default class BookingPetList extends Component{
     constructor(props) {
         super(props)
+        if(this.props.navigation.getParam('pDTO', null) === null){
+            alert('다시시도해주세요.');
+            this.props.navigation.goBack();
+        }
         const rslt = chgDateFormat(this.props.navigation.getParam('date'));
         this.state = {
             stDate : rslt.stDate,
@@ -36,6 +41,16 @@ export default class BookingPetList extends Component{
         }
     };
 
+    componentWillMount(){
+        const isDayCare = this.props.navigation.getParam('isDayCare');
+        if(isDayCare){
+            this.setState({
+                isDayCare : isDayCare,
+                checkin : this.props.navigation.getParam('checkin'),
+                checkout : this.props.navigation.getParam('checkout')
+            })
+        }
+    }
     
     _callBackPetList = (selectedPet) =>{
         this.setState({
@@ -50,7 +65,7 @@ export default class BookingPetList extends Component{
                 <ScrollView>
                 {this.state.petYN ?  <PetY callBackPetList={this._callBackPetList}/> :<PetN/> }            
                  </ScrollView>
-                {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state}/> : null }            
+                {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout}/> : null }            
             </SafeAreaView>
         );
     };
@@ -80,15 +95,54 @@ class PetY extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data : [{id : '1', name : '호두', detail : '말티즈', size : '소형'},
-                    {id : '2', name : '초코', detail : '웰시코기', size : '중형'},
-                    {id : '3', name : '초코', detail : '웰시코기', size : '중형'},
-                    {id : '4', name : '초코', detail : '웰시코기', size : '중형'},
-                    {id : '5', name : '우유', detail : '사모예드', size : '대형'}],
             selected : (new Map():Map<string,boolean>)
         };
 
     };
+
+    async componentWillMount() {
+        const petList = await this._getPetList();
+        let refinedPetList = [];
+        petList.forEach((value, index) => {
+            let weight = Number(value.petWeight);
+            let size = '';
+            if(weight > 0 && weight <= 6){
+                size = '소형';
+            }else if(weight > 6 && weight <= 15){
+                size='중형';
+            }else{
+                size='대형';
+            }
+            refinedPetList.push({id : value.petNo, name : value.petName, detail : value.petKind, size : size})
+        });
+        this.setState({data : refinedPetList});
+    }
+
+    _getPetList = async() => {        
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo
+        }
+        const petList = await fetch('http://192.168.0.10:8080/pet/getPetList.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            return res;
+        }))
+        .catch((err) => {
+            console.log(err);
+            this.setState({activityIndicator : false});
+        })
+
+        return petList;
+    }
+
     _keyExtractor = (item, index) => item.id;
 
     _onPressItem = (id : String) => {
@@ -181,6 +235,7 @@ class PetProfile extends Component {
 class BottomRequest extends Component{
     constructor(props) {
         super(props);
+        
     };
 
     _onSubmit = () =>{
@@ -196,7 +251,16 @@ class BottomRequest extends Component{
                 }
             }
             if(count>0){
-                this.props.navigation.navigate('BookingConfirm',{data:this.props.data});
+                let params = {
+                    data:this.props.data, 
+                    pDTO : this.props.pDTO
+                }
+                if(this.props.isDayCare){
+                    params.isDayCare = this.props.isDayCare;
+                    params.checkin = this.props.checkin;
+                    params.checkout = this.props.checkout
+                }
+                this.props.navigation.navigate('BookingConfirm',params);
                 return true;
             }else{
                 alert('맡기실 반려동물을 선택해주세요.');

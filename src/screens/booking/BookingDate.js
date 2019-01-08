@@ -163,7 +163,6 @@ class BottomRequest extends Component{
                     })
                     .then((response) => response.json())
                     .then((res => {
-                        console.log(res);
                         if(res){
                             this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res});
                         }else{
@@ -190,7 +189,6 @@ class BottomRequest extends Component{
                 })
                 .then((response) => response.json())
                 .then((res => {
-                    console.log(res);
                     if(res){
                         this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res});
                     }else{

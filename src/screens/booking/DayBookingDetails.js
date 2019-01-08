@@ -42,10 +42,6 @@ export default class DayBookingDetails extends Component{
         }
     }
 
-    _gotoPetList = async() => {
-        
-    }
-
     render(){
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -58,7 +54,7 @@ export default class DayBookingDetails extends Component{
                         checkout={this.state.checkout}
                     />
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} onPressButton={this._gotoPetList}/>
+                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')} checkin={this.state.checkin} checkout={this.state.checkout}/>
             </SafeAreaView>
         );
     };
@@ -169,7 +165,7 @@ class BookingDate extends Component {
                                 onValueChange={(itemValue, itemIndex) => {this._onChangeCheckout(itemValue)}}
                                 style={{width : '100%', height : '100%'}}
                             >
-                                {this._renderCheckTime(this.props.checkin)}
+                                {this._renderCheckTime(this.props.checkin + 1)}
                             </Picker>
                         </View>
                         <Text style={{fontSize : 15, width : '20%', marginLeft : 3}}>까지</Text>
@@ -199,11 +195,22 @@ class BottomRequest extends Component{
         super(props);
     }
 
+    _gotoBookingPetList = () => {
+        if(this.props.checkin === -1){
+            alert('체크인 시간을 설정해주세요.');
+            return;
+        }else if(this.props.checkout === -1) {
+            alert('체크아웃 시간을 설정해주세요.');
+            return;
+        }else{
+            this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date'), pDTO : this.props.pDTO, checkin : this.props.checkin, checkout : this.props.checkout, isDayCare : true})
+        }
+    }
 
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={this.props.onPressButton}/*onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date')})}*/>
+                <TouchableOpacity style={styles.bottomButton} onPress={this._gotoBookingPetList}>
                     <Text style={styles.bottomText}>다음</Text>
                 </TouchableOpacity>
             </View>
