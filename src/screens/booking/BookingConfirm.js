@@ -207,6 +207,15 @@ class PetList extends Component{
 
     renderList = (petList) => {
         return petList.map((pDTO, index)=>{
+            const weight = Number(pDTO.petWeight);
+            let size = '';
+            if(weight > 0 && weight <= 6){
+                size = '소형';
+            }else if(weight > 6 && weight <= 15){
+                size='중형';
+            }else{
+                size='대형';
+            }
             return(
                 <View style={styles.listBar} key={index}>
                     <View style={{alignItems : 'center', justifyContent: 'center'}}>
@@ -223,7 +232,7 @@ class PetList extends Component{
                             </View>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>{`몸무게 ${pDTO.petWeight}`}</Text>
+                                <Text>{size}</Text>
                             </View>
                         </View>
                     </View>            
