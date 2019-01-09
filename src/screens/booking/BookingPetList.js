@@ -42,7 +42,7 @@ export default class BookingPetList extends Component{
     };
 
     componentWillMount(){
-        const isDayCare = this.props.navigation.getParam('isDayCare');
+        const isDayCare = this.props.navigation.getParam('isDayCare', false);
         if(isDayCare){
             this.setState({
                 isDayCare : isDayCare,
@@ -59,11 +59,11 @@ export default class BookingPetList extends Component{
     };
       
     render(){
-
+        console.log(this.state.isDayCare);
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                {this.state.petYN ?  <PetY callBackPetList={this._callBackPetList}/> :<PetN/> }            
+                {this.state.petYN ?  <PetY callBackPetList={this._callBackPetList} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout} navigation={this.props.navigation}/> :<PetN/> }            
                  </ScrollView>
                 {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout}/> : null }            
             </SafeAreaView>
@@ -99,9 +99,41 @@ class PetY extends Component {
         };
 
     };
-
+    //여기서 불가능한 동물이 아예 안뜨게 만들어야겠다...필원아 좆댓다 점점 복잡해진다. 미안하다.
     async componentWillMount() {
-        const petList = await this._getPetList();
+        //이부분은 내가 생각해도 졸라 복잡하기때문에 툭별히 주석을 남긴다.
+        //여기서 문제는 펫시터가 이용불가라고 설정해놓은 견종을 화면에 출력하면 안된다.
+        //나는 여기서 자바스크립트로 해결할까 했지만 아싸리 스프링에서 데이터를 불러올때 펫시터가 이용불가로 설정해놓은 견종을 불러오지 않는 방식으로 변경한다.
+        
+        //먼저 펫시터가 이용불가로 설정해놓은 데이터를 불러오기위하여 부모 컴포넌트에서 넘겨준 펫시터 정보를 불러온다.
+        //데이터는 price가 0이면 펫시터가 이용 불가로 설정해 놓은 것이다.
+        const pDTO = this.props.pDTO;
+        
+        //데이케어의 경우 DayPrice만 판단한다.
+        let availablePetKind = [];
+        if(this.props.isDayCare){
+            if(pDTO.smallPetDayPrice !== '0'){
+                availablePetKind.push('SMALL');
+            }
+            if(pDTO.middlePetDayPricee !== '0'){
+                availablePetKind.push('MIDDLE');
+            }
+            if(pDTO.bigPetDayPrice !== '0'){
+                availablePetKind.push('BIG');
+            }
+        }else{//1박케어의 경우 NightPrice만 판단한다.
+            if(pDTO.smallPetNightPrice !== '0'){
+                availablePetKind.push('SMALL');
+            }
+            if(pDTO.middlePetNightPrice !== '0'){
+                availablePetKind.push('MIDDLE');
+            }
+            if(pDTO.bigPetNightPrice !== '0'){
+                availablePetKind.push('BIG');
+            }
+        }
+        //위의 if문으로 펫시팅 가능한 견종만 추리고 펫 목록을 불러오는 ajax에 파라미터로 넘긴다.
+        const petList = await this._getPetList(availablePetKind);
         let refinedPetList = [];
         petList.forEach((value, index) => {
             let weight = Number(value.petWeight);
@@ -118,12 +150,13 @@ class PetY extends Component {
         this.setState({data : refinedPetList});
     }
 
-    _getPetList = async() => {        
+    _getPetList = async(availablePetKind) => {        
         const userNo = await AsyncStorage.getItem('userInfo');
         const params = {
-            userNo
+            userNo,
+            availablePetKind
         }
-        const petList = await fetch('http://192.168.0.10:8080/pet/getPetList.do', {
+        const petList = await fetch('http://192.168.0.10:8080/pet/getAvaliablePetList.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -133,6 +166,10 @@ class PetY extends Component {
         })
         .then((response) => response.json())
         .then((res => {
+            if(res.length === 0){
+                alert('펫시팅 조건에 부합하는 반려동물이 없습니다. 펫시팅 조건을 다시 확인해주세요.');
+                this.props.navigation.pop(3);
+            }
             return res;
         }))
         .catch((err) => {

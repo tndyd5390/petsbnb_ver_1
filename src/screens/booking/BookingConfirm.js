@@ -34,6 +34,7 @@ export default class BookingConfirm extends Component {
         super(props);
         const data = this.props.navigation.getParam('data');
         const pDTO = this.props.navigation.getParam('pDTO');
+        const isDayCare = this.props.navigation.getParam('isDayCare', false);
         this.state = {
             petList : [],
             stDate : data.stDate,
@@ -50,7 +51,12 @@ export default class BookingConfirm extends Component {
             totalPrice : this.priceCalc(data),
             termsAccept : false,
             paymentIdx : 0,
-            paymentVal : '네이버 페이'
+            paymentVal : '네이버 페이',
+            isDayCare
+        }
+        if(isDayCare){
+            this.state.checkin = this.props.navigation.getParam('checkin');
+            this.state.checkout = this.props.navigation.getParam('checkout');
         }
     };
 
@@ -85,7 +91,8 @@ export default class BookingConfirm extends Component {
             return res
         }))
         .catch((err) => {
-            this.setState({activityIndicator : false});
+            alert('데이터 전송 오류입니다. 다시 시도해주세요.');
+            this.props.navigation.goBack();
         })
 
         return selectedPetList;
@@ -199,7 +206,6 @@ class PetList extends Component{
     };
 
     renderList = (petList) => {
-        console.log(petList);
         return petList.map((pDTO, index)=>{
             return(
                 <View style={styles.listBar} key={index}>
@@ -271,35 +277,85 @@ class BookingDateDetail extends Component{
 class Price extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            diffDate : this.props.data.diffDate,
-            price : this.props.data.price,
-            dayPrice : this.props.data.dayPrice,
-            coupon : '',
-            totalPrice : 0
-        }
     };
 
-    priceCalc = (data) =>{
+    _calcPriceDayCare = (petList, checkin, checkout, smallPetDayPrice, middlePetDayPrice, bigPetDayPrice) => {
         let price = 0;
-        if(data.diffDate == 0){
-            price = data.dayPrice;
+        petList = this._parsePetList(petList);
+        const careHours = Number(checkout) - Number(checkin);
+        petList.forEach((pDTO, index) => {
+            if(pDTO.petKind === '소형'){
+                price += careHours * Number(smallPetDayPrice);
+            }else if(pDTO.petKine === '중형'){
+                price += careHours * Number(middlePetDayPrice);
+            }else{
+                price += careHours * Number(bigPetDayPrice);
+            }
+        });
+        return price;
+    }
+
+    _calcPriceNightCare = (petList, diffDate, smallPetNightPrice, middlePetNightPrice, bigPetNightPrice) => {
+        let price = 0;
+        petList = this._parsePetList(petList);
+        diffDate = Number(diffDate);
+        petList.forEach((pDTO, index) => {
+            if(pDTO.petKind === '소형'){
+                price += diffDate * Number(smallPetNightPrice);
+            }else if(pDTO.petKine === '중형'){
+                price += diffDate * Number(middlePetNightPrice);
+            }else{
+                price += diffDate * Number(bigPetNightPrice);
+            }
+        });
+        return price;
+    }
+
+    _definePetKind = (weight) => {
+        weight = Number(weight);
+        if(weight > 0 && weight <= 6){
+            return '소형';
+        }else if(weight > 6 && weight <= 15){
+            return '중형';
         }else{
-            price = (data.price * data.diffDate);
+            return '대형';
         }
-        return this.addCommma(price);
-    };
+    }
+
+    _parsePetList = (petList) => petList.map((pDTO) => {return {...pDTO, petKind : this._definePetKind(pDTO.petWeight)}})
 
     addCommma = (price) =>{
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
+    _calcTotalPrice = (priceData) => {
+        if(priceData.isDayCare){
+            return this._calcPriceDayCare(
+                priceData.petList, 
+                priceData.checkin, 
+                priceData.checkout, 
+                priceData.smallPetDayPrice, 
+                priceData.middlePetDayPrice,
+                priceData.bigPetDayPrice
+            );
+        }else{
+            return this._calcPriceNightCare(
+                priceData.petList,
+                priceData.diffData,
+                priceData.smallPetNightPrice,
+                priceData.middlePetNightPrice,
+                priceData.bigPetNightPrice
+            )
+        }
+    }
+
     render(){
+        const priceData = this.props.data;
         return(
             <View style={styles.priceBar}>
                 <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
                     <Text style={{fontSize : 25, fontWeight : 'bold'}}>
-                        {this.priceCalc(this.state)} 원
+                        {this.addCommma(this._calcTotalPrice(priceData))} 원
                     </Text>
                 </View>
                 <View style={{flexDirection:'row', justifyContent:'flex-end', marginTop : 10}}>
