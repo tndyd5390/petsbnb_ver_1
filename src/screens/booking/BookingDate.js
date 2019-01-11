@@ -79,7 +79,7 @@ export default class BookingDate extends Component{
 
 class Caution extends Component {
     constructor(props) {
-        super(props);
+        super(props); 
     }
 
     render(){

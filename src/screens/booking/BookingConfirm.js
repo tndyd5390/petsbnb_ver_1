@@ -71,7 +71,9 @@ export default class BookingConfirm extends Component {
         const petNoMapArr = this.props.navigation.getParam('data').selected._mapData;
         let petNoArr = [];
         let petNoMap = petNoMapArr.reduce(function(map, obj) {
-            petNoArr.push(obj[0]);
+            if(obj[1]){
+                petNoArr.push(obj[0]);
+            }
         }, {});
         
         const params = {
@@ -308,10 +310,11 @@ class Price extends Component{
         let price = 0;
         petList = this._parsePetList(petList);
         diffDate = Number(diffDate);
+        console.log('diffDate : ' + diffDate);
         petList.forEach((pDTO, index) => {
             if(pDTO.petKind === '소형'){
                 price += diffDate * Number(smallPetNightPrice);
-            }else if(pDTO.petKine === '중형'){
+            }else if(pDTO.petKind === '중형'){
                 price += diffDate * Number(middlePetNightPrice);
             }else{
                 price += diffDate * Number(bigPetNightPrice);
@@ -350,7 +353,7 @@ class Price extends Component{
         }else{
             return this._calcPriceNightCare(
                 priceData.petList,
-                priceData.diffData,
+                priceData.diffDate,
                 priceData.smallPetNightPrice,
                 priceData.middlePetNightPrice,
                 priceData.bigPetNightPrice

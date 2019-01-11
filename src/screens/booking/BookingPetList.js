@@ -59,7 +59,6 @@ export default class BookingPetList extends Component{
     };
       
     render(){
-        console.log(this.state.isDayCare);
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
