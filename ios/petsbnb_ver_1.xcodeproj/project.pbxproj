@@ -1542,7 +1542,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1550,14 +1549,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = petsbnb_ver_1Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1592,7 +1583,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1600,14 +1590,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = petsbnb_ver_1Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1643,7 +1625,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1651,14 +1632,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = petsbnb_ver_1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1681,7 +1654,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1689,14 +1661,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = petsbnb_ver_1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1726,7 +1690,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1734,14 +1697,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1784,7 +1739,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1792,14 +1746,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1841,7 +1787,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1849,14 +1794,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1898,7 +1835,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-<<<<<<< HEAD
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
@@ -1906,14 +1842,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
-=======
-					"$(SRCROOT)..\node_modules\neact-native-fetch-blobios/**",
-					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
-					"$(SRCROOT)..\node_modules\neact-native-navigationios/**",
-					"$(SRCROOT)..\node_modules\neact-native-restartiosRCTRestart/**",
-					"$(SRCROOT)..\node_modules\neact-native-videoios/**",
-					"$(SRCROOT)..\node_modules\neact-native-webview-bridgeios",
->>>>>>> 31b5f71ec435010cbe9488446e53654b986aad17
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

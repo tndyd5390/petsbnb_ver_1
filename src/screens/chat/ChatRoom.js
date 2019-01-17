@@ -10,15 +10,34 @@ export default class ChatRoom extends Component{
     constructor(props) {
       super(props);
       this.state = {
+        userNo : this.props.navigation.getParam('userNo'),
+        petsitterNo : this.props.navigation.getParam('petsitterNo'),
+        petsitterName : this.props.navigation.getParam('petsitterName'),
         clientConnected: false,
+        roomId : '',
         messages: []
       };
+    }
+
+    componentDidMount(){
+      this._loginCheck();
+      this._makeRoomId(this.state.userNo, this.state.petsitterNo);
+    }
+
+    _makeRoomId = (userNo, petsitterNo) => {
+      const roomId = 'p'+petsitterNo+'u'+userNo;
+      this.setState({
+        roomId : roomId
+      });
     }
 
     _loginCheck = async() => {
       const userInfo = await AsyncStorage.getItem('userInfo');
       if(userInfo != null){
           //로그인 되있는 상태
+        this.setState({
+          userNo : userInfo
+        });
       }
     };
     
@@ -31,7 +50,7 @@ export default class ChatRoom extends Component{
 
     static navigationOptions = ({ navigation }) => {
       return {
-        title: navigation.getParam('key', 'A Nested Details Screen'),
+        title: navigation.getParam('petsitterName', 'A Nested Details Screen'),
       };
     };
     
@@ -57,7 +76,6 @@ export default class ChatRoom extends Component{
 }
 class MessageBubble extends Component {
     render() {
-  
         var leftSpacer = this.props.direction === 'left' ? null : <View/>;
         var rightSpacer = this.props.direction === 'left' ? <View/> : null;
         var bubbleTextStyle = this.props.direction === 'left' ? styles.messageBubbleTextLeft : styles.messageBubbleTextRight;
@@ -81,9 +99,11 @@ class InputBar extends Component{
     constructor(props) {
       super(props);
       this.state = {
+        roomId : this.props.roomId,
         bottomMenu : false,
         plusButton : false,
         clientConnected: false,
+        type: 'text',
         messages: []
       };
     }
@@ -138,13 +158,13 @@ class InputBar extends Component{
               });
             }} value={this.state.content}/>
                 <TouchableHighlight style={styles.sendButton} onPress={() => {
-              this.sendMessage({user : this.state.user, contents : this.state.contents})
+              this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents})
             }}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
             </View>
             {this.state.bottomMenu ? <BottomMenu/> : null}
-            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' topics={['/topic/chat']}
+            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' topics={['/topic/chat'+this.state.roomId]}
             onMessage={(msg) => { this.onMessageReceive(msg) }}
             ref={ (client) => { this.clientRef = client }}
             debug={true} />

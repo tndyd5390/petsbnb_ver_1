@@ -33,17 +33,19 @@ export default class BookingDetail extends Component{
         const petsitterNo = this.props.navigation.getParam('petsitterNo');
         this.state = {
             activityIndicator : true,
+            userNo : '',
             petsitterNo : petsitterNo,
             heartStatus : false,
             headImages : [],
             bookingDetail : {},
-            reviews : []
+            reviews : [],
         };
     };
     
 
     componentWillMount(){
         this._getBookingDetail();
+        this._getUserInfo();
     };
     
     static navigationOptions = ({navigation}) => {
@@ -60,6 +62,17 @@ export default class BookingDetail extends Component{
               )
         };
     };
+
+    _goToChat = () => {
+        this.props.navigation.navigate("ChatRoom",{userNo : this.state.userNo, petsitterNo : this.state.petsitterNo, petsitterName : this.state.bookingDetail.petsitterName});
+    }
+    
+    _getUserInfo = async() =>{
+        const userNo = await AsyncStorage.getItem('userInfo');
+        this.setState({
+          userNo : userNo
+        })
+      };
 
     _getBookingDetail = async() => {
         const params = {
@@ -86,7 +99,6 @@ export default class BookingDetail extends Component{
         .catch((err) => {
             console.log(err);
         })
-
     };
 
     render(){
@@ -126,7 +138,7 @@ export default class BookingDetail extends Component{
                         <BottomRequest navigation={this.props.navigation} petsitterNo={this.state.bookingDetail.petsitterNo}/>
                 ) : null}
                 {!this.state.activityIndicator ? (
-                        <TouchableOpacity activeOpacity={0.8} style={styles.stickerBtn}>
+                        <TouchableOpacity activeOpacity={0.8} style={styles.stickerBtn} onPress={this._goToChat}>
                              <IconFontAwesome name='comment-dots' color={Colors.buttonSky} size={25}/>
                         </TouchableOpacity>
                 ) : null}

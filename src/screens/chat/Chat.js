@@ -8,7 +8,7 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       userNo : '',
-      data : [{id : '1', sub: 'ss'}, {id : '2', sub:'dd'}],
+      data : [],
     }
   };
 
