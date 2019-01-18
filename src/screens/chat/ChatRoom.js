@@ -14,22 +14,21 @@ export default class ChatRoom extends Component{
         petsitterNo : this.props.navigation.getParam('petsitterNo'),
         petsitterName : this.props.navigation.getParam('petsitterName'),
         clientConnected: false,
-        roomId : '',
+        roomId : this.props.navigation.getParam('roomId'),
         messages: []
       };
     }
 
     componentDidMount(){
       this._loginCheck();
-      this._makeRoomId(this.state.userNo, this.state.petsitterNo);
     }
 
     _makeRoomId = (userNo, petsitterNo) => {
       const roomId = 'p'+petsitterNo+'u'+userNo;
-      this.setState({
-        roomId : roomId
-      });
-    }
+      this.setState((prevState)=>({
+        roomId : roomId,
+    }))
+}
 
     _loginCheck = async() => {
       const userInfo = await AsyncStorage.getItem('userInfo');
@@ -38,6 +37,14 @@ export default class ChatRoom extends Component{
         this.setState({
           userNo : userInfo
         });
+
+        console.log(userInfo);
+
+        if(this.state.roomId == ''){
+          this.setState({
+            roomId : 'p'+this.props.navigation.getParam('petsitterNo')+'u'+ this.props.navigation.getParam('userNo')
+          })
+        }
       }
     };
     
@@ -69,7 +76,7 @@ export default class ChatRoom extends Component{
              onContentSizeChange={(width,height) => this.refs.scrollView.scrollTo({y:height})}>
               {messages}
             </ScrollView>
-                <InputBar callBackMsg={this.callBackMsg}/>
+                <InputBar callBackMsg={this.callBackMsg} roomId={this.state.roomId} userNo={this.state.userNo}/>
             </View>
         );
     }
@@ -104,6 +111,7 @@ class InputBar extends Component{
         plusButton : false,
         clientConnected: false,
         type: 'text',
+        userNo : this.state.userNo,
         messages: []
       };
     }
@@ -129,7 +137,7 @@ class InputBar extends Component{
 
     sendMessage = (selfMsg) => {
       try {
-        this.clientRef.sendMessage("/app/hello", JSON.stringify(selfMsg));
+        this.clientRef.sendMessage("/app/hello/"+this.props.roomId, JSON.stringify(selfMsg));
         return true;
       } catch(e) {
         return false;
@@ -153,7 +161,8 @@ class InputBar extends Component{
                 </TouchableHighlight>
                 <TextInput style={styles.textBox} onChangeText={(text) => {
               this.setState({
-                user : 'me',
+                userNo : this.state.userNo,
+                type : this.state.type,
                 contents : text
               });
             }} value={this.state.content}/>
@@ -164,7 +173,7 @@ class InputBar extends Component{
                 </TouchableHighlight>
             </View>
             {this.state.bottomMenu ? <BottomMenu/> : null}
-            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' topics={['/topic/chat'+this.state.roomId]}
+            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' topics={['/topic/chat/'+this.props.roomId]}
             onMessage={(msg) => { this.onMessageReceive(msg) }}
             ref={ (client) => { this.clientRef = client }}
             debug={true} />

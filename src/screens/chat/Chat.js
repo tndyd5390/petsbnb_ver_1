@@ -8,7 +8,9 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       userNo : '',
-      data : [],
+      data : [
+        {roomId : "p2u4", petssiterNo : 2}
+      ],
     }
   };
 
@@ -33,13 +35,15 @@ export default class Chat extends Component {
 
   _renderItem = ({item}) => (
     <ChatList
-      id={item.id}
+      roomId={item.roomId}
+      userNo={this.state.userNo}
+      petssiterNo={item.petssiterNo}
       onPressItem={this._onPressItem}
     />
   );
 
   _onPressItem = (item) => {
-    this.props.navigation.navigate('ChatRoom',{'key': item.id});
+    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, petsitterNo:item.petsitterNo});
   };
 
   render() {
@@ -58,13 +62,13 @@ class ChatList extends Component {
   constructor(props){
     super(props);
     this.state = {
-      id : this.props.id,
+      roomId : this.props.roomId,
     }
 
   };
   
   _onPress = () => {
-    this.props.onPressItem(this.state.id);
+    this.props.onPressItem(this.state.roomId);
   };
 
   render(){
