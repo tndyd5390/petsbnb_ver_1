@@ -3,6 +3,16 @@ package com.petsbnb_ver_1;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
+import com.brentvatne.react.ReactVideoPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.rnrestartandroid.RNRestartAndroidPackage;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
+import com.reactnativenavigation.NavigationReactPackage;
+import com.imagepicker.ImagePickerPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -30,6 +40,16 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNBackgroundFetchPackage(),
+            new WebViewBridgePackage(),
+            new ReactVideoPackage(),
+            new VectorIconsPackage(),
+            new RNRestartAndroidPackage(),
+            new ReactNativeRestartPackage(),
+            new NavigationReactPackage(),
+            new ImagePickerPackage(),
+            new RNFirebasePackage(),
+            new RNFetchBlobPackage(),
             new BackgroundTaskPackage(),
             new RNFirebasePackage(),
           new RNFetchBlobPackage(),

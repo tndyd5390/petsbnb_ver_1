@@ -13,6 +13,7 @@
     "react-devtools": "^3.4.2",
     "react-moment": "^0.8.4",
     "react-native": "0.57.4",
+    "react-native-background-fetch": "^2.4.6",
     "react-native-background-task": "^0.2.1",
     "react-native-calendar-picker": "^5.22.0",
     "react-native-datepicker": "^1.7.2",

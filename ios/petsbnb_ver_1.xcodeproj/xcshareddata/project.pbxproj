@@ -52,7 +52,6 @@
 		B25BD0E223AB4B9BA78C108A /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 460CCD04F60A411D85C8D426 /* Ionicons.ttf */; };
 		BCBEB0C029E2452BB347A087 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D6A21ECB14D40A6BE1B72D2 /* MaterialCommunityIcons.ttf */; };
 		BE4D0BDE5A6044119EEC2771 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4F4E22F4A2B4A5E8B7CD027 /* FontAwesome5_Solid.ttf */; };
-		C86E1D8921F0477B00B2FADE /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C86E1D8821F0474D00B2FADE /* libRNFetchBlob.a */; };
 		F4305BBA12B64E1EB795DEB3 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59270C5664AF49BBB91BD450 /* Octicons.ttf */; };
 		F8F7CF1D43A147B791C398B5 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3108891851DA494AA05A85CE /* Foundation.ttf */; };
 		FC947C3433BC493BA7EC7CD9 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7682B06772340AF9C23941C /* libRNVectorIcons-tvOS.a */; };
@@ -346,13 +345,6 @@
 			remoteGlobalIDString = A39873CE1EA65EE60051E01A;
 			remoteInfo = "RNVectorIcons-tvOS";
 		};
-		C86E1D8721F0474D00B2FADE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C86E1D8321F0474D00B2FADE /* RNFetchBlob.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A15C300E1CD25C330074CB35;
-			remoteInfo = RNFetchBlob;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -397,7 +389,6 @@
 		A7682B06772340AF9C23941C /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		C4F4E22F4A2B4A5E8B7CD027 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
-		C86E1D8321F0474D00B2FADE /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		CB2500725A2B42DC884B5F01 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		D1CA1468A93D46D7AC1B370B /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		F732948B27334C09B8151897 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -416,7 +407,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C86E1D8921F0477B00B2FADE /* libRNFetchBlob.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -605,7 +595,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				C86E1D8321F0474D00B2FADE /* RNFetchBlob.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -704,14 +693,6 @@
 			children = (
 				C81ED11B219C037800509A0D /* libRNVectorIcons.a */,
 				C81ED11D219C037800509A0D /* libRNVectorIcons-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		C86E1D8421F0474D00B2FADE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C86E1D8821F0474D00B2FADE /* libRNFetchBlob.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -874,10 +855,6 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-				},
-				{
-					ProductGroup = C86E1D8421F0474D00B2FADE /* Products */;
-					ProjectRef = C86E1D8321F0474D00B2FADE /* RNFetchBlob.xcodeproj */;
 				},
 				{
 					ProductGroup = C81ED116219C037800509A0D /* Products */;
@@ -1168,13 +1145,6 @@
 			remoteRef = C81ED11C219C037800509A0D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C86E1D8821F0474D00B2FADE /* libRNFetchBlob.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNFetchBlob.a;
-			remoteRef = C86E1D8721F0474D00B2FADE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1331,13 +1301,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = petsbnb_ver_1Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1365,13 +1328,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = petsbnb_ver_1Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1400,13 +1356,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = petsbnb_ver_1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1429,13 +1378,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = petsbnb_ver_1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1465,13 +1407,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1507,13 +1442,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1548,13 +1476,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1589,13 +1510,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)..\node_modules\neact-native-vector-iconsRNVectorIconsManager",
-					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
-					"$(SRCROOT)\..\node_modules\react-native-navigation\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-restart\ios\RCTRestart/**",
-					"$(SRCROOT)\..\node_modules\react-native-video\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-webview-bridge\ios",
-					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 				);
 				INFOPLIST_FILE = "petsbnb_ver_1-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

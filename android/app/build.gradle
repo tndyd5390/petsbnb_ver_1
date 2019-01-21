@@ -141,6 +141,16 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-background-fetch')
+    compile project(':react-native-webview-bridge')
+    compile project(':react-native-video')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-restart-android')
+    compile project(':react-native-restart')
+    compile project(':react-native-navigation')
+    compile project(':react-native-image-picker')
+    compile project(':react-native-firebase')
+    compile project(':react-native-fetch-blob')
     compile project(':react-native-background-task')
     implementation project(':react-native-background-task')
     implementation project(':react-native-firebase')
