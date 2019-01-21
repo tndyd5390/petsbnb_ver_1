@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
-import {Alert,Platform, StyleSheet, Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput} from 'react-native';
+import {AsyncStorage,Platform, SafeAreaView,StyleSheet, Dimensions,Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput,ActivityIndicator} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import SockJsClient from 'react-stomp';
 
+const{width1, height1} = Dimensions.get('window');
+
 export default class ChatRoom extends Component{
     constructor(props) {
       super(props);
       this.state = {
+        activityIndicator : true,
         userNo : this.props.navigation.getParam('userNo'),
         petsitterNo : this.props.navigation.getParam('petsitterNo'),
         petsitterName : this.props.navigation.getParam('petsitterName'),
@@ -32,13 +35,11 @@ export default class ChatRoom extends Component{
 
     _loginCheck = async() => {
       const userInfo = await AsyncStorage.getItem('userInfo');
-      if(userInfo != null){
-          //로그인 되있는 상태
+      if(userInfo != null || userInfo != ''){
         this.setState({
-          userNo : userInfo
+          userNo : userInfo,
+          activityIndicator : false
         });
-
-        console.log(userInfo);
 
         if(this.state.roomId == ''){
           this.setState({
@@ -71,13 +72,22 @@ export default class ChatRoom extends Component{
         });
     
         return(
-            <View style={styles.outer}>
+            <SafeAreaView style={styles.outer}>
+            {this.state.activityIndicator && (
+              <View style={{backgroundColor : Colors.white, width : width1, height : height1, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                <ActivityIndicator size="large" color="#10b5f1"/>
+              </View>
+           )}
+           {!this.state.activityIndicator && (
             <ScrollView style={styles.messages} ref="scrollView"
              onContentSizeChange={(width,height) => this.refs.scrollView.scrollTo({y:height})}>
               {messages}
             </ScrollView>
-                <InputBar callBackMsg={this.callBackMsg} roomId={this.state.roomId} userNo={this.state.userNo}/>
-            </View>
+           )}
+          {!this.state.activityIndicator && (
+           <InputBar callBackMsg={this.callBackMsg} roomId={this.state.roomId} userNo={this.state.userNo}/>
+          )}
+          </SafeAreaView>
         );
     }
 }
@@ -111,7 +121,7 @@ class InputBar extends Component{
         plusButton : false,
         clientConnected: false,
         type: 'text',
-        userNo : this.state.userNo,
+        userNo : this.props.userNo,
         messages: []
       };
     }

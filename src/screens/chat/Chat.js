@@ -1,16 +1,17 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,Image, Text, View, FlatList, TouchableOpacity, SafeAreaView,AsyncStorage} from 'react-native';
+import {Platform, Dimensions,StyleSheet,Image, Text, View, FlatList, TouchableOpacity, SafeAreaView,AsyncStorage, ActivityIndicator} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
+
+const{width, height} = Dimensions.get('window');
 
 export default class Chat extends Component {
   constructor(props){
     super(props);
     this.state = {
-      userNo : '',
-      data : [
-        {roomId : "p2u4", petssiterNo : 2}
-      ],
+      activityIndicator : true,
+      userNo : null,
+      data : []
     }
   };
 
@@ -25,7 +26,12 @@ export default class Chat extends Component {
   _getUserInfo = async() =>{
     const userNo = await AsyncStorage.getItem('userInfo');
     this.setState({
-      userNo : userNo
+      userNo : userNo,
+      activityIndicator : false,
+      data : [
+              {roomId : 'p2u4', petsitterNo : 2, userNo : 4, petsitterName : 'dd'},
+              {roomId : 'p2u3', petsitterNo : 2, userNo : 3, petsitterName : 'dd'}
+            ]
     })
   };
 
@@ -37,22 +43,32 @@ export default class Chat extends Component {
     <ChatList
       roomId={item.roomId}
       userNo={this.state.userNo}
-      petssiterNo={item.petssiterNo}
+      petsitterNo={item.petsitterNo}
+      petsitterName={item.petsitterName}
       onPressItem={this._onPressItem}
     />
   );
 
   _onPressItem = (item) => {
-    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, petsitterNo:item.petsitterNo});
+    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:this.state.userNo, petsitterNo:item.petsitterNo, petsitterName:item.petsitterName});
   };
 
   render() {
     return (
+      
         <SafeAreaView style={styles.safeAreaViewStyle}>
+        {this.state.activityIndicator && (
+                    <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+           )}
+        {!this.state.activityIndicator && (
           <FlatList
             data={this.state.data}
+            keyExtractor={ (item, index) => index.toString() }
             renderItem={this._renderItem}
           />
+        )}
         </SafeAreaView>
     );
   }
@@ -63,12 +79,15 @@ class ChatList extends Component {
     super(props);
     this.state = {
       roomId : this.props.roomId,
+      userNo : this.props.userNo,
+      petsitterNo : this.props.petsitterNo,
+      petsitterName : this.props.petsitterName
     }
 
   };
   
   _onPress = () => {
-    this.props.onPressItem(this.state.roomId);
+    this.props.onPressItem(this.state);
   };
 
   render(){

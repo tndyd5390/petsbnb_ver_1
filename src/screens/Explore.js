@@ -55,8 +55,6 @@ export default class Explore extends Component {
             page : (this.state.page * 2),
         }
 
-        console.log(this.state.page);
-
         if(this.state.page==0){
             this.setState({
                 refreshing : true, 
