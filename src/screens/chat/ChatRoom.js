@@ -39,14 +39,9 @@ export default class ChatRoom extends Component{
 
     componentDidMount(){
       this._loginCheck();
+      this._onConnect(this.state.roomId);
     }
 
-    _makeRoomId = (userNo, petsitterNo) => {
-      const roomId = 'p'+petsitterNo+'u'+userNo;
-      this.setState((prevState)=>({
-        roomId : roomId,
-    }))
-    }
 
     _loginCheck = async() => {
       const userInfo = await AsyncStorage.getItem('userInfo');
@@ -55,19 +50,14 @@ export default class ChatRoom extends Component{
           userNo : userInfo,
           activityIndicator : false
         });
-
-        if(this.state.roomId == ''){
-          this.setState({
-            roomId : 'p'+this.props.navigation.getParam('petsitterNo')+'u'+ this.props.navigation.getParam('userNo')
-          })
-        }
       }
     };
     
     callBackMsg = (childMsg) => {
+      const prevMsg = this.state.messages;
       this.setState({
         clientConnected : true,
-        messages : childMsg
+        messages:  prevMsg.concat(childMsg)
       });
     }
 
@@ -77,6 +67,29 @@ export default class ChatRoom extends Component{
       };
     };
     
+    _onConnect = async(roomId) =>{
+      this.setState({
+        activityIndicator : true
+      });
+      await fetch("http://192.168.0.8:8095/topic/greetings/"+roomId, {
+          method : 'POST',
+          headers : {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+          },
+      })
+      .then((response) => response.json())
+      .then((res => {
+        this.setState({
+          activityIndicator : false,
+          messages: res
+        });
+      }))
+      .catch((err) => {
+          console.log(err);
+      })
+
+    }
 
     render(){
         if(this.state.activityIndicator == false){
@@ -84,8 +97,11 @@ export default class ChatRoom extends Component{
           var userNo = this.state.userNo;
           this.state.messages.forEach(function(msg) {
             const position = userNo == msg.userNo ? 'right' : 'left';
+            console.log(userNo);
+            console.log(msg.userNo);
+            console.log(msg);
             messages.push(
-                <MessageBubble key={msg.id} direction={position} text={msg.contents}/>
+                <MessageBubble direction={position} text={msg.contents}/>
             );
           });
         }
@@ -202,7 +218,8 @@ class InputBar extends Component{
                 </TouchableHighlight>
             </View>
             {this.state.bottomMenu ? <BottomMenu/> : null}
-            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' topics={['/topic/chat/'+this.props.roomId]}
+            <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' 
+            topics={['/topic/chat/'+this.props.roomId]}
             onMessage={(msg) => { this.onMessageReceive(msg) }}
             ref={ (client) => { this.clientRef = client }}
             debug={true} />
