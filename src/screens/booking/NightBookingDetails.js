@@ -31,21 +31,21 @@ export default class NightBookingDetails extends Component{
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                    <Profile pDTO={this.props.navigation.getParam('pDTO')} userImage={this.props.navigation.getParam('userImage')}/>
+                    <Profile pDTO={this.props.navigation.getParam('pDTO')} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
                     <BookingDate date={this.props.navigation.getParam('date')} pDTO={this.props.navigation.getParam('pDTO')}/>
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')}/>
+                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
             </SafeAreaView>
         );
     };
 };
 class Profile extends Component {
     render(){
-        const userImageName = this.props.userImage.userFileName;
+        const petsitterImageSource = this.props.petsitterUserImage.petsitterUserImage ? {uri:`http://192.168.0.10:8080/userImageFile/${this.props.petsitterUserImage.petsitterUserImage}`} : require("../../../img/user.png");
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${userImageName}`}} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={petsitterImageSource} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
@@ -140,7 +140,7 @@ class BottomRequest extends Component{
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date'), pDTO : this.props.pDTO})}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date'), pDTO : this.props.pDTO, petsitterUserImage:this.props.petsitterUserImage })}>
                     <Text style={styles.bottomText}>다음</Text>
                 </TouchableOpacity>
             </View>

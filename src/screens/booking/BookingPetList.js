@@ -64,7 +64,7 @@ export default class BookingPetList extends Component{
                 <ScrollView>
                 {this.state.petYN ?  <PetY callBackPetList={this._callBackPetList} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout} navigation={this.props.navigation}/> :<PetN/> }            
                  </ScrollView>
-                {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout}/> : null }            
+                {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/> : null }            
             </SafeAreaView>
         );
     };
@@ -144,7 +144,7 @@ class PetY extends Component {
             }else{
                 size='대형';
             }
-            refinedPetList.push({id : value.petNo, name : value.petName, detail : value.petKind, size : size})
+            refinedPetList.push({id : value.petNo, name : value.petName, detail : value.petKind, size : size, petFileName : value.petFileName})
         });
         this.setState({data : refinedPetList});
     }
@@ -172,7 +172,6 @@ class PetY extends Component {
             return res;
         }))
         .catch((err) => {
-            console.log(err);
             this.setState({activityIndicator : false});
         })
 
@@ -198,6 +197,7 @@ class PetY extends Component {
             name = {item.name}
             detail = {item.detail}
             size = {item.size}
+            petFileName = {item.petFileName}
         />
     );
 
@@ -227,7 +227,7 @@ class PetList extends Component{
         const backColor = this.props.selected ? Colors.lightGrey : Colors.white;
         return(
             <TouchableOpacity onPress={this._onPress}>
-                <PetProfile id={this.props.id} name={this.props.name} detail={this.props.detail} size={this.props.size} backColor={backColor}/>
+                <PetProfile id={this.props.id} name={this.props.name} detail={this.props.detail} size={this.props.size} backColor={backColor} petFileName={this.props.petFileName}/>
             </TouchableOpacity>
         )
     };
@@ -235,6 +235,9 @@ class PetList extends Component{
 
 class PetProfile extends Component {
     render(){
+        console.log('petprofile');
+        console.log(this.props.petFileName);
+        const petFileSource = this.props.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
         return(
             <View style={{
                     flex:1,
@@ -246,7 +249,7 @@ class PetProfile extends Component {
                     backgroundColor : this.props.backColor
             }}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={petFileSource} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
@@ -296,6 +299,7 @@ class BottomRequest extends Component{
                     params.checkin = this.props.checkin;
                     params.checkout = this.props.checkout
                 }
+                params.petsitterUserImage = this.props.petsitterUserImage;
                 this.props.navigation.navigate('BookingConfirm',params);
                 return true;
             }else{

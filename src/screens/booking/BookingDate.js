@@ -71,7 +71,7 @@ export default class BookingDate extends Component{
               <SelectedDate startDate={startDate} endDate={endDate}/>
             </View>
           </View>
-            <BottomRequest navigation={this.props.navigation} date={date} petsitterNo={this.props.navigation.getParam('petsitterNo')} userImage={this.props.navigation.getParam('userImage')}/>
+            <BottomRequest navigation={this.props.navigation} date={date} petsitterNo={this.props.navigation.getParam('petsitterNo')} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
         </SafeAreaView>
         );
     };
@@ -174,7 +174,7 @@ class BottomRequest extends Component{
                                 alert('선택하신 펫시터는 데이케어를 제공하지 않습니다.');
                                 return;
                             }
-                            this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res, userImage:this.props.userImage});
+                            this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res, petsitterUserImage:this.props.petsitterUserImage});
                         }else{
                             alert('잠시후 다시 시도해주세요.');
                             this.props.navigation.goBack();
@@ -182,7 +182,6 @@ class BottomRequest extends Component{
                         
                     }))
                     .catch((err) => {
-                        console.log(err);
                         this.setState({activityIndicator : false});
                     })
             }else{
@@ -210,7 +209,7 @@ class BottomRequest extends Component{
                             alert('선택하신 펫시터는 하루 이상의 데이케어를 제공하지 않습니다.');
                             return;
                         }
-                        this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res, userImage:this.props.userImage});
+                        this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res, petsitterUserImage:this.props.petsitterUserImage});
                     }else{
                         alert('잠시후 다시 시도해주세요.');
                         this.props.navigation.goBack();
@@ -218,7 +217,6 @@ class BottomRequest extends Component{
                     
                 }))
                 .catch((err) => {
-                    console.log(err);
                     this.setState({activityIndicator : false});
                 })
             }

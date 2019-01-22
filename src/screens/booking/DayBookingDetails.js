@@ -46,7 +46,7 @@ export default class DayBookingDetails extends Component{
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                    <Profile pDTO={this.props.navigation.getParam('pDTO')} userImage={this.props.navigation.getParam('userImage')}/>
+                    <Profile pDTO={this.props.navigation.getParam('pDTO')} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
                     <BookingDate 
                         date={this.props.navigation.getParam('date')} 
                         onChangeBookingDate={this._onChangeBookingDate} 
@@ -54,7 +54,7 @@ export default class DayBookingDetails extends Component{
                         checkout={this.state.checkout}
                     />
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')} checkin={this.state.checkin} checkout={this.state.checkout} />
+                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')} checkin={this.state.checkin} checkout={this.state.checkout} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
             </SafeAreaView>
         );
     };
@@ -64,11 +64,11 @@ class Profile extends Component {
         super(props);
     }
     render(){
-        const userImageName = this.props.userImage.userFileName;
+        const petsitterImageSource = this.props.petsitterUserImage.petsitterUserImage ? {uri:`http://192.168.0.10:8080/userImageFile/${this.props.petsitterUserImage.petsitterUserImage}`} : require("../../../img/user.png");
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${userImageName}`}} style={{width : 80, height : 80, margin : 18}}/>
+                <Image source={petsitterImageSource} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
@@ -204,7 +204,7 @@ class BottomRequest extends Component{
             alert('체크아웃 시간을 설정해주세요.');
             return;
         }else{
-            this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date'), pDTO : this.props.pDTO, checkin : this.props.checkin, checkout : this.props.checkout, isDayCare : true})
+            this.props.navigation.navigate('BookingPetList', {date : this.props.navigation.getParam('date'), pDTO : this.props.pDTO, checkin : this.props.checkin, checkout : this.props.checkout, isDayCare : true, petsitterUserImage:this.props.petsitterUserImage})
         }
     }
 

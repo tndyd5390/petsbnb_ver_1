@@ -145,7 +145,7 @@ export default class BookingConfirm extends Component {
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>펫시터 정보</Text>
                     </View>
-                    <Profile pDTO={pDTO}/>
+                    <Profile pDTO={pDTO} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>맡길 펫 정보</Text>
                     </View>
@@ -177,10 +177,11 @@ class Profile extends Component {
 
     render(){
         const pDTO = this.props.pDTO;
+        const petsitterUserImageFileName = this.props.petsitterUserImage.petsitterUserImage;
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${petsitterUserImageFileName}`}} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
@@ -310,7 +311,6 @@ class Price extends Component{
         let price = 0;
         petList = this._parsePetList(petList);
         diffDate = Number(diffDate);
-        console.log('diffDate : ' + diffDate);
         petList.forEach((pDTO, index) => {
             if(pDTO.petKind === '소형'){
                 price += diffDate * Number(smallPetNightPrice);
