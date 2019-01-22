@@ -28,15 +28,38 @@ export default class Chat extends Component {
     this.setState({
       userNo : userNo,
       activityIndicator : false,
-      data : [
-              {roomId : 'p2u4', petsitterNo : 2, userNo : 4, petsitterName : 'dd'},
-              {roomId : 'p2u3', petsitterNo : 2, userNo : 3, petsitterName : 'dd'}
-            ]
     })
+    this._getChatList();
   };
 
   _getChatList = async() =>{
+    this.setState({
+      activityIndicator : true
+    })
+    const params = {
+        userNo : this.state.userNo, 
+        petsitterNo : this.state.petsitterNo
+    }
+    await fetch("http://192.168.0.8:8095/chat/chatList", {
+        method : 'POST',
+        headers : {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body :JSON.stringify(params),
+    })
+    .then((response) => response.json())
+    .then((res => {
+      this.setState({
+        activityIndicator : false,
+        data : res
+      })
+      console.log(res);
 
+    }))
+    .catch((err) => {
+        console.log(err);
+    })
   };
 
   _renderItem = ({item}) => (
@@ -93,7 +116,7 @@ class ChatList extends Component {
   render(){
     return(
       <TouchableOpacity onPress={this._onPress}>
-        <ChatRoomList/>
+        <ChatRoomList data={this.state}/>
       </TouchableOpacity>
       );
   };
@@ -102,6 +125,12 @@ class ChatList extends Component {
 class ChatRoomList extends Component {
   constructor(props){
       super(props);
+      this.state = {
+        roomId : this.props.data.roomId,
+        userNo : this.props.data.userNo,
+        petsitterNo : this.props.data.petsitterNo,
+        petsitterName : this.props.data.petsitterName
+      }
   };
   
   render(){
@@ -118,7 +147,7 @@ class ChatRoomList extends Component {
               </View>
               <View style={{flex:1,justifyContent: 'center', marginLeft : 15}}>
                   <View>
-                      <Text style={{fontSize : 15, fontWeight : 'bold'}}>반려견 예약</Text>
+                      <Text style={{fontSize : 15, fontWeight : 'bold'}}>{this.state.petsitterName}</Text>
                   </View>
                   <View style={{alignItems : 'center', flexDirection: 'row', justifyContent : 'space-between', marginTop : 5}}>
                       <View style={{flexDirection: 'row'}}>

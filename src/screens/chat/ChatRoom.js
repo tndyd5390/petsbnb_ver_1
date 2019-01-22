@@ -1,5 +1,20 @@
 import React, {Component} from 'react';
-import {AsyncStorage,Platform, SafeAreaView,StyleSheet, Dimensions,Text, View, FlatList, ScrollView, KeyboardAvoidingView, Keyboard, TouchableHighlight, TextInput,ActivityIndicator} from 'react-native';
+import {
+  AsyncStorage,
+  Platform, 
+  SafeAreaView,
+  StyleSheet, 
+  Dimensions,
+  Text, 
+  View, 
+  FlatList, 
+  ScrollView, 
+  KeyboardAvoidingView, 
+  Keyboard, 
+  TouchableHighlight, 
+  TextInput,
+  ActivityIndicator} from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -31,7 +46,7 @@ export default class ChatRoom extends Component{
       this.setState((prevState)=>({
         roomId : roomId,
     }))
-}
+    }
 
     _loginCheck = async() => {
       const userInfo = await AsyncStorage.getItem('userInfo');
@@ -64,12 +79,16 @@ export default class ChatRoom extends Component{
     
 
     render(){
-        var messages = [];
-        this.state.messages.forEach(function(msg) {
-          messages.push(
-              <MessageBubble key={msg.id} direction={'right'} text={msg.contents}/>
-          );
-        });
+        if(this.state.activityIndicator == false){
+          var messages = [];
+          var userNo = this.state.userNo;
+          this.state.messages.forEach(function(msg) {
+            const position = userNo == msg.userNo ? 'right' : 'left';
+            messages.push(
+                <MessageBubble key={msg.id} direction={position} text={msg.contents}/>
+            );
+          });
+        }
     
         return(
             <SafeAreaView style={styles.outer}>
@@ -167,7 +186,7 @@ class InputBar extends Component{
           <View>
             <View style={styles.inputBar}>
                 <TouchableHighlight style={styles.plusButton} onPress={()=>this._showBottomMenu()}> 
-                    <Text style={{color: 'white', fontSize : 18}}>{this.state.plusButton ? 'x' : '+'}</Text>
+                    <Text style={{color: 'white', fontSize : 18, justifyContent: 'center'}}>{this.state.plusButton ? 'x' : '+'}</Text>
                 </TouchableHighlight>
                 <TextInput style={styles.textBox} onChangeText={(text) => {
               this.setState({
@@ -177,7 +196,7 @@ class InputBar extends Component{
               });
             }} value={this.state.content}/>
                 <TouchableHighlight style={styles.sendButton} onPress={() => {
-              this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents})
+              this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents, date : new Date()})
             }}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
@@ -249,7 +268,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       paddingVertical: 5,
       marginTop : 5,
-      height : 45
+      height : 40
     },
   
     textBox: {

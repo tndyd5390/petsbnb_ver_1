@@ -63,8 +63,31 @@ export default class BookingDetail extends Component{
         };
     };
 
-    _goToChat = () => {
-        this.props.navigation.navigate("ChatRoom",{userNo : this.state.userNo, petsitterNo : this.state.petsitterNo, petsitterName : this.state.bookingDetail.petsitterName});
+    _goToChat = async() => {
+        const roomId = 'p'+this.state.petsitterNo+'u'+this.state.userNo;
+        const params = {
+            roomId: roomId,
+            userNo : this.state.userNo, 
+            petsitterNo : this.state.petsitterNo,
+            petsitterName : this.state.bookingDetail.petsitterName,
+            date : new Date()
+        }
+        await fetch("http://192.168.0.8:8095/chat/chatRoomCreate/"+roomId, {
+            method : 'POST',
+            headers : {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body :JSON.stringify(params),
+        })
+        .then((response) => {
+            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, petsitterNo : this.state.petsitterNo, petsitterName : this.state.bookingDetail.petsitterName});
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+
+
     }
     
     _getUserInfo = async() =>{
