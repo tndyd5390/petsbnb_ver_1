@@ -85,7 +85,6 @@ export default class PetSitterProfileUpdateView extends Component{
         .then((response) => response.json())
         .then((res => {
             if(res.petSitterInfo != null){
-                console.log(res.petSitterInfo);
                 this.setState({activityIndicator : false});
                 const petSitterInfo = res.petSitterInfo;
                 const petSitterImages = res.petSitterImages;
@@ -125,7 +124,7 @@ export default class PetSitterProfileUpdateView extends Component{
             }
         }))
         .catch((err) => {
-            console.log(err);
+            alert('네트워크가 작동하지 않습니다. 잠시후 다시 시도해주세요.');
             this.setState({activityIndicator : false});
         })
         this.setState({activityIndicator : false});

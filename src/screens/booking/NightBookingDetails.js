@@ -31,7 +31,7 @@ export default class NightBookingDetails extends Component{
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                    <Profile pDTO={this.props.navigation.getParam('pDTO')}/>
+                    <Profile pDTO={this.props.navigation.getParam('pDTO')} userImage={this.props.navigation.getParam('userImage')}/>
                     <BookingDate date={this.props.navigation.getParam('date')} pDTO={this.props.navigation.getParam('pDTO')}/>
                 </ScrollView>
                 <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')}/>
@@ -41,10 +41,11 @@ export default class NightBookingDetails extends Component{
 };
 class Profile extends Component {
     render(){
+        const userImageName = this.props.userImage.userFileName;
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${userImageName}`}} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>

@@ -196,7 +196,6 @@ class BookingsContents extends Component{
     };
     
     _onPress = () => {
-        console.log('onpress');
         this.props.onPressItem(this.state);
     };
 
@@ -210,7 +209,7 @@ class BookingsContents extends Component{
                     <View style={styles.exploreWrapper}>
                         <View style={styles.exploreImageView}>
                             <Image
-                                source={require('../../assets/home.jpg')}
+                                source={{uri:`http://192.168.0.10:8080/petSitterImageFile/${this.props.petsitterFileName}`}}
                                 style={styles.exploreImage}
                             />
                         </View>

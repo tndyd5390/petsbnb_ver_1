@@ -46,7 +46,7 @@ export default class DayBookingDetails extends Component{
         return (
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                    <Profile pDTO={this.props.navigation.getParam('pDTO')}/>
+                    <Profile pDTO={this.props.navigation.getParam('pDTO')} userImage={this.props.navigation.getParam('userImage')}/>
                     <BookingDate 
                         date={this.props.navigation.getParam('date')} 
                         onChangeBookingDate={this._onChangeBookingDate} 
@@ -54,7 +54,7 @@ export default class DayBookingDetails extends Component{
                         checkout={this.state.checkout}
                     />
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')} checkin={this.state.checkin} checkout={this.state.checkout}/>
+                <BottomRequest navigation={this.props.navigation} pDTO={this.props.navigation.getParam('pDTO')} checkin={this.state.checkin} checkout={this.state.checkout} />
             </SafeAreaView>
         );
     };
@@ -64,10 +64,11 @@ class Profile extends Component {
         super(props);
     }
     render(){
+        const userImageName = this.props.userImage.userFileName;
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${userImageName}`}} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>

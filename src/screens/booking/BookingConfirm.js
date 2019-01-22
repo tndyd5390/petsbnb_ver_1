@@ -297,7 +297,7 @@ class Price extends Component{
         petList.forEach((pDTO, index) => {
             if(pDTO.petKind === '소형'){
                 price += careHours * Number(smallPetDayPrice);
-            }else if(pDTO.petKine === '중형'){
+            }else if(pDTO.petKind === '중형'){
                 price += careHours * Number(middlePetDayPrice);
             }else{
                 price += careHours * Number(bigPetDayPrice);

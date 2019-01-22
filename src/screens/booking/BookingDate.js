@@ -71,7 +71,7 @@ export default class BookingDate extends Component{
               <SelectedDate startDate={startDate} endDate={endDate}/>
             </View>
           </View>
-            <BottomRequest navigation={this.props.navigation} date={date} petsitterNo={this.props.navigation.getParam('petsitterNo')}/>
+            <BottomRequest navigation={this.props.navigation} date={date} petsitterNo={this.props.navigation.getParam('petsitterNo')} userImage={this.props.navigation.getParam('userImage')}/>
         </SafeAreaView>
         );
     };
@@ -174,7 +174,7 @@ class BottomRequest extends Component{
                                 alert('선택하신 펫시터는 데이케어를 제공하지 않습니다.');
                                 return;
                             }
-                            this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res});
+                            this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res, userImage:this.props.userImage});
                         }else{
                             alert('잠시후 다시 시도해주세요.');
                             this.props.navigation.goBack();
@@ -210,7 +210,7 @@ class BottomRequest extends Component{
                             alert('선택하신 펫시터는 하루 이상의 데이케어를 제공하지 않습니다.');
                             return;
                         }
-                        this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res});
+                        this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res, userImage:this.props.userImage});
                     }else{
                         alert('잠시후 다시 시도해주세요.');
                         this.props.navigation.goBack();
