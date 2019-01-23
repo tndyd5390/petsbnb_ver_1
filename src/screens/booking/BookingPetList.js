@@ -235,8 +235,6 @@ class PetList extends Component{
 
 class PetProfile extends Component {
     render(){
-        console.log('petprofile');
-        console.log(this.props.petFileName);
         const petFileSource = this.props.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
         return(
             <View style={{

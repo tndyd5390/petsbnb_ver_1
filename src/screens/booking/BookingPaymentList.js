@@ -56,20 +56,20 @@ export default class BookingPaymentList extends Component {
                         color={Colors.buttonSky}
                         style={{marginLeft : 20}}
                     >
-                        <RadioButton value={'네이버 페이'}>
-                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>네이버 페이</Text>
+                        <RadioButton value={'신용카드'}>
+                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>신용카드</Text>
                         </RadioButton>
                 
-                        <RadioButton value={'카카오 페이'}>
-                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>카카오 페이</Text>
+                        <RadioButton value={'휴대폰 결제'}>
+                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>휴대폰 결제</Text>
                         </RadioButton>
                 
-                        <RadioButton value={'카드 결제'}>
-                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>카드 결제</Text>
+                        <RadioButton value={'가상 계좌'}>
+                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>가상계좌</Text>
                         </RadioButton>
-
-                        <RadioButton value={'페이코'}>
-                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>페이코</Text>
+                        
+                        <RadioButton value={'실시간 계좌이체'}>
+                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>실시간 계좌이체</Text>
                         </RadioButton>
                     </RadioGroup>
                 </View>
