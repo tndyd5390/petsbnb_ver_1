@@ -34,6 +34,7 @@ export default class BookingConfirm extends Component {
         super(props);
         const data = this.props.navigation.getParam('data');
         const pDTO = this.props.navigation.getParam('pDTO');
+        console.log(pDTO);
         const isDayCare = this.props.navigation.getParam('isDayCare', false);
         this.state = {
             petList : [],
@@ -42,12 +43,15 @@ export default class BookingConfirm extends Component {
             diffDate : data.diffDate,
             price : '',
             dayPrice : 30000,
+            serviceProvider:pDTO.petSitterNo,
             smallPetNightPrice: pDTO.smallPetNightPrice,
             smallPetDayPrice: pDTO.smallPetDayPrice,
             middlePetNightPrice: pDTO.middlePetNightPrice,
             middlePetDayPrice: pDTO.middlePetDayPrice,
             bigPetNightPrice: pDTO.bigPetNightPrice,
             bigPetDayPrice: pDTO.bigPetDayPrice,
+            nightCheckin : pDTO.nightCheckin,
+            nightCheckout: pDTO.nightCheckout,
             totalPrice : this.priceCalc(data),
             termsAccept : false,
             paymentIdx : 0,
@@ -258,7 +262,7 @@ export default class BookingConfirm extends Component {
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>예약 정보</Text>
                     </View>
-                    <BookingDateDetail stDate={this.state.stDate} edDate={this.state.edDate} diffDate={this.state.diffDate} checkin={this.state.checkin} checkout={this.state.checkout}/>
+                    <BookingDateDetail stDate={this.state.stDate} edDate={this.state.edDate} diffDate={this.state.diffDate} checkin={this.state.checkin} checkout={this.state.checkout} nightCheckin={this.state.nightCheckin} nightCheckout={this.state.nightCheckout}/>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>결제 정보</Text>
                     </View>
@@ -367,7 +371,9 @@ class BookingDateDetail extends Component{
             edDate : this.props.edDate,
             diffDate : this.props.diffDate,
             checkin : this.props.checkin,
-            checkout : this.props.checkout
+            checkout : this.props.checkout,
+            nightCheckin : this.props.nightCheckin,
+            nightCheckout : this.props.nightCheckout
         }
     };
 
@@ -389,7 +395,7 @@ class BookingDateDetail extends Component{
         }else{
             return (
                 <Text style={{fontSize : 17}}>
-                    {state.stDate}  ~  {state.edDate}
+                    {`${state.stDate} ${state.nightCheckin} 부터 ~  ${state.edDate} ${state.nightCheckout}`}
                 </Text>
             )
         }
@@ -539,12 +545,14 @@ class BottomRequest extends Component{
         super(props);
     };
 
-    onSubmit = () =>{
+    onSubmit = async () =>{
         const termsAccept = this.props.termsAccept;
         const userInfo = this.props.data.userInfo;
         const price = this.props.data.price;
+        const userNo = await AsyncStorage.getItem("userInfo");
+
         if(termsAccept){
-            const param = {
+            let param = {
                 pg : 'html5_inicis',
                 pay_method : this._generatePaymentMethod(),
                 name : "",
@@ -555,15 +563,34 @@ class BottomRequest extends Component{
                 buyer_email : userInfo.userEmail,
                 buyer_addr : userInfo.userAddress + " " + userInfo.userAddressDetail,
                 buyer_postcode : userInfo.userZipcode,
-                vbank_due : this._getCurrentDate()
+                vbank_due : this._getCurrentDate(),
+                serviceReceiver : userNo,
+                serviceProvider : this.props.data.serviceProvider,
+                careKind : this._generateCareKind(this.props.data)
             }
             console.log(param);
-            // const { navigation } = this.props;
-            // navigation.push('Payment', param);
+            const { navigation } = this.props;
+            //navigation.push('Payment', param);
         }else{
             alert('약관에 동의해주시기 바랍니다.');
         };
         
+    };
+
+    _generateCareKind = (state) =>{
+        if(state.diffDate==0){
+            let checkin = state.checkin;
+            if(Number(checkin) < 10){
+                checkin = "0" + checkin;
+            }
+            let checkout = state.checkout;
+            if(Number(checkout) < 10 ){
+                checkout = "0" + checkout;
+            }
+            return "daycare"
+        }else{
+            return "nightcare"
+        }
     };
 
     _generatePaymentMethod = () => {

@@ -31,6 +31,8 @@ import CustomerCenter from './screens/profile/CustomerCenter';
 import Preference from './screens/profile/Preferences';
 import UsageTerm from './screens/profile/UsageTerm';
 import NightBookingDetails from './screens/booking/NightBookingDetails';
+import Payment from "./screens/booking/Payment";
+import PaymentResult from "./screens/booking/PaymentResult";
 
 export default class TabNavigator extends Component {
   render(){
@@ -281,6 +283,18 @@ const BookingStacks = createStackNavigator({
       },
     }
   },
+  Payment : {
+    screen : Payment,
+    navigationOptions : {
+      header : null
+    }
+  },
+  PaymentResult : {
+    screen : PaymentResult,
+    navigationOptions : {
+      header : null
+    }
+  }
 },
 {
   initialRouteName: 'Explore'
