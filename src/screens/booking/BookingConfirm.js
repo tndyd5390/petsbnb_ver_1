@@ -33,13 +33,15 @@ export default class BookingConfirm extends Component {
     constructor(props){
         super(props);
         const data = this.props.navigation.getParam('data');
+        console.log(data);
         const pDTO = this.props.navigation.getParam('pDTO');
-        console.log(pDTO);
         const isDayCare = this.props.navigation.getParam('isDayCare', false);
         this.state = {
             petList : [],
             stDate : data.stDate,
             edDate : data.edDate,
+            rowStDate : data.rowStDate,
+            rowEdDate: data.rowEdDate,
             diffDate : data.diffDate,
             price : '',
             dayPrice : 30000,
@@ -395,7 +397,7 @@ class BookingDateDetail extends Component{
         }else{
             return (
                 <Text style={{fontSize : 17}}>
-                    {`${state.stDate} ${state.nightCheckin} 부터 ~  ${state.edDate} ${state.nightCheckout}`}
+                    {`${state.stDate} ${state.nightCheckin}:00 부터 ~  ${state.edDate} ${state.nightCheckout}:00 까지`}
                 </Text>
             )
         }
@@ -566,11 +568,20 @@ class BottomRequest extends Component{
                 vbank_due : this._getCurrentDate(),
                 serviceReceiver : userNo,
                 serviceProvider : this.props.data.serviceProvider,
-                careKind : this._generateCareKind(this.props.data)
+                careKind : this._generateCareKind(this.props.data),
+                stDate : this.props.data.rowStDate,
+                edDate : this.props.data.rowEdDate,
+                petNo : this.props.data.petList.map(pDTO => pDTO.petNo)
             }
-            console.log(param);
+            if(this._generateCareKind(this.props.data) === "daycare"){
+                param.checkin = this.props.data.checkin;
+                param.checkout = this.props.data.checkout;
+            }else{
+                param.checkin = this.props.data.nightCheckin;
+                param.checkout = this.props.data.nightCheckout;
+            }
             const { navigation } = this.props;
-            //navigation.push('Payment', param);
+            navigation.push('Payment', param);
         }else{
             alert('약관에 동의해주시기 바랍니다.');
         };

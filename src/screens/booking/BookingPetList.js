@@ -36,10 +36,20 @@ export default class BookingPetList extends Component{
             stDate : rslt.stDate,
             edDate : rslt.edDate,
             diffDate : rslt.diffDate,
+            rowStDate: this._chgDateFormat(this.props.navigation.getParam("date").stDate),
+            rowEdDate: this._chgDateFormat(this.props.navigation.getParam("date").edDate),
             petYN : true,
             selected : (new Map():Map<string,boolean>)
         }
     };
+
+    _chgDateFormat = (date) => {
+        const chgDate = new Date(date);
+            const rstl = (chgDate.getFullYear() ? chgDate.getFullYear() +"년" : '') + 
+                         (chgDate.getMonth()>=0 ? (chgDate.getMonth()+1)+ "월" : '') +  
+                         (chgDate.getDate() ? chgDate.getDate() +"일" : '');
+            return rstl;
+    }
 
     componentWillMount(){
         const isDayCare = this.props.navigation.getParam('isDayCare', false);

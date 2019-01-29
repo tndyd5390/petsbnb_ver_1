@@ -1,42 +1,47 @@
-import React, { Component } from "react";
-import {
-    View,
-    Text
-} from "react-native";
-import IMP from "iamport-react-native";
-
-export default class Payment extends Component{
+import React, { Component } from 'react';
+import {View, Text} from 'react-native';
+import IMP from 'iamport-react-native';
+export default class Payment extends Component {
     static navigationOptions = {
-        title : "Payment"
-    }
-
-    callback = (response) => {
+        title: 'Payment'
+      }
+    
+      callback = (response) => {
         const { navigation } = this.props;
-        navigation.replace("", response);
-    }
-
-    render() {
-        const {navigation} = this.props;
-        const pg = navigation.getParam("pg");
-        const pay_method = navigation.getParam("pay_method");
-
+        navigation.replace('PaymentResult', response);
+      }
+    
+      render() {
+        const { navigation } = this.props;
+        const pg = navigation.getParam('pg');
+        const pay_method = navigation.getParam('pay_method');
         let data = {
-            pg,
-            pay_method,
-            app_scheme: "example",
-            name : navigation.getParam("name"),
-            amount : '100',//navigation.getParam("amount"),
-            buyer_email : navigation.getParam("buyer_email"),
-            buyer_name: navigation.getParam("buyer_name"),
-            buyer_addr: navigation.getParam("buyer_name"),
-            buyer_tel : navigation.getParam("buyer_tel"),
-            buyer_postcode: navigation.getParam("buyer_postcode"),
-            merchant_uid: navigation.getParam("merchant_uid"),
-            custom_data : {
-                mid : navigation.getParam("metchant_uid")
-            }
-        }
+          pg,
+          pay_method,
+          app_scheme: "example",
+          name : navigation.getParam("name"),
+          amount : '100',//navigation.getParam("amount"),
+          buyer_email : navigation.getParam("buyer_email"),
+          buyer_name: navigation.getParam("buyer_name"),
+          buyer_addr: navigation.getParam("buyer_name"),
+          buyer_tel : navigation.getParam("buyer_tel"),
+          buyer_postcode: navigation.getParam("buyer_postcode"),
+          merchant_uid: navigation.getParam("merchant_uid"),
+          custom_data : {
+              "mid" : navigation.getParam("merchant_uid"),
+              "stDate" : navigation.getParam("stDate"),
+              "edDate" : navigation.getParam("edDate"),
+              "serviceProvider": navigation.getParam("serviceProvider"),
+              "serviceReceiver": navigation.getParam("serviceReceiver"),
+              "careKind": navigation.getParam("careKind"),
+              "checkin": navigation.getParam("checkin"),
+              "checkout": navigation.getParam("checkout"),
+              "petNo": navigation.getParam("petNo").toString()
+          }
+      }
 
+      console.log(data);
+    
         /* 가상계좌의 경우, 입금기한 추가 */
         const vbank_due = navigation.getParam('vbank_due');
         if (pay_method === 'vbank' && vbank_due) {
@@ -92,9 +97,9 @@ export default class Payment extends Component{
         if (pay_method === 'phone') {
           data['digital'] = false;
         }
-
-        return(
-            <IMP.Payment 
+        
+        return (
+          <IMP.Payment 
             userCode={"imp79804178"}
             data={data}
             callback={this.callback}
@@ -104,5 +109,5 @@ export default class Payment extends Component{
             }}
           />
         );
-    }
+      }
 }
