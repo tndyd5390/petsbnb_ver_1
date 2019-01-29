@@ -13,15 +13,18 @@ import {
   Keyboard, 
   TouchableHighlight, 
   TextInput,
+  NativeModules,
   ActivityIndicator} from 'react-native';
-import ImagePicker from 'react-native-image-picker';
-import {List, ListItem} from 'react-native-elements';
+  import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import SockJsClient from 'react-stomp';
+import ImagePicker from 'react-native-image-crop-picker';
+
 
 const{width1, height1} = Dimensions.get('window');
+
 
 export default class ChatRoom extends Component{
     constructor(props) {
@@ -37,12 +40,42 @@ export default class ChatRoom extends Component{
       };
     }
 
+    _focusChatRoom = async() =>{
+      await AsyncStorage.setItem("nowChat", this.state.roomId);
+    }
+    
+    _blurChatRoom = async() =>{
+      await AsyncStorage.removeItem("nowChat");
+    }
+
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: navigation.getParam('petsitterName', 'A Nested Details Screen'),
+      };
+    };
+
     componentDidMount(){
       this._loginCheck();
       this._onConnect(this.state.roomId);
     }
 
+    componentWillMount(){
+      this.didFocusSubscription = this.props.navigation.addListener('didFocus', () => {
+        console.log('didFocus');
+        this._focusChatRoom();
+      })
+  
+      this.didBlurSubscription = this.props.navigation.addListener('didBlur', () => {
+        console.log('didBlur');
+        this._blurChatRoom();
+      })
+    }
 
+    componentWillUnmount() {
+      this.didFocusSubscription.remove()
+      this.didBlurSubscription.remove()
+    }
+  
     _loginCheck = async() => {
       const userInfo = await AsyncStorage.getItem('userInfo');
       if(userInfo != null || userInfo != ''){
@@ -60,12 +93,6 @@ export default class ChatRoom extends Component{
         messages:  prevMsg.concat(childMsg)
       });
     }
-
-    static navigationOptions = ({ navigation }) => {
-      return {
-        title: navigation.getParam('petsitterName', 'A Nested Details Screen'),
-      };
-    };
     
     _onConnect = async(roomId) =>{
       this.setState({
@@ -88,7 +115,6 @@ export default class ChatRoom extends Component{
       .catch((err) => {
           console.log(err);
       })
-
     }
 
     render(){
@@ -97,9 +123,6 @@ export default class ChatRoom extends Component{
           var userNo = this.state.userNo;
           this.state.messages.forEach(function(msg) {
             const position = userNo == msg.userNo ? 'right' : 'left';
-            console.log(userNo);
-            console.log(msg.userNo);
-            console.log(msg);
             messages.push(
                 <MessageBubble direction={position} text={msg.contents}/>
             );
@@ -155,10 +178,18 @@ class InputBar extends Component{
         bottomMenu : false,
         plusButton : false,
         clientConnected: false,
+        contents : '',
         type: 'text',
         userNo : this.props.userNo,
         messages: []
       };
+    }
+
+    _showChatRoomId = async() =>{
+      const chatroom = await AsyncStorage.getItem("nowChat");
+      if(chatroom != null){
+        console.log("this chatroom : "+chatroom);
+      }
     }
 
     _showBottomMenu = () => {
@@ -181,11 +212,18 @@ class InputBar extends Component{
     };
 
     sendMessage = (selfMsg) => {
-      try {
-        this.clientRef.sendMessage("/app/hello/"+this.props.roomId, JSON.stringify(selfMsg));
-        return true;
-      } catch(e) {
-        return false;
+      if(selfMsg.contents!=null){
+        try {
+          this.clientRef.sendMessage("/app/hello/"+this.props.roomId, JSON.stringify(selfMsg));
+          this.setState({
+            text :''
+          });
+          this.textInputRef.clear();
+          this._showChatRoomId();
+          return true;
+        } catch(e) {
+          return false;
+        }
       }
     };
     
@@ -204,16 +242,20 @@ class InputBar extends Component{
                 <TouchableHighlight style={styles.plusButton} onPress={()=>this._showBottomMenu()}> 
                     <Text style={{color: 'white', fontSize : 18, justifyContent: 'center'}}>{this.state.plusButton ? 'x' : '+'}</Text>
                 </TouchableHighlight>
-                <TextInput style={styles.textBox} onChangeText={(text) => {
-              this.setState({
-                userNo : this.state.userNo,
-                type : this.state.type,
-                contents : text
-              });
-            }} value={this.state.content}/>
+                <TextInput style={styles.textBox} 
+                  onChangeText={(text) => {
+                    this.setState({
+                      userNo : this.state.userNo,
+                      type : this.state.type,
+                      contents : text
+                    });
+                  }} 
+                  clearButtonMode={"always"}
+                  ref={ref => this.textInputRef = ref}
+                  value={this.state.content}/>
                 <TouchableHighlight style={styles.sendButton} onPress={() => {
               this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents, date : new Date()})
-            }}>
+              }}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
             </View>
@@ -229,31 +271,49 @@ class InputBar extends Component{
 };
 
 class BottomMenu extends Component{
-  constructor(props) {
-    super(props);
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        imageFileNo : '',
+        fileNo : '',
+        fileOrgName : '',
+        fileName : '',
+        filePath : '',
+        imageSource : null,
+        imageData : null,
+      }
+    }
+  
+  _showImagePicker() {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      console.log(image);
+    });
   }
+
   render(){
     return(
       <View style={styles.bottomBar}>
-        <TouchableHighlight onPress={()=>console.log('얍얍')}>
-        <View style={{flex : 1,flexDirection: 'row', padding: 10, alignItems:'center'}}>
-            <IconFontAwesome name='images' color={Colors.black} size={50}>
+        <TouchableHighlight onPress={()=>this._showImagePicker()}>
+        <View style={{flex : 1,flexDirection: 'column', padding: 10, alignItems:'center'}}>
+            <Icon name="photo" size={30}/>
+            <Text style={{flex:1, flexDirection:'row'}}>사진</Text>
+            {/* <IconFontAwesome name='images' color={Colors.black} size={25}>
               <Text style={{fontFamily: 'Arial', fontSize: 15}}>앨범</Text>
-            </IconFontAwesome>
+            </IconFontAwesome> */}
         </View>
         </TouchableHighlight>
         <TouchableHighlight onPress={()=>console.log('얍얍')}>
-        <View style={{flex : 1,flexDirection: 'row', padding: 10, alignItems:'center'}}>
-            <IconFontAwesome name='camera' color={Colors.black} size={50}>
-              <Text style={{fontFamily: 'Arial', fontSize: 15}}>사진</Text>
-            </IconFontAwesome>
-        </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={()=>console.log('얍얍')}>
-        <View style={{flex : 1,flexDirection: 'row', padding: 10, alignItems:'center'}}>
-            <IconFontAwesome name='video' color={Colors.black} size={50}>
-              <Text style={{fontFamily: 'Arial', fontSize: 15}}>동영상</Text>
-            </IconFontAwesome>       
+        <View style={{flex : 1,flexDirection: 'column', padding: 10, alignItems:'center'}}>
+            <Icon name="video-camera" size={30}/>
+            <Text style={{flex:1, flexDirection:'row'}}>동영상</Text>
+            {/* <IconFontAwesome name='images' color={Colors.black} size={25}>
+              <Text style={{fontFamily: 'Arial', fontSize: 15}}>앨범</Text>
+            </IconFontAwesome> */}
         </View>
         </TouchableHighlight>
       </View>
@@ -366,11 +426,12 @@ const styles = StyleSheet.create({
     
     bottomBar : {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       paddingHorizontal: 10,
       paddingVertical: 5,
-      height : 110,
-      backgroundColor : Colors.lightGrey,
+      height : 80,
+      alignItems : 'center',
+      backgroundColor : Colors.white,
     },
   })
   

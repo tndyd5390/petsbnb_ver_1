@@ -141,6 +141,12 @@ export default class App extends Component {
     );
   }
 
+  _checkChatRoom = async() => {
+    const nowChat = await AsyncStorage.getItem("nowChat");
+    return nowChat;
+  }
+
+
   render() {
     return(
       <StackNavigator/>
