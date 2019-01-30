@@ -18,7 +18,6 @@ import {
   import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import SockJsClient from 'react-stomp';
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -33,10 +32,12 @@ export default class ChatRoom extends Component{
         activityIndicator : true,
         userNo : this.props.navigation.getParam('userNo'),
         petsitterNo : this.props.navigation.getParam('petsitterNo'),
+        petsitterUserNo : this.props.navigation.getParam('petsitterUserNo'),
         petsitterName : this.props.navigation.getParam('petsitterName'),
         clientConnected: false,
         roomId : this.props.navigation.getParam('roomId'),
-        messages: []
+        messages: [],
+        token : ''
       };
     }
 
@@ -57,6 +58,7 @@ export default class ChatRoom extends Component{
     componentDidMount(){
       this._loginCheck();
       this._onConnect(this.state.roomId);
+      this._getToken();
     }
 
     componentWillMount(){
@@ -85,6 +87,37 @@ export default class ChatRoom extends Component{
         });
       }
     };
+
+    _getToken = async() => {
+      var token = (this.state.userNo == this.state.petsitterUserNo) ? this.props.navigation.getParam("userNo") : this.state.petsitterUserNo;
+      console.log("------------------------");
+      console.log(this.state.userNo);
+      console.log(this.props.navigation.getParam("userNo"));
+      // if(this.state.userNo == this.state.petsitterUserNo){
+      //   tokenUserNo = this.props.navigation.getParam("userNo");
+      // }else{
+      //   tokenUserNo = this.state.petsitterUserNo;
+      // }
+      
+      console.log(token);
+      console.log("------------------------");
+      const params = {
+        tokenUserNo : token
+      }
+
+      await fetch("http://192.168.0.8:8091/chat/getToken.do",{
+        method : 'POST',
+        headers : {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body :JSON.stringify(params),
+      })
+      .then((response)=> response.json())
+      .then((res => {
+        console.log(res);
+      }))
+    }
     
     callBackMsg = (childMsg) => {
       const prevMsg = this.state.messages;
@@ -212,18 +245,20 @@ class InputBar extends Component{
     };
 
     sendMessage = (selfMsg) => {
-      if(selfMsg.contents!=null){
-        try {
-          this.clientRef.sendMessage("/app/hello/"+this.props.roomId, JSON.stringify(selfMsg));
-          this.setState({
-            text :''
-          });
-          this.textInputRef.clear();
-          this._showChatRoomId();
-          return true;
-        } catch(e) {
-          return false;
-        }
+      if(selfMsg.contents==null || selfMsg.contents==""){
+        return false;
+      }else{
+          try {
+            this.clientRef.sendMessage("/app/hello/"+this.props.roomId, JSON.stringify(selfMsg));
+            this.setState({
+              contents : ''
+            });
+            this.textInputRef.clear();
+            this._showChatRoomId();
+            return true;
+          } catch(e) {
+            return false;
+          }
       }
     };
     

@@ -73,7 +73,7 @@ export default class Chat extends Component {
   );
 
   _onPressItem = (item) => {
-    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:this.state.userNo, petsitterNo:item.petsitterNo, petsitterName:item.petsitterName});
+    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, petsitterNo:item.petsitterNo, petsitterName:item.petsitterName});
   };
 
   render() {

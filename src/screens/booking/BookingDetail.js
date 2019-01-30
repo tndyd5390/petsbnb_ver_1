@@ -35,6 +35,7 @@ export default class BookingDetail extends Component{
             activityIndicator : true,
             userNo : '',
             petsitterNo : petsitterNo,
+            petsitterUserNo : '',
             heartStatus : false,
             headImages : [],
             bookingDetail : {},
@@ -70,6 +71,7 @@ export default class BookingDetail extends Component{
             userNo : this.state.userNo, 
             petsitterNo : this.state.petsitterNo,
             petsitterName : this.state.bookingDetail.petsitterName,
+            petsitterUserNo : this.state.bookingDetail.petsitterUserNo,
             date : new Date()
         }
         await fetch("http://192.168.0.8:8095/chat/chatRoomCreate/"+roomId, {
@@ -81,7 +83,7 @@ export default class BookingDetail extends Component{
             body :JSON.stringify(params),
         })
         .then((response) => {
-            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, petsitterNo : this.state.petsitterNo, petsitterName : this.state.bookingDetail.petsitterName});
+            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, petsitterNo : this.state.petsitterNo,petsitterUserNo : this.state.bookingDetail.petsitterUserNo ,petsitterName : this.state.bookingDetail.petsitterName});
         })
         .catch((err) => {
             console.log(err);
@@ -177,6 +179,7 @@ class Profile extends Component {
         super(props);
         this.state = {
             petsitterNo : this.props.profileData.petsitterNo,
+            petsitterUserNo : this.props.profileData.petsitterUserNo,
             petsitterName : this.props.profileData.petsitterName,
             petsitterIntroduceOneline : this.props.profileData.petsitterIntroduceOneline,
             reviewCount : this.props.profileData.reviewCount,
