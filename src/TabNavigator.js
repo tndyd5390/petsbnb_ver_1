@@ -187,7 +187,11 @@ export default class TabNavigator extends Component {
     {
       tabBarPosition : 'bottom',
       navigationOptions : {
-        tabBarVisible : true
+        tabBarVisible: true,
+        tabBarOnPress : ({navigation, defaultHandler}) => {
+          navigation.dispatch(StackActions.popToTop());
+          defaultHandler();
+        }
       },
       tabBarOptions : {
         activeTintColor : 'red',
@@ -292,7 +296,11 @@ const BookingStacks = createStackNavigator({
   PaymentResult : {
     screen : PaymentResult,
     navigationOptions : {
-      header : null
+      title : '결제 완료',
+      headerTitleStyle: {
+        width: '90%',
+        textAlign: 'center',
+      },
     }
   }
 },
@@ -302,12 +310,21 @@ const BookingStacks = createStackNavigator({
 
 BookingStacks.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
-  if (navigation.state.index > 0) {
-    tabBarVisible = false;
-  }
-  return {
-    tabBarVisible,
+  let viewName = navigation.state.routes[navigation.state.index].routeName;
+  let options = {};
+  switch (viewName){
+    case "PaymentResult":
+      options.tabBarVisible = true;
+      options.headerLeft = null;
+      break;
+    case "Explore":
+      options.tabBarVisible = true;
+      break;
+    default : 
+      options.tabBarVisible = false;
   };
+
+  return options;
 };
 
 
