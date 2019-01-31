@@ -30,10 +30,10 @@ export default class PaymentResult extends Component {
     }
 
     async componentDidMount() {
-        const paymentInfo = await this._getPaymentInfo(this.state.imp_uid);
-        const customData = this._parsingCustomData(paymentInfo.custom_data);
         if(this.state.success){
-            await this._insertReservationInfo(paymentInfo, customData);
+            const paymentInfo = await this._getPaymentInfo(this.state.imp_uid);
+            const customData = this._parsingCustomData(paymentInfo.custom_data);
+            const result = await this._insertReservationInfo(paymentInfo, customData);
         }
         this.setState({
             activityIndicator: false
@@ -60,7 +60,7 @@ export default class PaymentResult extends Component {
             stDate: customData.stDate,
             edDate: customData.edDate
         };
-        await fetch("http://192.168.0.10:8080/reservation/insertReservationInfo.do", {
+        const result = await fetch("http://192.168.0.10:8080/reservation/insertReservationInfo.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -70,11 +70,14 @@ export default class PaymentResult extends Component {
         })
         .then((response) => response.json())
         .then(res => {
-
+            return res.result;
         })
         .catch((err) => {
-
+            alert("에러 발생 본사에 문의해주세요");
+            return false;
         });
+
+        return result;
     }
 
     _parsingCustomData = (data) => {
