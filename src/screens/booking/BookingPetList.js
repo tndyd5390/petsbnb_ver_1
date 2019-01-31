@@ -21,21 +21,46 @@ import Category from '../components/Explore/Category';
 import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import PropTypes from 'prop-types';
 import {List, ListItem} from 'react-native-elements';
 
 export default class BookingPetList extends Component{
     constructor(props) {
         super(props)
+        if(this.props.navigation.getParam('pDTO', null) === null){
+            alert('다시시도해주세요.');
+            this.props.navigation.goBack();
+        }
         const rslt = chgDateFormat(this.props.navigation.getParam('date'));
         this.state = {
             stDate : rslt.stDate,
             edDate : rslt.edDate,
             diffDate : rslt.diffDate,
+            rowStDate: this._chgDateFormat(this.props.navigation.getParam("date").stDate),
+            rowEdDate: this._chgDateFormat(this.props.navigation.getParam("date").edDate),
             petYN : true,
             selected : (new Map():Map<string,boolean>)
         }
     };
 
+    _chgDateFormat = (date) => {
+        const chgDate = new Date(date);
+            const rstl = (chgDate.getFullYear() ? chgDate.getFullYear() +"년" : '') + 
+                         (chgDate.getMonth()>=0 ? (chgDate.getMonth()+1)+ "월" : '') +  
+                         (chgDate.getDate() ? chgDate.getDate() +"일" : '');
+            return rstl;
+    }
+
+    componentWillMount(){
+        const isDayCare = this.props.navigation.getParam('isDayCare', false);
+        if(isDayCare){
+            this.setState({
+                isDayCare : isDayCare,
+                checkin : this.props.navigation.getParam('checkin'),
+                checkout : this.props.navigation.getParam('checkout')
+            })
+        }
+    }
     
     _callBackPetList = (selectedPet) =>{
         this.setState({
@@ -44,13 +69,12 @@ export default class BookingPetList extends Component{
     };
       
     render(){
-
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                {this.state.petYN ?  <PetY callBackPetList={this._callBackPetList}/> :<PetN/> }            
+                {this.state.petYN ?  <PetY callBackPetList={this._callBackPetList} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout} navigation={this.props.navigation}/> :<PetN/> }            
                  </ScrollView>
-                {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state}/> : null }            
+                {this.state.petYN ?  <BottomRequest navigation={this.props.navigation} data={this.state} pDTO={this.props.navigation.getParam('pDTO')} isDayCare={this.state.isDayCare} checkin={this.state.checkin} checkout={this.state.checkout} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/> : null }            
             </SafeAreaView>
         );
     };
@@ -80,15 +104,90 @@ class PetY extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data : [{id : '1', name : '호두', detail : '말티즈', size : '소형'},
-                    {id : '2', name : '초코', detail : '웰시코기', size : '중형'},
-                    {id : '3', name : '초코', detail : '웰시코기', size : '중형'},
-                    {id : '4', name : '초코', detail : '웰시코기', size : '중형'},
-                    {id : '5', name : '우유', detail : '사모예드', size : '대형'}],
             selected : (new Map():Map<string,boolean>)
         };
 
     };
+    //여기서 불가능한 동물이 아예 안뜨게 만들어야겠다...필원아 좆댓다 점점 복잡해진다. 미안하다.
+    async componentWillMount() {
+        //이부분은 내가 생각해도 졸라 복잡하기때문에 툭별히 주석을 남긴다.
+        //여기서 문제는 펫시터가 이용불가라고 설정해놓은 견종을 화면에 출력하면 안된다.
+        //나는 여기서 자바스크립트로 해결할까 했지만 아싸리 스프링에서 데이터를 불러올때 펫시터가 이용불가로 설정해놓은 견종을 불러오지 않는 방식으로 변경한다.
+        
+        //먼저 펫시터가 이용불가로 설정해놓은 데이터를 불러오기위하여 부모 컴포넌트에서 넘겨준 펫시터 정보를 불러온다.
+        //데이터는 price가 0이면 펫시터가 이용 불가로 설정해 놓은 것이다.
+        const pDTO = this.props.pDTO;
+        
+        //데이케어의 경우 DayPrice만 판단한다.
+        let availablePetKind = [];
+        if(this.props.isDayCare){
+            if(pDTO.smallPetDayPrice !== '0'){
+                availablePetKind.push('SMALL');
+            }
+            if(pDTO.middlePetDayPricee !== '0'){
+                availablePetKind.push('MIDDLE');
+            }
+            if(pDTO.bigPetDayPrice !== '0'){
+                availablePetKind.push('BIG');
+            }
+        }else{//1박케어의 경우 NightPrice만 판단한다.
+            if(pDTO.smallPetNightPrice !== '0'){
+                availablePetKind.push('SMALL');
+            }
+            if(pDTO.middlePetNightPrice !== '0'){
+                availablePetKind.push('MIDDLE');
+            }
+            if(pDTO.bigPetNightPrice !== '0'){
+                availablePetKind.push('BIG');
+            }
+        }
+        //위의 if문으로 펫시팅 가능한 견종만 추리고 펫 목록을 불러오는 ajax에 파라미터로 넘긴다.
+        const petList = await this._getPetList(availablePetKind);
+        let refinedPetList = [];
+        petList.forEach((value, index) => {
+            let weight = Number(value.petWeight);
+            let size = '';
+            if(weight > 0 && weight <= 6){
+                size = '소형';
+            }else if(weight > 6 && weight <= 15){
+                size='중형';
+            }else{
+                size='대형';
+            }
+            refinedPetList.push({id : value.petNo, name : value.petName, detail : value.petKind, size : size, petFileName : value.petFileName})
+        });
+        this.setState({data : refinedPetList});
+    }
+
+    _getPetList = async(availablePetKind) => {        
+        const userNo = await AsyncStorage.getItem('userInfo');
+        const params = {
+            userNo,
+            availablePetKind
+        }
+        const petList = await fetch('http://192.168.0.10:8080/pet/getAvaliablePetList.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            if(res.length === 0){
+                alert('펫시팅 조건에 부합하는 반려동물이 없습니다. 펫시팅 조건을 다시 확인해주세요.');
+                this.props.navigation.pop(3);
+            }
+            return res;
+        }))
+        .catch((err) => {
+            this.setState({activityIndicator : false});
+        })
+
+        return petList;
+    }
+
     _keyExtractor = (item, index) => item.id;
 
     _onPressItem = (id : String) => {
@@ -108,6 +207,7 @@ class PetY extends Component {
             name = {item.name}
             detail = {item.detail}
             size = {item.size}
+            petFileName = {item.petFileName}
         />
     );
 
@@ -137,7 +237,7 @@ class PetList extends Component{
         const backColor = this.props.selected ? Colors.lightGrey : Colors.white;
         return(
             <TouchableOpacity onPress={this._onPress}>
-                <PetProfile id={this.props.id} name={this.props.name} detail={this.props.detail} size={this.props.size} backColor={backColor}/>
+                <PetProfile id={this.props.id} name={this.props.name} detail={this.props.detail} size={this.props.size} backColor={backColor} petFileName={this.props.petFileName}/>
             </TouchableOpacity>
         )
     };
@@ -145,6 +245,7 @@ class PetList extends Component{
 
 class PetProfile extends Component {
     render(){
+        const petFileSource = this.props.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
         return(
             <View style={{
                     flex:1,
@@ -156,7 +257,7 @@ class PetProfile extends Component {
                     backgroundColor : this.props.backColor
             }}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={petFileSource} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
@@ -181,6 +282,7 @@ class PetProfile extends Component {
 class BottomRequest extends Component{
     constructor(props) {
         super(props);
+        
     };
 
     _onSubmit = () =>{
@@ -196,7 +298,17 @@ class BottomRequest extends Component{
                 }
             }
             if(count>0){
-                this.props.navigation.navigate('BookingConfirm',{data:this.props.data});
+                let params = {
+                    data:this.props.data, 
+                    pDTO : this.props.pDTO
+                }
+                if(this.props.isDayCare){
+                    params.isDayCare = this.props.isDayCare;
+                    params.checkin = this.props.checkin;
+                    params.checkout = this.props.checkout
+                }
+                params.petsitterUserImage = this.props.petsitterUserImage;
+                this.props.navigation.navigate('BookingConfirm',params);
                 return true;
             }else{
                 alert('맡기실 반려동물을 선택해주세요.');

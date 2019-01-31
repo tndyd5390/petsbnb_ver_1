@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image,TouchableHighlight, Button} from 'react-native';
-import {createBottomTabNavigator, BottomTabBar,withNavigation,createStackNavigator} from 'react-navigation';
+import {createBottomTabNavigator, BottomTabBar,withNavigation,createStackNavigator, StackActions} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
@@ -9,7 +9,7 @@ import Colors from './utils/Colors';
 import Chat from './screens/chat/Chat';
 import ChatRoom from './screens/chat/ChatRoom';
 import BookingDetail from './screens/booking/BookingDetail';
-import BookingDetails from './screens/booking/BookingDetails';
+import DayBookingDetails from './screens/booking/DayBookingDetails';
 import BookingDate from './screens/booking/BookingDate';
 import BookingPetList from './screens/booking/BookingPetList';
 import BookingConfirm from './screens/booking/BookingConfirm';
@@ -30,6 +30,9 @@ import StackNavigator from './StackNavigator';
 import CustomerCenter from './screens/profile/CustomerCenter';
 import Preference from './screens/profile/Preferences';
 import UsageTerm from './screens/profile/UsageTerm';
+import NightBookingDetails from './screens/booking/NightBookingDetails';
+import Payment from "./screens/booking/Payment";
+import PaymentResult from "./screens/booking/PaymentResult";
 
 export default class TabNavigator extends Component {
   render(){
@@ -184,7 +187,11 @@ export default class TabNavigator extends Component {
     {
       tabBarPosition : 'bottom',
       navigationOptions : {
-        tabBarVisible : true
+        tabBarVisible: true,
+        tabBarOnPress : ({navigation, defaultHandler}) => {
+          navigation.dispatch(StackActions.popToTop());
+          defaultHandler();
+        }
       },
       tabBarOptions : {
         activeTintColor : 'red',
@@ -230,8 +237,18 @@ const BookingStacks = createStackNavigator({
       },
     }
   },
-    BookingDetails :{
-      screen : BookingDetails,
+    DayBookingDetails :{
+      screen : DayBookingDetails,
+      navigationOptions : {
+        title : '예약 세부사항',
+        headerTitleStyle: {
+          width: '75%',
+          textAlign: 'center',
+      },
+    }
+  },
+    NightBookingDetails :{
+      screen : NightBookingDetails,
       navigationOptions : {
         title : '예약 세부사항',
         headerTitleStyle: {
@@ -270,6 +287,22 @@ const BookingStacks = createStackNavigator({
       },
     }
   },
+  Payment : {
+    screen : Payment,
+    navigationOptions : {
+      header : null
+    }
+  },
+  PaymentResult : {
+    screen : PaymentResult,
+    navigationOptions : {
+      title : '결제 완료',
+      headerTitleStyle: {
+        width: '90%',
+        textAlign: 'center',
+      },
+    }
+  }
 },
 {
   initialRouteName: 'Explore'
@@ -277,12 +310,21 @@ const BookingStacks = createStackNavigator({
 
 BookingStacks.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
-  if (navigation.state.index > 0) {
-    tabBarVisible = false;
-  }
-  return {
-    tabBarVisible,
+  let viewName = navigation.state.routes[navigation.state.index].routeName;
+  let options = {};
+  switch (viewName){
+    case "PaymentResult":
+      options.tabBarVisible = true;
+      options.headerLeft = null;
+      break;
+    case "Explore":
+      options.tabBarVisible = true;
+      break;
+    default : 
+      options.tabBarVisible = false;
   };
+
+  return options;
 };
 
 

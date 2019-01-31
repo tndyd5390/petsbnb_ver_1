@@ -44,7 +44,6 @@ export default class BookingDate extends Component{
         const startDate  =  selectedStartDate ? selectedStartDate.toString() : '';
         const endDate = selectedEndDate ? selectedEndDate.toString() : '';
         const date = {stDate : startDate, edDate : endDate};
-
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
             <View style={styles.container}>
@@ -72,7 +71,7 @@ export default class BookingDate extends Component{
               <SelectedDate startDate={startDate} endDate={endDate}/>
             </View>
           </View>
-            <BottomRequest navigation={this.props.navigation} date={date} />
+            <BottomRequest navigation={this.props.navigation} date={date} petsitterNo={this.props.navigation.getParam('petsitterNo')} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
         </SafeAreaView>
         );
     };
@@ -80,7 +79,7 @@ export default class BookingDate extends Component{
 
 class Caution extends Component {
     constructor(props) {
-        super(props);
+        super(props); 
     }
 
     render(){
@@ -142,7 +141,7 @@ class BottomRequest extends Component{
         super(props);
     }
 
-    onSubmit = () => {
+    onSubmit = async() => {
         if(this.props.date.stDate==''){
             alert('시작일을 선택해주세요.');
             return false;
@@ -150,7 +149,77 @@ class BottomRequest extends Component{
             alert('종료일을 선택해주세요.');
             return false;
         }else{
-            return this.props.navigation.navigate('BookingDetails', {date : this.props.date});
+            if(this.props.date.stDate === this.props.date.edDate){
+                    const params = {
+                        petSitterNo : this.props.petsitterNo.toString()
+                    }
+                    await fetch('http://192.168.0.10:8080/petSitter/getPDTO.do', {
+                        method: 'POST',
+                        headers: {
+                          Accept: 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(params),
+                    })
+                    .then((response) => response.json())
+                    .then((res => {
+                        if(res){
+                            //여기는 사용자가 날짜를 선택하고나서 다음 화면으로 넘어가는 코드인데
+                            //만약 펫시터가 데이케어를 모두 이용 불가를 해놓았다면 넘어가선 안된다.
+                            if(
+                                res.smallPetDayPrice === '0' &&
+                                res.middlePetDayPrice === '0' &&
+                                res.bigPetDayPrice === '0'
+                            ){
+                                alert('선택하신 펫시터는 데이케어를 제공하지 않습니다.');
+                                return;
+                            }
+                            this.props.navigation.navigate('DayBookingDetails', {date : this.props.date, pDTO : res, petsitterUserImage:this.props.petsitterUserImage});
+                        }else{
+                            alert('잠시후 다시 시도해주세요.');
+                            this.props.navigation.goBack();
+                        }
+                        
+                    }))
+                    .catch((err) => {
+                        this.setState({activityIndicator : false});
+                    })
+            }else{
+                const params = {
+                    petSitterNo : this.props.petsitterNo.toString()
+                }
+                await fetch('http://192.168.0.10:8080/petSitter/getPDTO.do', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params),
+                })
+                .then((response) => response.json())
+                .then((res => {
+                    if(res){
+                        //여기는 사용자가 1박 케어를 선택하고 나서 다음화면으로 넘어가는 코드인데
+                        //만약 펫시터가 1박 케어를 이용불가 해놓았다면 화면이 넘어가선 안된다.
+                        if(
+                            res.smallPetNightPrice === '0' &&
+                            res.middlePetNightPrice === '0' &&
+                            res.bigPetNightPrice === '0'
+                        ){
+                            alert('선택하신 펫시터는 하루 이상의 데이케어를 제공하지 않습니다.');
+                            return;
+                        }
+                        this.props.navigation.navigate('NightBookingDetails', {date : this.props.date, pDTO : res, petsitterUserImage:this.props.petsitterUserImage});
+                    }else{
+                        alert('잠시후 다시 시도해주세요.');
+                        this.props.navigation.goBack();
+                    }
+                    
+                }))
+                .catch((err) => {
+                    this.setState({activityIndicator : false});
+                })
+            }
         }
     }
 

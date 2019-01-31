@@ -141,6 +141,7 @@ android {
 }
 
 dependencies {
+<<<<<<< HEAD
     compile project(':react-native-webview-bridge')
     compile project(':react-native-video')
     compile project(':react-native-vector-icons')
@@ -150,6 +151,9 @@ dependencies {
     compile project(':react-native-image-picker')
     compile project(':react-native-firebase')
     compile project(':react-native-fetch-blob')
+=======
+    implementation project(':iamport-react-native')
+>>>>>>> psyPetbnb_ver_1
     implementation project(':react-native-firebase')
     implementation project(':react-native-fetch-blob')
     implementation project(':react-native-restart-android')

@@ -21,6 +21,7 @@ import Category from '../components/Explore/Category';
 import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import PropTypes from 'prop-types';
 import {
     List, 
     ListItem, 
@@ -28,24 +29,122 @@ import {
 } from 'react-native-elements';
 
 export default class BookingConfirm extends Component {
+    
     constructor(props){
         super(props);
         const data = this.props.navigation.getParam('data');
+        console.log(data);
+        const pDTO = this.props.navigation.getParam('pDTO');
+        const isDayCare = this.props.navigation.getParam('isDayCare', false);
         this.state = {
-            petList : this.setArrList(data.selected._mapData),
+            petList : [],
             stDate : data.stDate,
             edDate : data.edDate,
+            rowStDate : data.rowStDate,
+            rowEdDate: data.rowEdDate,
             diffDate : data.diffDate,
-            price : 50000,
+            price : '',
             dayPrice : 30000,
+            serviceProvider:pDTO.petSitterNo,
+            smallPetNightPrice: pDTO.smallPetNightPrice,
+            smallPetDayPrice: pDTO.smallPetDayPrice,
+            middlePetNightPrice: pDTO.middlePetNightPrice,
+            middlePetDayPrice: pDTO.middlePetDayPrice,
+            bigPetNightPrice: pDTO.bigPetNightPrice,
+            bigPetDayPrice: pDTO.bigPetDayPrice,
+            nightCheckin : pDTO.nightCheckin,
+            nightCheckout: pDTO.nightCheckout,
             totalPrice : this.priceCalc(data),
             termsAccept : false,
             paymentIdx : 0,
-            paymentVal : '네이버 페이'
+            paymentVal : '신용카드',
+            isDayCare
+        }
+        if(isDayCare){
+            this.state.checkin = this.props.navigation.getParam('checkin');
+            this.state.checkout = this.props.navigation.getParam('checkout');
         }
     };
+
+    async componentWillMount() {
+        const petList = await this._getSelectedPetList();
+        const userInfo = await this._getUserInfo();
+        this.setState({
+            petList,
+            userInfo
+        });
+        const price = this._calcTotalPrice(this.state);
+        this.setState({
+            price
+        })
+    }
+
     
-    priceCalc = (data) =>{
+
+    _getUserInfo = async() => {
+        const userNo = await AsyncStorage.getItem("userInfo");
+
+        const params = {
+            userNo
+        };
+
+        const userInfo = await fetch('http://192.168.0.10:8080/user/getUserInfo.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            return res
+        }))
+        .catch((err) => {
+            alert('데이터 전송 오류입니다. 다시 시도해주세요.');
+            this.props.navigation.goBack();
+        })
+
+        return userInfo;
+    }
+
+    _getSelectedPetList = async () =>{
+        const petNoMapArr = this.props.navigation.getParam('data').selected._mapData;
+        let petNoArr = [];
+        let petNoMap = petNoMapArr.reduce(function(map, obj) {
+            if(obj[1]){
+                petNoArr.push(obj[0]);
+            }
+        }, {});
+        
+        const params = {
+            petNoArr
+        }
+
+        const selectedPetList = await fetch('http://192.168.0.10:8080/pet/getSelectedPetList.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        .then((response) => response.json())
+        .then((res => {
+            return res
+        }))
+        .catch((err) => {
+            alert('데이터 전송 오류입니다. 다시 시도해주세요.');
+            this.props.navigation.goBack();
+        })
+
+        return selectedPetList;
+        
+    }
+
+    
+    
+    priceCalc = async (data) =>{
         let price = 0;
         if(data.diffDate == 0){
             price = data.dayPrice;
@@ -79,14 +178,85 @@ export default class BookingConfirm extends Component {
         });
     };
 
+    _calcPriceDayCare = (petList, checkin, checkout, smallPetDayPrice, middlePetDayPrice, bigPetDayPrice) => {
+        let price = 0;
+        petList = this._parsePetList(petList);
+        const careHours = Number(checkout) - Number(checkin);
+        petList.forEach((pDTO, index) => {
+            if(pDTO.petKind === '소형'){
+                price += careHours * Number(smallPetDayPrice);
+            }else if(pDTO.petKind === '중형'){
+                price += careHours * Number(middlePetDayPrice);
+            }else{
+                price += careHours * Number(bigPetDayPrice);
+            }
+        });
+        return price;
+    }
+
+    _calcPriceNightCare = (petList, diffDate, smallPetNightPrice, middlePetNightPrice, bigPetNightPrice) => {
+        let price = 0;
+        petList = this._parsePetList(petList);
+        diffDate = Number(diffDate);
+        petList.forEach((pDTO, index) => {
+            if(pDTO.petKind === '소형'){
+                price += diffDate * Number(smallPetNightPrice);
+            }else if(pDTO.petKind === '중형'){
+                price += diffDate * Number(middlePetNightPrice);
+            }else{
+                price += diffDate * Number(bigPetNightPrice);
+            }
+        });
+        return price;
+    }
+
+    _definePetKind = (weight) => {
+        weight = Number(weight);
+        if(weight > 0 && weight <= 6){
+            return '소형';
+        }else if(weight > 6 && weight <= 15){
+            return '중형';
+        }else{
+            return '대형';
+        }
+    }
+
+    _parsePetList = (petList) => petList.map((pDTO) => {return {...pDTO, petKind : this._definePetKind(pDTO.petWeight)}})
+
+    addCommma = (price) =>{
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    _calcTotalPrice = (priceData) => {
+        if(priceData.isDayCare){
+            return this._calcPriceDayCare(
+                priceData.petList, 
+                priceData.checkin, 
+                priceData.checkout, 
+                priceData.smallPetDayPrice, 
+                priceData.middlePetDayPrice,
+                priceData.bigPetDayPrice
+            );
+        }else{
+            return this._calcPriceNightCare(
+                priceData.petList,
+                priceData.diffDate,
+                priceData.smallPetNightPrice,
+                priceData.middlePetNightPrice,
+                priceData.bigPetNightPrice
+            )
+        }
+    }
+
     render(){
+        const pDTO = this.props.navigation.getParam('pDTO');
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>펫시터 정보</Text>
                     </View>
-                    <Profile/>
+                    <Profile pDTO={pDTO} petsitterUserImage={this.props.navigation.getParam('petsitterUserImage')}/>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>맡길 펫 정보</Text>
                     </View>
@@ -94,18 +264,19 @@ export default class BookingConfirm extends Component {
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>예약 정보</Text>
                     </View>
-                    <BookingDateDetail stDate={this.state.stDate} edDate={this.state.edDate} diffDate={this.state.diffDate}/>
+                    <BookingDateDetail stDate={this.state.stDate} edDate={this.state.edDate} diffDate={this.state.diffDate} checkin={this.state.checkin} checkout={this.state.checkout} nightCheckin={this.state.nightCheckin} nightCheckout={this.state.nightCheckout}/>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>결제 정보</Text>
                     </View>
-                    <Price data={this.state} />
+                    {/* <Price data={this.state} changePrice={this._changePrice}/> */}
+                    <Price price={this.addCommma(this.state.price)}/>
                     <View style={{backgroundColor : Colors.white}}>
                         <Text style={{fontSize : 17,fontWeight : 'bold', marginLeft : 20, marginTop : 20}}>결제 방법</Text>
                     </View>
                     <Payment navigation={this.props.navigation} data={this.state} _callBackPayment={this._callBackPayment.bind(this)}/>
                     <Terms callBackChecked={this.callBackChecked}/>
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} termsAccept={this.state.termsAccept}/>
+                <BottomRequest navigation={this.props.navigation} termsAccept={this.state.termsAccept} data={this.state}/>
             </SafeAreaView>
         );
     };
@@ -117,23 +288,21 @@ class Profile extends Component {
     };
 
     render(){
+        const pDTO = this.props.pDTO;
+        const petsitterUserImageFileName = this.props.petsitterUserImage.petsitterUserImage;
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${petsitterUserImageFileName}`}} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
-                        <Text style={{fontSize : 20, fontWeight : 'bold'}}>유혜진</Text>
+                        <Text style={{fontSize : 20, fontWeight : 'bold'}}>{pDTO.petSitterName}</Text>
                     </View>
                     <View style={{flexDirection: 'column', marginTop : 5}}>
                         <View style={{alignItems : 'center', flexDirection: 'row'}}>
                             <View style={styles.blueCircle}/>
-                            <Text>프로필1</Text>
-                        </View>
-                        <View style={{alignItems : 'center', flexDirection: 'row'}}>
-                            <View style={styles.blueCircle}/>
-                            <Text>프로필2</Text>
+                            <Text>{pDTO.petSitterIntroduceOneLine}</Text>
                         </View>
                     </View>
                 </View>            
@@ -142,33 +311,44 @@ class Profile extends Component {
     };
 };
 
+Profile.propTypes = {
+    pDTO : PropTypes.object.isRequired
+}
+
 class PetList extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            petList : this.props.petList
-        }
     };
 
     renderList = (petList) => {
-        return petList.map((key)=>{
+        return petList.map((pDTO, index)=>{
+            const weight = Number(pDTO.petWeight);
+            let size = '';
+            if(weight > 0 && weight <= 6){
+                size = '소형';
+            }else if(weight > 6 && weight <= 15){
+                size='중형';
+            }else{
+                size='대형';
+            }
+            const petFileSource = pDTO.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${pDTO.petFileName}`} : require("../../../img/user.png");
             return(
-                <View style={styles.listBar} key={key}>
+                <View style={styles.listBar} key={index}>
                     <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                            <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                            <Image source={petFileSource} style={{width : 80, height : 80, margin : 18}}/>
                     </View>
                     <View style={{justifyContent: 'center', marginLeft : 15}}>
                         <View>
-                            <Text style={{fontSize : 20, fontWeight : 'bold'}}>{key}</Text>
+                            <Text style={{fontSize : 20, fontWeight : 'bold'}}>{pDTO.petName}</Text>
                         </View>
                         <View style={{flexDirection: 'column', marginTop : 5}}>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>프로필1</Text>
+                                <Text>{`종류 ${pDTO.petKind}`}</Text>
                             </View>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>프로필2</Text>
+                                <Text>{size}</Text>
                             </View>
                         </View>
                     </View>            
@@ -179,7 +359,7 @@ class PetList extends Component{
     render(){
         return(
             <View>
-                {this.renderList(this.state.petList)}
+                {this.renderList(this.props.petList)}
             </View>
         );
     };
@@ -191,21 +371,33 @@ class BookingDateDetail extends Component{
         this.state = {
             stDate : this.props.stDate,
             edDate : this.props.edDate,
-            diffDate : this.props.diffDate
+            diffDate : this.props.diffDate,
+            checkin : this.props.checkin,
+            checkout : this.props.checkout,
+            nightCheckin : this.props.nightCheckin,
+            nightCheckout : this.props.nightCheckout
         }
     };
 
     setDateDetail = (state) =>{
         if(state.diffDate==0){
+            let checkin = state.checkin;
+            if(Number(checkin) < 10){
+                checkin = "0" + checkin;
+            }
+            let checkout = state.checkout;
+            if(Number(checkout) < 10 ){
+                checkout = "0" + checkout;
+            }
             return (
                 <Text style={{fontSize : 17}}>
-                    {state.stDate} 데이케어
+                    {`${state.stDate} ${checkin}:00 ~ ${checkout}:00 까지`}
                 </Text>
             )
         }else{
             return (
                 <Text style={{fontSize : 17}}>
-                    {state.stDate}  ~  {state.edDate}
+                    {`${state.stDate} ${state.nightCheckin}:00 부터 ~  ${state.edDate} ${state.nightCheckout}:00 까지`}
                 </Text>
             )
         }
@@ -222,27 +414,6 @@ class BookingDateDetail extends Component{
 class Price extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            diffDate : this.props.data.diffDate,
-            price : this.props.data.price,
-            dayPrice : this.props.data.dayPrice,
-            coupon : '',
-            totalPrice : 0
-        }
-    };
-
-    priceCalc = (data) =>{
-        let price = 0;
-        if(data.diffDate == 0){
-            price = data.dayPrice;
-        }else{
-            price = (data.price * data.diffDate);
-        }
-        return this.addCommma(price);
-    };
-
-    addCommma = (price) =>{
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
     render(){
@@ -250,7 +421,7 @@ class Price extends Component{
             <View style={styles.priceBar}>
                 <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
                     <Text style={{fontSize : 25, fontWeight : 'bold'}}>
-                        {this.priceCalc(this.state)} 원
+                        {this.props.price} 원
                     </Text>
                 </View>
                 <View style={{flexDirection:'row', justifyContent:'flex-end', marginTop : 10}}>
@@ -376,16 +547,84 @@ class BottomRequest extends Component{
         super(props);
     };
 
-    onSubmit = () =>{
+    onSubmit = async () =>{
         const termsAccept = this.props.termsAccept;
+        const userInfo = this.props.data.userInfo;
+        const price = this.props.data.price;
+        const userNo = await AsyncStorage.getItem("userInfo");
 
         if(termsAccept){
-            alert('다음');   
+            let param = {
+                pg : 'html5_inicis',
+                pay_method : this._generatePaymentMethod(),
+                name : "",
+                merchant_uid : `mid_${new Date().getTime()}`,
+                amount : price.toString(),
+                buyer_name : userInfo.userName,
+                buyer_tel : userInfo.userPhone,
+                buyer_email : userInfo.userEmail,
+                buyer_addr : userInfo.userAddress + " " + userInfo.userAddressDetail,
+                buyer_postcode : userInfo.userZipcode,
+                vbank_due : this._getCurrentDate(),
+                serviceReceiver : userNo,
+                serviceProvider : this.props.data.serviceProvider,
+                careKind : this._generateCareKind(this.props.data),
+                stDate : this.props.data.rowStDate,
+                edDate : this.props.data.rowEdDate,
+                petNo : this.props.data.petList.map(pDTO => pDTO.petNo)
+            }
+            if(this._generateCareKind(this.props.data) === "daycare"){
+                param.checkin = this.props.data.checkin;
+                param.checkout = this.props.data.checkout;
+            }else{
+                param.checkin = this.props.data.nightCheckin;
+                param.checkout = this.props.data.nightCheckout;
+            }
+            const { navigation } = this.props;
+            navigation.push('Payment', param);
         }else{
             alert('약관에 동의해주시기 바랍니다.');
         };
         
     };
+
+    _generateCareKind = (state) =>{
+        if(state.diffDate==0){
+            let checkin = state.checkin;
+            if(Number(checkin) < 10){
+                checkin = "0" + checkin;
+            }
+            let checkout = state.checkout;
+            if(Number(checkout) < 10 ){
+                checkout = "0" + checkout;
+            }
+            return "daycare"
+        }else{
+            return "nightcare"
+        }
+    };
+
+    _generatePaymentMethod = () => {
+        const{paymentVal} = this.props.data;
+        if(paymentVal === "신용카드") return "card";
+        else if(paymentVal === "휴대폰 결제") return "phone";
+        else if(paymentVal === "가상 계좌") return "vbank";
+        else return "trans";//실시간 계좌 이체
+    }
+
+    _getCurrentDate = () => {
+        let date = new Date();	
+        date.setDate(date.getDate() + 2); // 가상계좌 입금기한 날짜는 현재로부터 2일 후로 설정
+      
+        const year = date.getUTCFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+      
+        if (month < 10) month = `0${month}`;
+        if (day < 10) day = `0${day}`;
+      
+        return `${year}${month}${day}`;
+      }
 
     render(){
         return(
