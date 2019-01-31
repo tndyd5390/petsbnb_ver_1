@@ -152,6 +152,7 @@ dependencies {
     compile project(':react-native-image-picker')
     compile project(':react-native-firebase')
     compile project(':react-native-fetch-blob')
+    implementation project(':iamport-react-native')
     implementation project(':react-native-firebase')
     implementation project(':react-native-fetch-blob')
     implementation project(':react-native-restart-android')

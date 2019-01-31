@@ -40,6 +40,7 @@ export default class BookingDetail extends Component{
             headImages : [],
             bookingDetail : {},
             reviews : [],
+            petsitterUserProfileImage : {}
         };
     };
     
@@ -100,11 +101,12 @@ export default class BookingDetail extends Component{
       };
 
     _getBookingDetail = async() => {
+        const userNo = await AsyncStorage.getItem('userInfo');
         const params = {
             petsitterNo : this.state.petsitterNo,
             reviewNow : 0
         }
-        await fetch('http://192.168.0.8:8091/booking/getBookingDetail.do', {
+        await fetch('http://192.168.0.10:8080/booking/getBookingDetail.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -118,20 +120,26 @@ export default class BookingDetail extends Component{
                 activityIndicator : false,
                 headImages : res.images,
                 bookingDetail : res.details,
-                reviews : res.reviews
+                reviews : res.reviews,
+                petsitterUserProfileImage : res.petsitterUserProfileImage
             });
         }))
         .catch((err) => {
-            console.log(err);
         })
     };
 
     render(){
-        const images = [
-            'https://s-i.huffpost.com/gen/5563994/images/n-DOG-MOUTH-628x314.jpg',
-            'http://pet.chosun.com/images/news/healthchosun_pet_201611/20161117212109_708_1630_347.jpg',
-            'https://s-i.huffpost.com/gen/5563994/images/n-DOG-MOUTH-628x314.jpg',
-        ];
+        const images = this.state.headImages
+        .sort((a, b) => {
+            if(a.petsitterFileNo > b.petsitterFileNo) {
+                return 1;
+            }else if(a.petsitterFileNo < b.petsitterFileNo){
+                return -1;
+            }else {
+                return 0;
+            }
+        })
+        .map((image, index) => `http://192.168.0.10:8080/petSitterImageFile/${image.petsitterFileName}`);
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 {this.state.activityIndicator && (
@@ -149,7 +157,7 @@ export default class BookingDetail extends Component{
                                 </View>
                                 )}
                                 style={{height:200}} />
-                    <Profile profileData={this.state.bookingDetail}/>
+                    <Profile profileData={this.state.bookingDetail} petsitterUserProfileImage={this.state.petsitterUserProfileImage}/>
                     <Certificate/>
                     <Price priceData={this.state.bookingDetail}/>
                     <Enviroment petsitterEnv={this.state.bookingDetail.petsitterEnv}/>
@@ -160,7 +168,7 @@ export default class BookingDetail extends Component{
                     </ScrollView>
                 )}
                 {!this.state.activityIndicator ? (
-                        <BottomRequest navigation={this.props.navigation} petsitterNo={this.state.bookingDetail.petsitterNo}/>
+                        <BottomRequest navigation={this.props.navigation} petsitterNo={this.state.bookingDetail.petsitterNo} petsitterUserProfileImage={this.state.petsitterUserProfileImage}/>
                 ) : null}
                 {!this.state.activityIndicator ? (
                         <TouchableOpacity activeOpacity={0.8} style={styles.stickerBtn} onPress={this._goToChat}>
@@ -185,15 +193,17 @@ class Profile extends Component {
             reviewCount : this.props.profileData.reviewCount,
             starCount : this.props.profileData.starCount,
             petsitterFileName : this.props.profileData.petsitterFileName,
-            petsitterFilePath : this.props.profileData.petsitterFilePath
+            petsitterFilePath : this.props.profileData.petsitterFilePath,
+            petsitterUserProfileImage : this.props.petsitterUserProfileImage.petsitterUserImage
         };
     };
 
     render(){
+        const petsitterImageSource = this.state.petsitterUserProfileImage ? {uri : `http://192.168.0.10:8080/userImageFile/${this.state.petsitterUserProfileImage}`} : require("../../../img/user.png");
         return(
         <View style={styles.listBar}>
             <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                    <Image source={require("../../../img/user.png")} style={{width : 60, height : 60, margin : 18}}/>
+                    <Image source={petsitterImageSource} style={{width : 60, height : 60, margin : 18}}/>
             </View>
             <View style={{justifyContent: 'center', marginLeft : 15}}>
                 <View>
@@ -546,7 +556,6 @@ class MoreReview extends Component{
             }))
         }))
         .catch((err) => {
-            console.log(err);
         })
 
     };
@@ -612,7 +621,7 @@ class BottomRequest extends Component{
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props.navigation.navigate('BookingDate')}}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props.navigation.navigate('BookingDate', {petsitterNo : this.props.petsitterNo, petsitterUserImage:this.props.petsitterUserProfileImage})}}>
                     <Text style={styles.bottomText}>예약 요청</Text>
                 </TouchableOpacity>
             </View>

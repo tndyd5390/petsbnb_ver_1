@@ -3,12 +3,16 @@ package com.petsbnb_ver_1;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.rnrestartandroid.RNRestartAndroidPackage;
 import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.imagepicker.ImagePickerPackage;
+=======
+import com.iamport.IamportPackage;
+>>>>>>> psyPetbnb_ver_1
 import io.invertase.firebase.RNFirebasePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
@@ -31,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+<<<<<<< HEAD
             new WebViewBridgePackage(),
             new ReactVideoPackage(),
             new VectorIconsPackage(),
@@ -38,6 +43,9 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeRestartPackage(),
             new ImagePickerPackage(),
             new RNFetchBlobPackage(),
+=======
+            new IamportPackage(),
+>>>>>>> psyPetbnb_ver_1
             new RNFirebasePackage(),
               new RNFirebaseMessagingPackage(),
               new RNFirebaseNotificationsPackage()
