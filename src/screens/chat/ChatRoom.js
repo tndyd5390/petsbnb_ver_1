@@ -59,6 +59,7 @@ export default class ChatRoom extends Component{
       this._loginCheck();
       this._onConnect(this.state.roomId);
       this._getToken();
+
     }
 
     componentWillMount(){
@@ -83,26 +84,19 @@ export default class ChatRoom extends Component{
       if(userInfo != null || userInfo != ''){
         this.setState({
           userNo : userInfo,
-          activityIndicator : false
         });
       }
     };
 
     _getToken = async() => {
-      var token = (this.state.userNo == this.state.petsitterUserNo) ? this.props.navigation.getParam("userNo") : this.state.petsitterUserNo;
-      console.log("------------------------");
-      console.log(this.state.userNo);
-      console.log(this.props.navigation.getParam("userNo"));
-      // if(this.state.userNo == this.state.petsitterUserNo){
-      //   tokenUserNo = this.props.navigation.getParam("userNo");
-      // }else{
-      //   tokenUserNo = this.state.petsitterUserNo;
-      // }
-      
-      console.log(token);
-      console.log("------------------------");
+      this.setState({
+        activityIndicator : true
+      });
+
       const params = {
-        tokenUserNo : token
+        nowUserNo : this.state.userNo,
+        propsUserNo : this.props.navigation.getParam("userNo"),
+        petsitterUserNo : this.state.petsitterUserNo,
       }
 
       await fetch("http://192.168.0.8:8091/chat/getToken.do",{
@@ -115,7 +109,11 @@ export default class ChatRoom extends Component{
       })
       .then((response)=> response.json())
       .then((res => {
-        console.log(res);
+        this.setState({
+          token : res.token,
+          activityIndicator : false
+        })
+
       }))
     }
     
@@ -128,9 +126,6 @@ export default class ChatRoom extends Component{
     }
     
     _onConnect = async(roomId) =>{
-      this.setState({
-        activityIndicator : true
-      });
       await fetch("http://192.168.0.8:8095/topic/greetings/"+roomId, {
           method : 'POST',
           headers : {
@@ -141,7 +136,6 @@ export default class ChatRoom extends Component{
       .then((response) => response.json())
       .then((res => {
         this.setState({
-          activityIndicator : false,
           messages: res
         });
       }))
@@ -176,7 +170,7 @@ export default class ChatRoom extends Component{
             </ScrollView>
            )}
           {!this.state.activityIndicator && (
-           <InputBar callBackMsg={this.callBackMsg} roomId={this.state.roomId} userNo={this.state.userNo}/>
+           <InputBar callBackMsg={this.callBackMsg} data={this.state}/>
           )}
           </SafeAreaView>
         );
@@ -207,13 +201,16 @@ class InputBar extends Component{
     constructor(props) {
       super(props);
       this.state = {
-        roomId : this.props.roomId,
+        roomId : this.props.data.roomId,
         bottomMenu : false,
         plusButton : false,
         clientConnected: false,
         contents : '',
         type: 'text',
-        userNo : this.props.userNo,
+        userNo : this.props.data.userNo,
+        petsitterNo : this.props.data.petsitterNo,
+        petsitterUserNo : this.props.data.petsitterUserNo,
+        token : this.props.data.token,
         messages: []
       };
     }
@@ -249,7 +246,7 @@ class InputBar extends Component{
         return false;
       }else{
           try {
-            this.clientRef.sendMessage("/app/hello/"+this.props.roomId, JSON.stringify(selfMsg));
+            this.clientRef.sendMessage("/app/hello/"+this.state.roomId, JSON.stringify(selfMsg));
             this.setState({
               contents : ''
             });
@@ -289,14 +286,14 @@ class InputBar extends Component{
                   ref={ref => this.textInputRef = ref}
                   value={this.state.content}/>
                 <TouchableHighlight style={styles.sendButton} onPress={() => {
-              this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents, date : new Date()})
+              this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents, petsitterNo : this.state.petsitterNo,petsitterUserNo:this.state.petsitterUserNo,token : this.state.token,date : new Date()})
               }}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
             </View>
             {this.state.bottomMenu ? <BottomMenu/> : null}
             <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' 
-            topics={['/topic/chat/'+this.props.roomId]}
+            topics={['/topic/chat/'+this.state.roomId]}
             onMessage={(msg) => { this.onMessageReceive(msg) }}
             ref={ (client) => { this.clientRef = client }}
             debug={true} />

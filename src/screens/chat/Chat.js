@@ -54,8 +54,6 @@ export default class Chat extends Component {
         activityIndicator : false,
         data : res
       })
-      console.log(res);
-
     }))
     .catch((err) => {
         console.log(err);
@@ -67,13 +65,14 @@ export default class Chat extends Component {
       roomId={item.roomId}
       userNo={this.state.userNo}
       petsitterNo={item.petsitterNo}
+      petsitterUserNo={item.petsitterUserNo}
       petsitterName={item.petsitterName}
       onPressItem={this._onPressItem}
     />
   );
 
   _onPressItem = (item) => {
-    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, petsitterNo:item.petsitterNo, petsitterName:item.petsitterName});
+    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, petsitterNo:item.petsitterNo, petsitterName:item.petsitterName, petsitterUserNo : item.petsitterUserNo});
   };
 
   render() {
@@ -104,6 +103,7 @@ class ChatList extends Component {
       roomId : this.props.roomId,
       userNo : this.props.userNo,
       petsitterNo : this.props.petsitterNo,
+      petsitterUserNo : this.props.petsitterUserNo,
       petsitterName : this.props.petsitterName
     }
 
@@ -129,6 +129,7 @@ class ChatRoomList extends Component {
         roomId : this.props.data.roomId,
         userNo : this.props.data.userNo,
         petsitterNo : this.props.data.petsitterNo,
+        petsitterUserNo : this.props.petsitterUserNo,
         petsitterName : this.props.data.petsitterName
       }
   };
