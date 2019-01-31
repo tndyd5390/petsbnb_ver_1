@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Colors from '../../utils/Colors';
-import {createBottomTabNavigator, BottomTabBar,withNavigation,createStackNavigator} from 'react-navigation';
+import {createBottomTabNavigator, BottomTabBar,withNavigation,createStackNavigator, StackActions} from 'react-navigation';
 import Explore from '../Explore';
 import Chat from '../chat/Chat';
 import Reservation from '../Reservation';
@@ -26,6 +26,8 @@ import BookingPetList from '../booking/BookingPetList';
 import BookingConfirm from '../booking/BookingConfirm';
 import BookingPaymentList from '../booking/BookingPaymentList';
 import NightBookingDetails from '../booking/NightBookingDetails';
+import Payment from "../booking/Payment";
+import PaymentResult from "../booking/PaymentResult";
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -254,6 +256,22 @@ export default class PetSitterTab extends Component{
           },
         }
       },
+      Payment : {
+        screen : Payment,
+        navigationOptions : {
+          header : null
+        }
+      },
+      PaymentResult : {
+        screen : PaymentResult,
+        navigationOptions : {
+          title : '결제 완료',
+          headerTitleStyle: {
+            width: '90%',
+            textAlign: 'center',
+          },
+        }
+      }
     },
     {
       initialRouteName: 'Explore'
@@ -261,12 +279,21 @@ export default class PetSitterTab extends Component{
     
     BookingStacks.navigationOptions = ({ navigation }) => {
       let tabBarVisible = true;
-      if (navigation.state.index > 0) {
-        tabBarVisible = false;
-      }
-      return {
-        tabBarVisible,
+      let viewName = navigation.state.routes[navigation.state.index].routeName;
+      let options = {};
+      switch (viewName){
+        case "PaymentResult":
+          options.tabBarVisible = true;
+          options.headerLeft = null;
+          break;
+        case "Explore":
+          options.tabBarVisible = true;
+          break;
+        default : 
+          options.tabBarVisible = false;
       };
+    
+      return options;
     };
 
       const Tabs = createBottomTabNavigator({
@@ -311,7 +338,11 @@ export default class PetSitterTab extends Component{
         {
           tabBarPosition : 'bottom',
           navigationOptions : {
-            tabBarVisible : true
+            tabBarVisible: true,
+            tabBarOnPress : ({navigation, defaultHandler}) => {
+              navigation.dispatch(StackActions.popToTop());
+              defaultHandler();
+            }
           },
           tabBarOptions : {
             activeTintColor : 'red',
