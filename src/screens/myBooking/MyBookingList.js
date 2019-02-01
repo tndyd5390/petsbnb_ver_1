@@ -25,15 +25,51 @@ export default class MyBookingList extends Component{
     constructor(props){
         super(props);
         this.state = {
-            booking : true
+            booking : true,
+            bookingList : []
         }
     };
+
+    componentDidMount(){
+        this._getBookingList();
+    }
+
+    _getBookingList = async() => {
+        const userNo = await AsyncStorage.getItem("userInfo");
+        const params = {
+            userNo,
+        }
+        const bookingList = await fetch("http://192.168.0.10:8080/reservation/getReservationList.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then((response) => response.json())
+        .then(res => {
+            if(res.length === 0){
+                this.setState({
+                    booking: false
+                })
+            }else{
+                this.setState({
+                    bookingList: res
+                })
+            }
+        })
+        .catch(err => {
+
+        });
+    }
+
 
     render(){
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 <ScrollView>
-                    {this.state.booking ? <BookingY navigation={this.props.navigation}/> : <BookingN/>}
+                    {this.state.booking ? <BookingY navigation={this.props.navigation} bookingList={this.state.bookingList}/> : <BookingN/>}
                 </ScrollView>
             </SafeAreaView>
         );
@@ -65,38 +101,30 @@ class BookingN extends Component {
 class BookingY extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            data : [
-                    {id : '1', sitter: '유혜진', date: '2018.12.06', status : '케어 진행'},
-                    {id : '2', sitter: '김혜진', date: '2018-12-07', status : '승인 대기'},
-                    {id : '3', sitter: '박혜진', date: '2018-12-08', status : '예약 반려'},
-                    {id : '4', sitter: '이혜진', date: '2018-12-09', status : '예약 승인'},
-                    {id : '5', sitter: '지혜진', date: '2018-12-10', status : '승인 대기'},
-                    {id : '6', sitter: '조혜진', date: '2018-12-05', status : '케어 완료'},
-                    ]
-        }
     };
+    
     _onPressItem = (item) => {
-        this.props.navigation.navigate('MyBookingDetail', {data: item})
+        this.props.navigation.navigate('MyBookingDetail', {id: item.id})
     };
 
     _keyExtractor = (item, index) => item.id;
 
-    _renderItem = ({item}) => (
-        <BookingList
+    _renderItem = ({item}) => {
+        return (<BookingList
             id = {item.id}
             onPressItem = {this._onPressItem}
             sitter = {item.sitter}
             date = {item.date}
             status = {item.status}
-        />
-    );
+        />)
+    };
+    
 
     render(){
         return(
             <View>
                 <FlatList
-                    data={this.state.data}
+                    data={this.props.bookingList}
                     extraData={this.state} 
                     renderItem={this._renderItem} 
                     keyExtractor={this._keyExtractor}

@@ -33,7 +33,6 @@ export default class BookingConfirm extends Component {
     constructor(props){
         super(props);
         const data = this.props.navigation.getParam('data');
-        console.log(data);
         const pDTO = this.props.navigation.getParam('pDTO');
         const isDayCare = this.props.navigation.getParam('isDayCare', false);
         this.state = {
@@ -552,12 +551,17 @@ class BottomRequest extends Component{
         const userInfo = this.props.data.userInfo;
         const price = this.props.data.price;
         const userNo = await AsyncStorage.getItem("userInfo");
-
+        let name = "";
+        if(this.props.data.petList.length === 1){
+            name = this.props.data.petList[0].petName + " 예약";
+        }else{
+            name = this.props.data.petList[0].petName + "외 " +(this.props.data.petList.length - 1) + "마리 예약";
+        }
         if(termsAccept){
             let param = {
                 pg : 'html5_inicis',
                 pay_method : this._generatePaymentMethod(),
-                name : "",
+                name : name,
                 merchant_uid : `mid_${new Date().getTime()}`,
                 amount : price.toString(),
                 buyer_name : userInfo.userName,

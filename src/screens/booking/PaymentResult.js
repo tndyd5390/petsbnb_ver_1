@@ -45,6 +45,7 @@ export default class PaymentResult extends Component {
         const params = {
             imp_uid: this.state.imp_uid,
             merchant_uid: paymentInfo.merchant_uid,
+            reservationName: paymentInfo.name,
             amount: paymentInfo.amount + "",
             buyer_addr: paymentInfo.buyer_addr,
             buyer_email: paymentInfo.buyer_email,
