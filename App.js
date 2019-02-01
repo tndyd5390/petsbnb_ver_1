@@ -55,6 +55,7 @@ export default class App extends Component {
 
   async componentDidMount(){
     this._checkPermission();
+    this._clearNowChat();
     this._createNotificationListeners();
     //BackgroundTask.schedule();
   }
@@ -62,6 +63,11 @@ export default class App extends Component {
   componentWillUnmount(){
     this.notificationListener();
     this.notificationOpenedListener();
+  }
+
+  _clearNowChat = async() => {
+    await AsyncStorage.setItem('nowChat', '');
+    console.log(await AsyncStorage.getItem('nowChat'));
   }
 
   _checkPermission = async() => {
@@ -98,7 +104,7 @@ export default class App extends Component {
 
   _createNotificationListeners = async() => {
     this.notificationListener = firebase.notifications().onNotification((notification) => {
-      const {title, body} = notification;
+      const {title, body, data} = notification;
       const channel = new firebase.notifications.Android.Channel('phone-channel', 'Phone Channel', firebase.notifications.Android.Importance.Max).setDescription('phone apps channel');
       const phoneChannel = firebase.notifications().android.createChannel(channel);
       const phoneNotification = new firebase.notifications.Notification()
@@ -109,6 +115,8 @@ export default class App extends Component {
         key1 : 'value1',
         key2 : 'value2'
       });
+      console.log(this._checkChatRoom());
+      console.log(data.roomId);
       phoneNotification.android.setChannelId(channel.channelId);
       firebase.notifications().displayNotification(phoneNotification);
     });
@@ -142,8 +150,21 @@ export default class App extends Component {
   }
 
   _checkChatRoom = async() => {
-    const nowChat = await AsyncStorage.getItem("nowChat");
-    return nowChat;
+    try{
+      let nowChat;
+      await AsyncStorage.getItem('nowChat').then((value)=>{
+              if(value!==null){
+                console.log("value", value);
+                nowChat = value
+              }else{
+                nowChat = '';
+              }
+            }
+        ); 
+      return nowChat;
+    }catch(err){
+      console.log(err);
+    }
   }
 
 

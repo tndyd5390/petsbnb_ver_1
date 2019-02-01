@@ -64,6 +64,7 @@ export default class Chat extends Component {
     <ChatList
       roomId={item.roomId}
       userNo={this.state.userNo}
+      propsUserNo={item.userNo}
       petsitterNo={item.petsitterNo}
       petsitterUserNo={item.petsitterUserNo}
       petsitterName={item.petsitterName}
@@ -72,7 +73,7 @@ export default class Chat extends Component {
   );
 
   _onPressItem = (item) => {
-    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, petsitterNo:item.petsitterNo, petsitterName:item.petsitterName, petsitterUserNo : item.petsitterUserNo});
+    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, propsUserNo:item.propsUserNo,petsitterNo:item.petsitterNo, petsitterName:item.petsitterName, petsitterUserNo : item.petsitterUserNo});
   };
 
   render() {
@@ -102,6 +103,7 @@ class ChatList extends Component {
     this.state = {
       roomId : this.props.roomId,
       userNo : this.props.userNo,
+      propsUserNo : this.props.propsUserNo,
       petsitterNo : this.props.petsitterNo,
       petsitterUserNo : this.props.petsitterUserNo,
       petsitterName : this.props.petsitterName
@@ -128,6 +130,7 @@ class ChatRoomList extends Component {
       this.state = {
         roomId : this.props.data.roomId,
         userNo : this.props.data.userNo,
+        propsUserNo : this.props.data.propsUserNo,
         petsitterNo : this.props.data.petsitterNo,
         petsitterUserNo : this.props.petsitterUserNo,
         petsitterName : this.props.data.petsitterName

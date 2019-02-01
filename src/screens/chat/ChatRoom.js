@@ -31,6 +31,7 @@ export default class ChatRoom extends Component{
       this.state = {
         activityIndicator : true,
         userNo : this.props.navigation.getParam('userNo'),
+        propsUserNo : this.props.navigation.getParam('propsUserNo'),
         petsitterNo : this.props.navigation.getParam('petsitterNo'),
         petsitterUserNo : this.props.navigation.getParam('petsitterUserNo'),
         petsitterName : this.props.navigation.getParam('petsitterName'),
@@ -46,7 +47,7 @@ export default class ChatRoom extends Component{
     }
     
     _blurChatRoom = async() =>{
-      await AsyncStorage.removeItem("nowChat");
+      await AsyncStorage.setItem("nowChat", "");
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -68,7 +69,7 @@ export default class ChatRoom extends Component{
         this._focusChatRoom();
       })
   
-      this.didBlurSubscription = this.props.navigation.addListener('didBlur', () => {
+      this.didBlurSubscription = this.props.navigation.addListener('willBlur', () => {
         console.log('didBlur');
         this._blurChatRoom();
       })
@@ -95,7 +96,7 @@ export default class ChatRoom extends Component{
 
       const params = {
         nowUserNo : this.state.userNo,
-        propsUserNo : this.props.navigation.getParam("userNo"),
+        propsUserNo : this.state.propsUserNo,
         petsitterUserNo : this.state.petsitterUserNo,
       }
 
@@ -387,6 +388,7 @@ const styles = StyleSheet.create({
       backgroundColor : Colors.white,
       flex: 1,
       paddingHorizontal: 10,
+      fontSize : 10
     },
     sendButton: {
       justifyContent: 'center',
