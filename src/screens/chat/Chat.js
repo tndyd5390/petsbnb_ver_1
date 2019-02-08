@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Platform, Dimensions,StyleSheet,Image, Text, View, FlatList, TouchableOpacity, SafeAreaView,AsyncStorage, ActivityIndicator} from 'react-native';
 import {List, ListItem} from 'react-native-elements';
 import Colors from '../../utils/Colors';
+import SockJsClient from 'react-stomp';
+import SockJs from 'sockjs-client';
+import Stomp from 'stompjs';
 
 const{width, height} = Dimensions.get('window');
 
@@ -11,16 +14,33 @@ export default class Chat extends Component {
     this.state = {
       activityIndicator : true,
       userNo : null,
-      data : []
+      data : [],
+      roomId : 'rooms'
     }
+
+    this.sockjs = new SockJs('http://192.168.0.8:8095/gs-guide-websocket');
+    this.stompClient = Stomp.over(this.sockjs);
+    this.stompClient.connect({}, (frame)=>{
+      console.log(frame);
+      this.stompClient.send('/app/chat/join/'+this.state.userNo, {},JSON.stringify({userNo : this.state.userNo, petsitterNo : this.state.petsitterNo}));
+      this.stompClient.subscribe('/topic/chat/rooms/'+this.state.userNo, (data)=>{
+        console.log(data);
+      })
+      }
+    );
   };
+  _initialize() {
+    console.log("connected");
+  }
+  _onMsg(e){
+    console.log("e")
+  }
 
   componentDidMount(){
     this._getUserInfo();
   }
 
   componentWillMount(){
-
   }
 
   _getUserInfo = async() =>{
@@ -29,36 +49,36 @@ export default class Chat extends Component {
       userNo : userNo,
       activityIndicator : false,
     })
-    this._getChatList();
+   // this._getChatList();
   };
 
-  _getChatList = async() =>{
-    this.setState({
-      activityIndicator : true
-    })
-    const params = {
-        userNo : this.state.userNo, 
-        petsitterNo : this.state.petsitterNo
-    }
-    await fetch("http://192.168.0.8:8095/chat/chatList", {
-        method : 'POST',
-        headers : {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body :JSON.stringify(params),
-    })
-    .then((response) => response.json())
-    .then((res => {
-      this.setState({
-        activityIndicator : false,
-        data : res
-      })
-    }))
-    .catch((err) => {
-        console.log(err);
-    })
-  };
+  // _getChatList = async() =>{
+  //   this.setState({
+  //     activityIndicator : true
+  //   })
+  //   const params = {
+  //       userNo : this.state.userNo, 
+  //       petsitterNo : this.state.petsitterNo
+  //   }
+  //   await fetch("http://192.168.0.8:8095/chat/chatList", {
+  //       method : 'POST',
+  //       headers : {
+  //           Accept: 'application/json',
+  //           'Content-Type': 'application/json',
+  //       },
+  //       body :JSON.stringify(params),
+  //   })
+  //   .then((response) => response.json())
+  //   .then((res => {
+  //     this.setState({
+  //       activityIndicator : false,
+  //       data : res
+  //     })
+  //   }))
+  //   .catch((err) => {
+  //       console.log(err);
+  //   })
+  // };
 
   _renderItem = ({item}) => (
     <ChatList
@@ -86,11 +106,19 @@ export default class Chat extends Component {
                     </View>
            )}
         {!this.state.activityIndicator && (
+          <View>
+            {/* <SockJsClient url='http://192.168.0.8:8095/gs-guide-websocket' 
+            topics={['/topic/chat/'+this.state.roomId]}
+            onMessage={(msg) => { this.setState({data : msg}); console.log(msg) }}
+            ref={ (client) => { this.clientRef = client }}
+            debug={true} /> */}
+
           <FlatList
-            data={this.state.data}
-            keyExtractor={ (item, index) => index.toString() }
-            renderItem={this._renderItem}
+           data={this.state.data}
+          keyExtractor={ (item, index) => index.toString() }
+          renderItem={this._renderItem}
           />
+          </View>
         )}
         </SafeAreaView>
     );
