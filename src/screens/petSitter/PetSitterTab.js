@@ -28,6 +28,8 @@ import BookingPaymentList from '../booking/BookingPaymentList';
 import NightBookingDetails from '../booking/NightBookingDetails';
 import Payment from "../booking/Payment";
 import PaymentResult from "../booking/PaymentResult";
+import PetSitterReservationList from "./PetSitterReservationList";
+import PetSitterReservationDetail from "./PetSitterReservationDetail";
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -170,6 +172,22 @@ export default class PetSitterTab extends Component{
             }
           }
         },
+        PetSitterReservationList : {
+          screen : PetSitterReservationList,
+          navigationOptions : {
+            header : null 
+          }
+        },
+        PetSitterReservationDetail : {
+          screen: PetSitterReservationDetail,
+          navigationOptions: {
+            title: "예약 상세",
+            headerTitleStyle: {
+              width: "70%",
+              textAlign: "center"
+            }
+          }
+        }
       })
 
       petSitterReservationStackNavigator.navigationOptions = ({ navigation }) => {

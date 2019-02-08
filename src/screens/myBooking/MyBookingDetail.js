@@ -53,6 +53,7 @@ export default class MyBookingDetail extends Component {
         })
         .then(response => response.json())
         .then(res => {
+            console.log(res);
             return res;
         })
         .catch(err => {
@@ -310,133 +311,144 @@ class BottomRequest extends Component{
     render(){
         const bottomTxt = this._statusText(this.props.status);
         return(
-            <View style={styles.bottomRequest}>
-                <Modal
-                    animationType="none"
-                    transparent={true}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        
-                    }}
-                >
-                    <View style={{width:width, height:height, alignItems:"center", backgroundColor:'rgba(0,0,0,0.5)'}}>
-                        <View 
-                            style={{
-                                width: "80%", 
-                                backgroundColor: Colors.buttonSky, 
-                                borderTopLeftRadius:10, 
-                                borderTopRightRadius:10, 
-                                height: 45,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginTop : 30
-                            }}
-                        >
-                            <Text
-                                style={{color: Colors.white, fontSize:18, fontWeight: "500"}}
-                            >취소 사유</Text>
-                        </View>
-                        <View
-                            style={{
-                                width: "80%",
-                                backgroundColor: Colors.white,
-                                height: 200,
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}
-                        >
-                            <TextInput
-                                style={{
-                                    width: "90%",
-                                    height: "80%",
-                                    borderRadius: 5,
-                                    borderColor: Colors.lightGrey,
-                                    borderWidth : 2
-                                }}
-                                multiline={true}
-                                textAlignVertical="top"
-                                onChangeText={(value) => {this.setState({reason: value})}}
-                            />
-                        </View>
-                        <View
-                            style={{
-                                width: "80%",
-                                height: 70,
-                                flexDirection: "row",
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: "50%",
-                                    backgroundColor: Colors.buttonSky,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRightWidth: 1,
-                                    borderRightColor: Colors.white
+            <View>
+                {
+                    this.props.status !== "예약 취소" ?
+                    (
+                        <View style={styles.bottomRequest}>
+                            <Modal
+                                animationType="none"
+                                transparent={true}
+                                visible={this.state.modalVisible}
+                                onRequestClose={() => {
+                                    
                                 }}
                             >
-                                <TouchableOpacity
-                                    style={{
-                                        width: "50%",
-                                        height: "50%",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}
-                                    onPress={this._cancelReservation}
-                                >
-                                    <Text 
+                                <View style={{width:width, height:height, alignItems:"center", backgroundColor:'rgba(0,0,0,0.5)'}}>
+                                    <View 
                                         style={{
-                                            color: Colors.white,
-                                            fontSize: 17,
-                                            fontWeight: "300"
+                                            width: "80%", 
+                                            backgroundColor: Colors.buttonSky, 
+                                            borderTopLeftRadius:10, 
+                                            borderTopRightRadius:10, 
+                                            height: 45,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            marginTop : 30
                                         }}
                                     >
-                                        예약 취소
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View
-                                style={{
-                                    width: "50%",
-                                    backgroundColor: Colors.buttonSky,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderLeftColor: Colors.white,
-                                    borderLeftWidth: 1
-                                }}
-                            >
-                                <TouchableOpacity
-                                    style={{
-                                        width: "50%",
-                                        height: "50%",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}
-                                    onPress={this._closeModal}
-                                >
-                                    <Text 
+                                        <Text
+                                            style={{color: Colors.white, fontSize:18, fontWeight: "500"}}
+                                        >취소 사유</Text>
+                                    </View>
+                                    <View
                                         style={{
-                                            color: Colors.white,
-                                            fontSize: 17,
-                                            fontWeight: "300"
+                                            width: "80%",
+                                            backgroundColor: Colors.white,
+                                            height: 200,
+                                            alignItems: "center",
+                                            justifyContent: "center"
                                         }}
                                     >
-                                        닫기
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => this.setState({modalVisible: false})}
-                        >
-                            <Text>닫기</Text>
-                        </TouchableOpacity>
-                    </View>
+                                        <TextInput
+                                            style={{
+                                                width: "90%",
+                                                height: "80%",
+                                                borderRadius: 5,
+                                                borderColor: Colors.lightGrey,
+                                                borderWidth : 2
+                                            }}
+                                            multiline={true}
+                                            textAlignVertical="top"
+                                            onChangeText={(value) => {this.setState({reason: value})}}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            width: "80%",
+                                            height: 70,
+                                            flexDirection: "row",
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                width: "50%",
+                                                backgroundColor: Colors.buttonSky,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                borderRightWidth: 1,
+                                                borderRightColor: Colors.white
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                style={{
+                                                    width: "50%",
+                                                    height: "50%",
+                                                    alignItems: "center",
+                                                    justifyContent: "center"
+                                                }}
+                                                onPress={this._cancelReservation}
+                                            >
+                                                <Text 
+                                                    style={{
+                                                        color: Colors.white,
+                                                        fontSize: 17,
+                                                        fontWeight: "300"
+                                                    }}
+                                                >
+                                                    예약 취소
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View
+                                            style={{
+                                                width: "50%",
+                                                backgroundColor: Colors.buttonSky,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                borderLeftColor: Colors.white,
+                                                borderLeftWidth: 1
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                style={{
+                                                    width: "50%",
+                                                    height: "50%",
+                                                    alignItems: "center",
+                                                    justifyContent: "center"
+                                                }}
+                                                onPress={this._closeModal}
+                                            >
+                                                <Text 
+                                                    style={{
+                                                        color: Colors.white,
+                                                        fontSize: 17,
+                                                        fontWeight: "300"
+                                                    }}
+                                                >
+                                                    닫기
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => this.setState({modalVisible: false})}
+                                    >
+                                        <Text>닫기</Text>
+                                    </TouchableOpacity>
+                                </View>
 
-                </Modal>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this._onSubmit(this.props.status)}>
-                    <Text style={styles.bottomText}>{bottomTxt}</Text>
-                </TouchableOpacity>
+                            </Modal>
+                            <TouchableOpacity style={styles.bottomButton} onPress={()=>this._onSubmit(this.props.status)}>
+                                <Text style={styles.bottomText}>{bottomTxt}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) 
+                    : 
+                    (
+                        null
+                    )
+                }
             </View>
         )
     };
