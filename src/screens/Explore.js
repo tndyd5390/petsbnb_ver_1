@@ -67,7 +67,7 @@ export default class Explore extends Component {
             });
         }
         
-        await fetch('http://192.168.0.10:8080/booking/getBookingList.do', {
+        await fetch('http://192.168.0.8:8091/booking/getBookingList.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -129,7 +129,9 @@ export default class Explore extends Component {
 
     handleEnd = () => {
         if(!this.state.firstLoad){
-            this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
+            if(this.state.data.length!=1){
+                this.setState(state => ({ page: state.page + 1 }), () => this._getBookingList());
+            }
         }
     };
 
