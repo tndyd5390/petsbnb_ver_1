@@ -13,58 +13,145 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Button,
+    FlatList,
+    Alert,
     Modal,
-    FlatList
+    ActivityIndicator
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../../utils/Colors';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {List, ListItem} from 'react-native-elements';
 
+const{width, height} = Dimensions.get("window");
+
 export default class MyBookingDetail extends Component {
     constructor(props){
         super(props);
-        const data = this.props.navigation.getParam('data');
+        const id = this.props.navigation.getParam('id');
         this.state = {
-            id : data.id,
-            sitter : data.sitter,
-            date : data.date,
-            status : data.status,
-            review : false
+            id,
+            activityIndicator: true
         };
     };
+
+    componentDidMount() {
+        this._getReservationDetail(this.state.id);
+    }
+
+    _getReservationDetail = async(id) => {
+        const params = {
+            id
+        }
+        const reservationDetail = await fetch("http://192.168.0.10:8080/reservation/getReservationDetail.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            console.log(res);
+            return res;
+        })
+        .catch(err => {
+
+        })
+        this.setState({
+            activityIndicator: false,
+            petsitterFileName: reservationDetail.fileName,
+            checkin: reservationDetail.checkin,
+            checkout: reservationDetail.checkout,
+            petsitterName: reservationDetail.petsitterName,
+            stDate: reservationDetail.stDate,
+            edDate: reservationDetail.edDate,
+            status: reservationDetail.status,
+            petsitterIntroOne: reservationDetail.petsitterIntroOne
+        })
+    }
+
+    _setStateFromButton = (reservationDetail) => {
+        this.setState({
+            activityIndicator: false,
+            petsitterFileName: reservationDetail.fileName,
+            checkin: reservationDetail.checkin,
+            checkout: reservationDetail.checkout,
+            petsitterName: reservationDetail.petsitterName,
+            stDate: reservationDetail.stDate,
+            edDate: reservationDetail.edDate,
+            status: reservationDetail.status,
+            petsitterIntroOne: reservationDetail.petsitterIntroOne
+        })
+    }
+
+    _setActivityIndicator = (act) => {
+        this.setState({
+            activityIndicator: act
+        });
+    }
 
     render(){
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
+                {this.state.activityIndicator ? (
+                    <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+                ) : (null)}
                 <ScrollView>
-                    <Profile sitter={this.state.sitter}/>
-                    <BookingDate date={this.state.date} status={this.state.status}/>
+                    <Profile 
+                        petsitterFileName={this.state.petsitterFileName} 
+                        petsitterName={this.state.petsitterName} 
+                        petsitterIntroOne={this.state.petsitterIntroOne}
+                    />
+                    <BookingDate 
+                        stDate={this.state.stDate}
+                        edDate={this.state.edDate} 
+                        checkin={this.state.checkin} 
+                        checkout={this.state.checkout} 
+                        status={this.state.status}
+                    />
                 </ScrollView>
-                {this.state.status == '예약 반려' ? null : this.state.status == '케어 완료' ? <CompleteBottomRequest navigation={this.props.navigation} review={this.state.review}/> : <BottomRequest navigation={this.props.navigation} status={this.state.status}/>}
+                {this.state.status == '예약 반려' 
+                ? 
+                null 
+                : 
+                this.state.status == '케어 완료' 
+                ? 
+                <CompleteBottomRequest 
+                    navigation={this.props.navigation} 
+                    review={this.state.review}
+                /> 
+                : 
+                <BottomRequest 
+                    navigation={this.props.navigation} 
+                    status={this.state.status}
+                    id={this.state.id}
+                    setStateFromButton={this._setStateFromButton}
+                    setActivityIndicator={this._setActivityIndicator}
+                />}
             </SafeAreaView>
         );
     };
 };
 class Profile extends Component {
     render(){
+        const fileSource = this.props.petsitterFileName ? {uri : `http://192.168.0.10:8080/userImageFile/${this.props.petsitterFileName}`} : require("../../../img/user.png")
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={require("../../../img/user.png")} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={fileSource} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
-                        <Text style={{fontSize : 20, fontWeight : 'bold'}}>{this.props.sitter}</Text>
+                        <Text style={{fontSize : 20, fontWeight : 'bold'}}>{this.props.petsitterName}</Text>
                     </View>
                     <View style={{flexDirection: 'column', marginTop : 5}}>
                         <View style={{alignItems : 'center', flexDirection: 'row'}}>
                             <View style={styles.blueCircle}/>
-                            <Text>프로필1</Text>
-                        </View>
-                        <View style={{alignItems : 'center', flexDirection: 'row'}}>
-                            <View style={styles.blueCircle}/>
-                            <Text>프로필2</Text>
+                            <Text>{this.props.petsitterIntroOne}</Text>
                         </View>
                     </View>
                 </View>            
@@ -93,8 +180,18 @@ class BookingDate extends Component {
         return color;
     };
 
+    _generateTime = (h) => {
+        if(Number(h) < 10){
+            return "0" + h;
+        }else{
+            return h + "";
+        }
+    }
+
     render(){
         const statusColor = _statusColor(this.props.status);
+        const checkin = this._generateTime(this.props.checkin);
+        const checkout = this._generateTime(this.props.checkout);
         return(
             <View>
                 <View style={styles.dateBar}>
@@ -102,7 +199,7 @@ class BookingDate extends Component {
                         <Text style={{fontSize : 17}}>예약일</Text>
                     </View> 
                     <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 17}}>{this.props.date}</Text>
+                        <Text style={{fontSize : 17}}>{this.props.stDate}</Text>
                     </View> 
                 </View>
                 <View style={styles.dateBar}>
@@ -110,7 +207,7 @@ class BookingDate extends Component {
                         <Text style={{fontSize : 17}}>체크인</Text>
                     </View> 
                     <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>{this.props.date} 11:00 부터</Text>
+                        <Text style={{fontSize : 15}}>{`${this.props.stDate} ${checkin}:00 부터`}</Text>
                     </View> 
                 </View>
                 <View style={styles.dateBar}>
@@ -118,16 +215,7 @@ class BookingDate extends Component {
                         <Text style={{fontSize : 17}}>체크아웃</Text>
                     </View> 
                     <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>{this.props.date}  09:00 까지</Text>
-                    </View> 
-                </View>
-                <View style={styles.dateBar}>
-                    <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', width:'30%'}}>
-                        <Text style={{fontSize : 17}}>초과시간</Text>
-                        <IconFontAwesome name='question-circle' size={15} style={{marginLeft : 5}}/>
-                    </View>
-                    <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
-                        <Text style={{fontSize : 15}}>체크아웃 0시간 초과</Text>
+                        <Text style={{fontSize : 15}}>{`${this.props.edDate}  ${checkout}:00 까지`}</Text>
                     </View> 
                 </View>
                 <View style={styles.endBar}>
@@ -135,12 +223,12 @@ class BookingDate extends Component {
                     <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 15}}>
                         <Text style={{fontSize : 25, fontWeight : 'bold', color : statusColor}}>{this.props.status}</Text>
                     </View> 
-                    <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 20}}>
+                    {/* <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 20}}>
                         <Text style={{fontSize : 15, fontWeight : 'bold'}}>24시간 기준 체크아웃 시간 초과시, 추가 비용 부과</Text>
                     </View> 
                     <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center'}}>
                         <Text style={{fontSize : 13, color : Colors.red}}>1시간 당 추가비용 = 해당 펫시터 데이케어 비용의 10%</Text>
-                    </View> 
+                    </View>  */}
                 </View>
                 </View>
             </View>
@@ -151,8 +239,13 @@ class BookingDate extends Component {
 class BottomRequest extends Component{
     constructor(props) {
         super(props);
+        this.state={
+            id: this.props.id,
+            modalVisible: false,
+            reason: ""
+        }
     }
-
+    
     _statusText = (status) =>{
         let text = '';
         if(status=='승인 대기' || status=='예약 승인'){
@@ -164,23 +257,198 @@ class BottomRequest extends Component{
     };
     
     _onSubmit = (status) => {
+        
         if(status=='승인 대기' || status=='예약 승인'){
             text = '예약 취소';
-            alert('예약 취소');
+            this.setState({
+                modalVisible: true
+            })
         }else{
             text = '타임 라인';
             this.props.navigation.navigate('Timeline');
         }
     };
 
+    _cancelReservation = async() => {
+        if(this.state.reason === ""){
+            alert("취소 사유를 입력해주세요.");
+            return;
+        }
+        this.props.setActivityIndicator(true);
+        this._closeModal();
+        const params = {
+            reservationNo: this.state.id,
+            reason: this.state.reason
+        };
+
+        const reservationDetail = await fetch("http://192.168.0.10:8080/reservation/cancelReservation.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            return res;
+        })
+        .catch(err => {
+
+        })
+        this.props.setStateFromButton(reservationDetail);
+        this.props.setActivityIndicator(false);
+    }
+
+    _closeModal = () => {
+        this.setState({
+            reason: "",
+            modalVisible: false
+        })
+    }
+
 
     render(){
         const bottomTxt = this._statusText(this.props.status);
         return(
-            <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this._onSubmit(this.props.status)}>
-                    <Text style={styles.bottomText}>{bottomTxt}</Text>
-                </TouchableOpacity>
+            <View>
+                {
+                    this.props.status !== "예약 취소" ?
+                    (
+                        <View style={styles.bottomRequest}>
+                            <Modal
+                                animationType="none"
+                                transparent={true}
+                                visible={this.state.modalVisible}
+                                onRequestClose={() => {
+                                    
+                                }}
+                            >
+                                <View style={{width:width, height:height, alignItems:"center", backgroundColor:'rgba(0,0,0,0.5)'}}>
+                                    <View 
+                                        style={{
+                                            width: "80%", 
+                                            backgroundColor: Colors.buttonSky, 
+                                            borderTopLeftRadius:10, 
+                                            borderTopRightRadius:10, 
+                                            height: 45,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            marginTop : 30
+                                        }}
+                                    >
+                                        <Text
+                                            style={{color: Colors.white, fontSize:18, fontWeight: "500"}}
+                                        >취소 사유</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            width: "80%",
+                                            backgroundColor: Colors.white,
+                                            height: 200,
+                                            alignItems: "center",
+                                            justifyContent: "center"
+                                        }}
+                                    >
+                                        <TextInput
+                                            style={{
+                                                width: "90%",
+                                                height: "80%",
+                                                borderRadius: 5,
+                                                borderColor: Colors.lightGrey,
+                                                borderWidth : 2
+                                            }}
+                                            multiline={true}
+                                            textAlignVertical="top"
+                                            onChangeText={(value) => {this.setState({reason: value})}}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            width: "80%",
+                                            height: 70,
+                                            flexDirection: "row",
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                width: "50%",
+                                                backgroundColor: Colors.buttonSky,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                borderRightWidth: 1,
+                                                borderRightColor: Colors.white
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                style={{
+                                                    width: "50%",
+                                                    height: "50%",
+                                                    alignItems: "center",
+                                                    justifyContent: "center"
+                                                }}
+                                                onPress={this._cancelReservation}
+                                            >
+                                                <Text 
+                                                    style={{
+                                                        color: Colors.white,
+                                                        fontSize: 17,
+                                                        fontWeight: "300"
+                                                    }}
+                                                >
+                                                    예약 취소
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View
+                                            style={{
+                                                width: "50%",
+                                                backgroundColor: Colors.buttonSky,
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                borderLeftColor: Colors.white,
+                                                borderLeftWidth: 1
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                style={{
+                                                    width: "50%",
+                                                    height: "50%",
+                                                    alignItems: "center",
+                                                    justifyContent: "center"
+                                                }}
+                                                onPress={this._closeModal}
+                                            >
+                                                <Text 
+                                                    style={{
+                                                        color: Colors.white,
+                                                        fontSize: 17,
+                                                        fontWeight: "300"
+                                                    }}
+                                                >
+                                                    닫기
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => this.setState({modalVisible: false})}
+                                    >
+                                        <Text>닫기</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </Modal>
+                            <TouchableOpacity style={styles.bottomButton} onPress={()=>this._onSubmit(this.props.status)}>
+                                <Text style={styles.bottomText}>{bottomTxt}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) 
+                    : 
+                    (
+                        null
+                    )
+                }
             </View>
         )
     };

@@ -20,7 +20,7 @@ export default class Payment extends Component {
           pay_method,
           app_scheme: "example",
           name : navigation.getParam("name"),
-          amount : '5000',//navigation.getParam("amount"),
+          amount : '100',//navigation.getParam("amount"),
           buyer_email : navigation.getParam("buyer_email"),
           buyer_name: navigation.getParam("buyer_name"),
           buyer_addr: navigation.getParam("buyer_addr"),
