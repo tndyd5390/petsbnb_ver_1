@@ -20,7 +20,11 @@ export default class Chat extends Component {
   }
 
   componentWillMount(){
-
+    this._subscribe = this.props.navigation.addListener('didFocus', () => {
+      this._getChatList();
+      console.log("reload");
+    });
+     
   }
 
   _getUserInfo = async() =>{
@@ -76,9 +80,8 @@ export default class Chat extends Component {
     this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, propsUserNo:item.propsUserNo,petsitterNo:item.petsitterNo, petsitterName:item.petsitterName, petsitterUserNo : item.petsitterUserNo});
   };
 
-  render() {
+  render(){
     return (
-      
         <SafeAreaView style={styles.safeAreaViewStyle}>
         {this.state.activityIndicator && (
                     <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
