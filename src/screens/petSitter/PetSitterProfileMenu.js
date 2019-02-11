@@ -125,6 +125,10 @@ export default class PetSitterProfileMenu extends Component{
         this.setState({activityIndicator : false});
     }
 
+    _gotoPetSitterPoint = () => {
+        this.props.navigation.navigate("PetSitterPoint");
+    }
+
     render() {
         return(
             <View style={styles.container}>
@@ -195,7 +199,7 @@ export default class PetSitterProfileMenu extends Component{
 
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
-                        
+                        onPress={this._gotoPetSitterPoint}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>포인트 조회</Text>
                     </TouchableOpacity>
