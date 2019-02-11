@@ -210,6 +210,14 @@ class ReservationDetail extends Component {
                         <Text style={{fontSize : 15}}>{`${reservationDetail.edDate}  ${reservationDetail.checkout}:00 까지`}</Text>
                     </View> 
                 </View>
+                <View style={styles.dateBar}>
+                    <View style={{alignItems :'center', justifyContent : 'center', width:'30%'}}>
+                        <Text style={{fontSize : 17}}>금액</Text>
+                    </View> 
+                    <View style={{alignItems :'center', justifyContent : 'center',width:'70%'}}>
+                        <Text style={{fontSize : 15}}>{`${reservationDetail.amount}원`}</Text>
+                    </View> 
+                </View>
                 <View style={styles.endBar}>
                 <View style={{flex:1,flexDirection :'column', alignItems :'center'}}>
                     <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 15}}>
