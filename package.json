@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "express": "^4.16.4",
     "iamport-react-native": "^1.0.6",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
@@ -38,6 +39,7 @@
     "react-native-webview-bridge": "^0.40.1",
     "react-navigation": "^2.18.2",
     "react-stomp": "^3.3.0",
+    "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "sockjs-client": "^1.3.0",
     "stompjs": "^2.3.3"
