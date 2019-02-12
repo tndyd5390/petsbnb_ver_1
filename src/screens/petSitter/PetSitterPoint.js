@@ -7,8 +7,11 @@ import {
     Image,
     Dimensions,
     StyleSheet,
-    ListView,
-    TouchableOpacity
+    TouchableOpacity,
+    FlatList,
+    Modal,
+    TextInput,
+    AsyncStorage
 } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 const{ width, height } = Dimensions.get("window");
@@ -16,10 +19,119 @@ const{ width, height } = Dimensions.get("window");
 export default class PetSitterPoint extends Component{
     constructor(props){
         super(props);
+        const {getPoint,totalPoint, refundPoint, userImage} = this.props.navigation.getParam("pointData");
+
+        this.state={
+            getPoint,
+            totalPoint,
+            refundPoint,
+            userImage,
+            modalVisiable: false,
+            refundPointInput: ""
+        }
     }
+
+    _requestRefund = async() => {
+        if(Number(this.state.refundPointInput) > this.state.totalPoint){
+            alert("보유한 포인트보다 많은 급액을 환급 받으실 수 없습니다.");
+            this.setState({
+                refundPointInput: "",
+                modalVisiable: false
+            })
+            return;
+        }else if(Number(this.state.refundPointInput) === 0){
+            alert("0보다 큰 수를 입력해 주세요");
+            this.setState({
+                refundPointInput: "",
+                modalVisiable: false
+            })
+            return;
+        }
+        const userNo = await AsyncStorage.getItem("userInfo");
+        const params = {
+            userNo,
+            refundPointInput: this.state.refundPointInput
+        }
+        const data = await fetch("http://192.168.0.10:8080/petSitter/requestRefund.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            return res;
+        })
+        .catch(err => {
+
+        })
+        console.log("res");
+        console.log(data);
+        this.setState({
+            getPoint: data.getPoint,
+            totalPoint: data.totalPoint,
+            refundPoint: data.refundPoint,
+            modalVisiable: false
+        });
+    }
+
+    _onChangeCheckNumber = (text) => {
+        let newText = '';
+        let numbers = '0123456789';
+
+        for (var i=0; i < text.length; i++) {
+            if(numbers.indexOf(text[i]) > -1 ) {
+                newText = newText + text[i];
+            }
+        }
+        this.setState({
+            refundPointInput: newText
+        })
+    }
+
     render() {
         return(
             <View style={{width: width, height: height, backgroundColor: Colors.white, flex: 1}}>
+                {this.state.modalVisiable ? (
+                    <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10}}>
+                        <View style={{width: width, alignItems: "center"}}>
+                            <View style={{alignItems: "center", justifyContent: "center", width: "80%", height: 45, backgroundColor: Colors.buttonSky, marginTop: 100, borderTopRightRadius: 10, borderTopLeftRadius: 10}}>
+                                <Text style={{color: Colors.white, fontSize: 20, fontWeight: "300"}}>환급 받기</Text>
+                            </View>
+                            <View style={{backgroundColor: Colors.white, width: "80%", height: 80, alignItems: "center", justifyContent: "center"}}>
+                                <TextInput 
+                                    style={{height: 40,width: "90%", borderColor: Colors.grey, borderWidth: 1}}
+                                    onChangeText={this._onChangeCheckNumber}
+                                    value={this.state.refundPointInput}
+                                    keyboardType="numeric"
+                                />
+                            </View>
+                            <View style={{width: "80%", flexDirection: "row", height: 50}}>
+                                <TouchableOpacity 
+                                    style={[styles.modalButton, {borderRightWidth: 2, borderRightColor: Colors.white}]}
+                                    onPress={this._requestRefund}
+                                >
+                                    <View style={{}}>
+                                        <Text style={{color: Colors.white, fontSize: 20, fontWeight: "300"}}>환급받기</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    style={[styles.modalButton, { borderLeftWidth: 2, borderLeftColor: Colors.white}]}
+                                    onPress={()=> this.setState({
+                                        refundPointInput: "",
+                                        modalVisiable: false
+                                    })}
+                                >
+                                    <View>
+                                        <Text style={{color: Colors.white, fontSize: 20, fontWeight: "300"}}>닫기</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                ) : (null)}
                 <View style={{alignItems: "center", width: width}}>
                     <View style={{width: "95%", height: 120, flexDirection: "row"}}>
                         <View style={{width: "40%", alignItems: "center", justifyContent: "center"}}>
@@ -33,7 +145,7 @@ export default class PetSitterPoint extends Component{
                                 <Text style={{fontSize: 20}}>박수용</Text>
                             </View>
                             <View style={{height: "40%", justifyContent: "center"}}>
-                                <Text style={{fontSize: 18}}>보유한 포인트 : 0p</Text>
+                                <Text style={{fontSize: 18}}>{`보유한 포인트 : ${this.state.totalPoint}p`}</Text>
                             </View>
                         </View>
                     </View>
@@ -41,14 +153,14 @@ export default class PetSitterPoint extends Component{
 
                 <View style={{width: width, alignItems: "center"}}>
                     <View style={{ width: "95%", height: 385}}>
-                        <PointTabs/>
+                        <PointTabs getPoint={this.state.getPoint} refundPoint={this.state.refundPoint}/>
                     </View>
                 </View>
 
                 <View style={{alignItems: "center", width: width, position: "absolute", bottom: 10}}>
                     <View style={{width: "95%"}}>
                         <View style={[styles.bottomRequest, {borderRadius: 10}]}>
-                            <TouchableOpacity style={styles.bottomButton} onPress={this._approvalReservation}>
+                            <TouchableOpacity style={styles.bottomButton} onPress={()=>this.setState({modalVisiable:true})}>
                                 <Text style={styles.bottomText}>환급 받기</Text>
                             </TouchableOpacity>
                         </View>
@@ -72,12 +184,33 @@ class PointTabs extends Component{
     }
 
     render() {
-        const FirstRoute = () => (
-            <GetPointListView/>
-        );
-        const SecondRoute = () => (
-            <RefundPointListView/>
-        );
+        console.log(this.props.refundPoint);
+        const FirstRoute = () => {
+            if(this.props.getPoint.length !== 0){
+                return(
+                    <GetPointFlatList getPoint={this.props.getPoint}/>
+                );
+            }else {
+                return(
+                    <View style={{alignItems: "center", justifyContent: "center", marginTop: 20}}>
+                        <Text style={{fontSize: 17, fontWeight: "300"}}>포인트 획득 내역이 없습니다.</Text>
+                    </View>
+                )
+            }
+        }
+        const SecondRoute = () => {
+            if(this.props.refundPoint.length !== 0){
+                return ( 
+                    <RefundPointFlatList refundPoint={this.props.refundPoint}/>
+                );
+            }else{
+                return(
+                    <View style={{alignItems: "center", justifyContent: "center", marginTop: 20}}>
+                        <Text style={{fontSize: 17, fontWeight: "300"}}>포인트 환급 내역이 없습니다.</Text>
+                    </View>
+                )
+            }
+        }
         return(
             <TabView
                 navigationState={this.state}
@@ -86,43 +219,32 @@ class PointTabs extends Component{
                     refundPoint: SecondRoute,
                 })}
                 onIndexChange={index => this.setState({ index })}
-                initialLayout={{ width: Dimensions.get('window').width }}
+                initialLayout={{ width: Dimensions.get('window').width,height: Dimensions.get('window').height}}
             />
         );
     }
 }
 
-class GetPointListView extends Component {
+class GetPointFlatList extends Component {
     constructor(props){
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        const sample = [
-            {
-                id: "1",
-                date: "2018/02/11",
-                point: "200"
-            },
-            
-        ]
-        this.state = {
-            dataSource: ds.cloneWithRows(sample)
-        }
-
     }
 
-    _renderItem = (data) => {
+    _keyExtractor = (item, index) => index + "";
+
+    _renderItem = ({item, index}) => {
         return(
             <View style={{borderBottomWidth: 1, borderBottomColor: Colors.grey}}>
                 <TouchableOpacity
-                    onPress={() => console.log(data.id)}
+                    onPress={() => console.log(item.pointInfoNo)}
                 >
                     <View style={{height: 50, alignItems: "center", justifyContent: "center"}}>
                         <View style={{width: "70%", justifyContent: "space-between", flexDirection: "row"}}>
                             <View>
-                                <Text style={{fontSize: 20}}>{data.date}</Text>
+                                <Text style={{fontSize: 20}}>{item.getPointDate}</Text>
                             </View>
                             <View>
-                                <Text style={{fontSize: 20}}>{data.point}</Text>
+                                <Text style={{fontSize: 20}}>{item.getPoint}</Text>
                             </View>
                         </View>
                     </View>
@@ -133,47 +255,37 @@ class GetPointListView extends Component {
 
     render() {
         return(
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderItem}
+            <FlatList
+                data={this.props.getPoint}
+                renderItem={this._renderItem}
+                keyExtractor={this._keyExtractor}
             />
         )
     }
 }
 
-class RefundPointListView extends Component{
+class RefundPointFlatList extends Component{
     constructor(props){
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        const sample = [
-            {
-                id: "1",
-                date: "2018/02/11",
-                point: "3500",
-                status: "처리중"
-            },
-            
-        ]
-        this.state = {
-            dataSource: ds.cloneWithRows(sample)
-        }
     }
 
-    _renderItem = (data) => {
+    _keyExtractor = (item, index) => index + ""; 
+
+    _renderItem = ({item, index}) => {
         return(
             <View style={{borderBottomWidth: 1, borderBottomColor: Colors.grey}}>
                 <TouchableOpacity
-                    onPress={() => console.log(data.id)}
+                    onPress={() => console.log(item.pointInfoNo)}
                 >
                     <View style={{flexDirection: "row", justifyContent: "center", height: 50}}>
                         <View style={{width: "40%", alignItems: "center", justifyContent: "center"}}>
-                            <Text style={{fontSize: 17}}>{data.date}</Text>
+                            <Text style={{fontSize: 17}}>{item.refundPointDate}</Text>
                         </View>
                         <View style={{width: "30%", alignItems: "center", justifyContent: "center"}}>
-                            <Text style={{fontSize: 17}}>{data.point}</Text>
+                            <Text style={{fontSize: 17}}>{item.refundPoint}</Text>
                         </View>
                         <View style={{width: "30%", alignItems: "center", justifyContent: "center"}}>
-                            <Text style={{fontSize: 17}}>{data.status}</Text>
+                            <Text style={{fontSize: 17}}>{item.status}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -183,9 +295,10 @@ class RefundPointListView extends Component{
 
     render() {
         return(
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderItem}
+            <FlatList
+                data={this.props.refundPoint}
+                renderItem={this._renderItem}
+                keyExtractor={this._keyExtractor}
             />
         )
     }
@@ -216,4 +329,11 @@ const styles = StyleSheet.create({
         color : Colors.white,
         fontWeight: "600"
     },
+    modalButton : {
+        width: "50%", 
+        height: "100%", 
+        backgroundColor: Colors.buttonSky, 
+        alignItems: "center", 
+        justifyContent: "center",
+    }
 });

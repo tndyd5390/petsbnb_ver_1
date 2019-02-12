@@ -125,8 +125,32 @@ export default class PetSitterProfileMenu extends Component{
         this.setState({activityIndicator : false});
     }
 
-    _gotoPetSitterPoint = () => {
-        this.props.navigation.navigate("PetSitterPoint");
+    _gotoPetSitterPoint = async () => {
+        const userNo = await AsyncStorage.getItem("userInfo");
+        const params = {
+            userNo
+        }
+
+        this.setState({
+            activityIndicator: true
+        })
+
+        fetch("http://192.168.0.10:8080/petSitter/getPetSitterPointInfo.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            this.setState({activityIndicator: false});
+            this.props.navigation.navigate("PetSitterPoint", {pointData: res});
+        })
+        .catch(err => {
+
+        })
     }
 
     render() {
