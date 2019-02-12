@@ -22,7 +22,6 @@ export default class Chat extends Component {
   componentWillMount(){
     this._subscribe = this.props.navigation.addListener('didFocus', () => {
       this._getChatList();
-      console.log("reload");
     });
      
   }
@@ -44,7 +43,7 @@ export default class Chat extends Component {
         userNo : this.state.userNo, 
         petsitterNo : this.state.petsitterNo
     }
-    await fetch("http://192.168.0.8:8095/chat/chatList", {
+    await fetch("http://192.168.0.8:8091/chat/chatList.do", {
         method : 'POST',
         headers : {
             Accept: 'application/json',
@@ -54,6 +53,7 @@ export default class Chat extends Component {
     })
     .then((response) => response.json())
     .then((res => {
+      console.log(res);
       this.setState({
         activityIndicator : false,
         data : res
@@ -71,13 +71,41 @@ export default class Chat extends Component {
       propsUserNo={item.userNo}
       petsitterNo={item.petsitterNo}
       petsitterUserNo={item.petsitterUserNo}
-      petsitterName={item.petsitterName}
+      userName={item.userName}
       onPressItem={this._onPressItem}
     />
   );
 
+  _renderList = () =>{
+    console.log(this.state.data);
+    if(this.state.data.length!= 0){
+      return(
+        <FlatList
+        data={this.state.data}
+        keyExtractor={ (item, index) => index.toString() }
+        renderItem={this._renderItem}
+      />
+      );
+    }else{
+      return(
+        <View style={{flexDirection :'column', justifyContent :'center', alignItems:'center',height:(Dimensions.get('window').height-100)}}>
+        <View style={{flexDirection : 'row', justifyContent :'center', alignItems:'center'}}>
+            <Text style={{fontSize:17, fontWeight : 'bold'}}>
+                대화중인 채팅방이 없습니다.
+            </Text>
+        </View>
+        <View style={{flexDirection : 'row', justifyContent :'center', alignItems:'center', marginTop:20}}>
+            <Text>
+                예약 후 이곳에서 예약내용을 확인할 수 있습니다.
+            </Text>
+        </View>
+    </View>
+)
+    }
+  }
+
   _onPressItem = (item) => {
-    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, propsUserNo:item.propsUserNo,petsitterNo:item.petsitterNo, petsitterName:item.petsitterName, petsitterUserNo : item.petsitterUserNo});
+    this.props.navigation.navigate('ChatRoom',{roomId: item.roomId, userNo:item.userNo, propsUserNo:item.propsUserNo,petsitterNo:item.petsitterNo, userName:item.userName, petsitterUserNo : item.petsitterUserNo});
   };
 
   render(){
@@ -89,11 +117,7 @@ export default class Chat extends Component {
                     </View>
            )}
         {!this.state.activityIndicator && (
-          <FlatList
-            data={this.state.data}
-            keyExtractor={ (item, index) => index.toString() }
-            renderItem={this._renderItem}
-          />
+          this._renderList()
         )}
         </SafeAreaView>
     );
@@ -109,7 +133,7 @@ class ChatList extends Component {
       propsUserNo : this.props.propsUserNo,
       petsitterNo : this.props.petsitterNo,
       petsitterUserNo : this.props.petsitterUserNo,
-      petsitterName : this.props.petsitterName
+      userName : this.props.userName
     }
 
   };
@@ -136,9 +160,13 @@ class ChatRoomList extends Component {
         propsUserNo : this.props.data.propsUserNo,
         petsitterNo : this.props.data.petsitterNo,
         petsitterUserNo : this.props.petsitterUserNo,
-        petsitterName : this.props.data.petsitterName
+        userName : this.props.data.userName
       }
   };
+
+  _checkUser = () =>{
+
+  }
   
   render(){
       return(
@@ -154,7 +182,7 @@ class ChatRoomList extends Component {
               </View>
               <View style={{flex:1,justifyContent: 'center', marginLeft : 15}}>
                   <View>
-                      <Text style={{fontSize : 15, fontWeight : 'bold'}}>{this.state.petsitterName}</Text>
+                      <Text style={{fontSize : 15, fontWeight : 'bold'}}>{this.state.userName}</Text>
                   </View>
                   <View style={{alignItems : 'center', flexDirection: 'row', justifyContent : 'space-between', marginTop : 5}}>
                       <View style={{flexDirection: 'row'}}>

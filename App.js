@@ -52,6 +52,12 @@ import {RemoteMessage} from 'react-native-firebase';
 
 
 export default class App extends Component {
+  constructor(props){
+    super(props);
+
+    const { navigation } = this.props;
+    console.log("navi "+navigation);
+  }
 
   async componentDidMount(){
     this._checkPermission();
@@ -111,26 +117,30 @@ export default class App extends Component {
       .setNotificationId('phoneNotification')
       .setTitle(title)
       .setBody(body)
-      .setData({
-        key1 : 'value1',
-        key2 : 'value2'
-      });
+      .setData(data)
+      // .setData({
+      //   key1 : 'value1',
+      //   key2 : 'value2'
+      // });
       console.log(this._checkChatRoom());
       console.log(data.roomId);
       phoneNotification.android.setChannelId(channel.channelId);
       firebase.notifications().displayNotification(phoneNotification);
     });
 
-    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notification) => {
       const title = 'opened listener';
       const body = 'opened body';
       this.showAlert(title, body);
+      //this.props.navigation.navigate('ChatRoom',{roomId: notification.data.roomId, userNo:userNo, propsUserNo:notification.data.propsUserNo,petsitterNo:notification.data.petsitterNo, petsitterUserNo : notification.data.petsitterUserNo});
+
     });
 
     const notificationOpen = await firebase.notifications().getInitialNotification();
     if(notificationOpen){
-      const { title, body } = notificationOpen.notification;
-      this.showAlert(title, body);
+      const { title, body, data } = notificationOpen.notification;
+      console.log(notificationOpen.notification);
+      //this.showAlert(title, body);
     }
 
     this.messageListener = firebase.messaging().onMessage((message) => {

@@ -43,11 +43,13 @@ export default class BookingDetail extends Component{
             petsitterUserProfileImage : {}
         };
     };
-    
+    componentDidMount(){
+        this._getUserInfo();
+        this._getBookingDetail();
+    };
 
     componentWillMount(){
-        this._getBookingDetail();
-        this._getUserInfo();
+        
     };
     
     static navigationOptions = ({navigation}) => {
@@ -66,6 +68,7 @@ export default class BookingDetail extends Component{
     };
 
     _goToChat = async() => {
+        console.log(this.state.bookingDetail);
         const roomId = 'p'+this.state.petsitterNo+'u'+this.state.userNo;
         const params = {
             roomId: roomId,
@@ -75,7 +78,7 @@ export default class BookingDetail extends Component{
             petsitterUserNo : this.state.bookingDetail.petsitterUserNo,
             date : new Date()
         }
-        await fetch("http://192.168.0.8:8095/chat/chatRoomCreate/"+roomId, {
+        await fetch("http://192.168.0.8:8091/chat/createChatRoom.do", {
             method : 'POST',
             headers : {
                 Accept: 'application/json',
@@ -84,7 +87,7 @@ export default class BookingDetail extends Component{
             body :JSON.stringify(params),
         })
         .then((response) => {
-            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, petsitterNo : this.state.petsitterNo,petsitterUserNo : this.state.bookingDetail.petsitterUserNo ,petsitterName : this.state.bookingDetail.petsitterName});
+            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, propsUserNo : this.state.userNo,petsitterNo : this.state.petsitterNo,petsitterUserNo : this.state.bookingDetail.petsitterUserNo ,petsitterName : this.state.bookingDetail.petsitterName});
         })
         .catch((err) => {
             console.log(err);
@@ -106,7 +109,7 @@ export default class BookingDetail extends Component{
             petsitterNo : this.state.petsitterNo,
             reviewNow : 0
         }
-        await fetch('http://192.168.0.10:8080/booking/getBookingDetail.do', {
+        await fetch('http://192.168.0.8:8091/booking/getBookingDetail.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -123,6 +126,8 @@ export default class BookingDetail extends Component{
                 reviews : res.reviews,
                 petsitterUserProfileImage : res.petsitterUserProfileImage
             });
+
+            console.log(res.details);
         }))
         .catch((err) => {
         })

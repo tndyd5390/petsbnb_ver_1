@@ -34,7 +34,7 @@ export default class ChatRoom extends Component{
         propsUserNo : this.props.navigation.getParam('propsUserNo'),
         petsitterNo : this.props.navigation.getParam('petsitterNo'),
         petsitterUserNo : this.props.navigation.getParam('petsitterUserNo'),
-        petsitterName : this.props.navigation.getParam('petsitterName'),
+        userName : this.props.navigation.getParam('userName'),
         clientConnected: false,
         roomId : this.props.navigation.getParam('roomId'),
         messages: [],
@@ -52,7 +52,7 @@ export default class ChatRoom extends Component{
 
     static navigationOptions = ({ navigation }) => {
       return {
-        title: navigation.getParam('petsitterName', 'A Nested Details Screen'),
+        title: navigation.getParam('userName', 'A Nested Details Screen'),
       };
     };
 
@@ -209,6 +209,7 @@ class InputBar extends Component{
         contents : '',
         type: 'text',
         userNo : this.props.data.userNo,
+        propsUserNo : this.props.data.propsUserNo,
         petsitterNo : this.props.data.petsitterNo,
         petsitterUserNo : this.props.data.petsitterUserNo,
         token : this.props.data.token,
@@ -287,7 +288,7 @@ class InputBar extends Component{
                   ref={ref => this.textInputRef = ref}
                   value={this.state.content}/>
                 <TouchableHighlight style={styles.sendButton} onPress={() => {
-              this.sendMessage({roomId: this.state.roomId, userNo : this.state.userNo, type:this.state.type,contents : this.state.contents, petsitterNo : this.state.petsitterNo,petsitterUserNo:this.state.petsitterUserNo,token : this.state.token,date : new Date()})
+              this.sendMessage({roomId: this.state.roomId, propsUserNo : this.state.propsUserNo,userNo : this.state.userNo, type:this.state.type,contents : this.state.contents, petsitterNo : this.state.petsitterNo,petsitterUserNo:this.state.petsitterUserNo,token : this.state.token,date : new Date()})
               }}>
                     <Text style={{color: 'white', fontSize : 17}}>></Text>
                 </TouchableHighlight>
