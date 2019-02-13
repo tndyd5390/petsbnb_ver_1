@@ -11,7 +11,8 @@ import {
     FlatList,
     Modal,
     TextInput,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 const{ width, height } = Dimensions.get("window");
@@ -27,7 +28,8 @@ export default class PetSitterPoint extends Component{
             refundPoint,
             userImage,
             modalVisiable: false,
-            refundPointInput: ""
+            refundPointInput: "",
+            activityIndicator: false
         }
     }
 
@@ -67,16 +69,22 @@ export default class PetSitterPoint extends Component{
         .catch(err => {
 
         })
-        console.log("res");
-        console.log(data);
+        if(data){
+            alert("환급요청이 완료되었습니다.");
+        }
         this.setState({
             getPoint: data.getPoint,
             totalPoint: data.totalPoint,
             refundPoint: data.refundPoint,
+            refundPointInput: "",
             modalVisiable: false
         });
     }
-
+    _toggleActivityIndicator = (flag) => {
+        this.setState({
+            activityIndicator: flag
+        })
+    }
     _onChangeCheckNumber = (text) => {
         let newText = '';
         let numbers = '0123456789';
@@ -92,8 +100,14 @@ export default class PetSitterPoint extends Component{
     }
 
     render() {
+        const imageSource = this.state.userImage ? {uri: `http://192.168.0.10:8080/userImageFile/${this.state.userImage}`} : require("../../../img/user.png");
         return(
             <View style={{width: width, height: height, backgroundColor: Colors.white, flex: 1}}>
+                {this.state.activityIndicator ? (
+                    <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+                ) : (null)}
                 {this.state.modalVisiable ? (
                     <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10}}>
                         <View style={{width: width, alignItems: "center"}}>
@@ -137,7 +151,7 @@ export default class PetSitterPoint extends Component{
                         <View style={{width: "40%", alignItems: "center", justifyContent: "center"}}>
                             <Image
                                 style={{width: 100, height: 100}}
-                                source={require("../../../img/user.png")}
+                                source={imageSource}
                             />
                         </View>
                         <View style={{width: "60%"}}>
@@ -153,7 +167,7 @@ export default class PetSitterPoint extends Component{
 
                 <View style={{width: width, alignItems: "center"}}>
                     <View style={{ width: "95%", height: 385}}>
-                        <PointTabs getPoint={this.state.getPoint} refundPoint={this.state.refundPoint}/>
+                        <PointTabs getPoint={this.state.getPoint} refundPoint={this.state.refundPoint} toggleActivityIndicator={this._toggleActivityIndicator} navigation={this.props.navigation}/>
                     </View>
                 </View>
 
@@ -184,11 +198,10 @@ class PointTabs extends Component{
     }
 
     render() {
-        console.log(this.props.refundPoint);
         const FirstRoute = () => {
             if(this.props.getPoint.length !== 0){
                 return(
-                    <GetPointFlatList getPoint={this.props.getPoint}/>
+                    <GetPointFlatList getPoint={this.props.getPoint} toggleActivityIndicator={this.props.toggleActivityIndicator} navigation={this.props.navigation}/>
                 );
             }else {
                 return(
@@ -232,11 +245,42 @@ class GetPointFlatList extends Component {
 
     _keyExtractor = (item, index) => index + "";
 
+    _getPointDetail = (pointInfoNo) => {
+        const params = {
+            pointInfoNo: pointInfoNo+ ""
+        }
+        this.props.toggleActivityIndicator(true);
+        fetch("http://192.168.0.10:8080/petSitter/getPointDetail.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            if(res){
+                this.props.navigation.navigate("PointDetail", {
+                    reservationDetail: res.reservationDetail,
+                    reservationPetDetail : res.reservationPetDetail
+                })
+            } else {
+                alert("네트워크 오류입니다.");
+            }
+            this.props.toggleActivityIndicator(false);
+        })
+        .catch(err => {
+
+        })
+
+    }
+
     _renderItem = ({item, index}) => {
         return(
             <View style={{borderBottomWidth: 1, borderBottomColor: Colors.grey}}>
                 <TouchableOpacity
-                    onPress={() => console.log(item.pointInfoNo)}
+                    onPress={() => this._getPointDetail(item.pointInfoNo)}
                 >
                     <View style={{height: 50, alignItems: "center", justifyContent: "center"}}>
                         <View style={{width: "70%", justifyContent: "space-between", flexDirection: "row"}}>
@@ -274,21 +318,17 @@ class RefundPointFlatList extends Component{
     _renderItem = ({item, index}) => {
         return(
             <View style={{borderBottomWidth: 1, borderBottomColor: Colors.grey}}>
-                <TouchableOpacity
-                    onPress={() => console.log(item.pointInfoNo)}
-                >
-                    <View style={{flexDirection: "row", justifyContent: "center", height: 50}}>
-                        <View style={{width: "40%", alignItems: "center", justifyContent: "center"}}>
-                            <Text style={{fontSize: 17}}>{item.refundPointDate}</Text>
-                        </View>
-                        <View style={{width: "30%", alignItems: "center", justifyContent: "center"}}>
-                            <Text style={{fontSize: 17}}>{item.refundPoint}</Text>
-                        </View>
-                        <View style={{width: "30%", alignItems: "center", justifyContent: "center"}}>
-                            <Text style={{fontSize: 17}}>{item.status}</Text>
-                        </View>
+                <View style={{flexDirection: "row", justifyContent: "center", height: 50}}>
+                    <View style={{width: "40%", alignItems: "center", justifyContent: "center"}}>
+                        <Text style={{fontSize: 17}}>{item.refundPointDate}</Text>
                     </View>
-                </TouchableOpacity>
+                    <View style={{width: "30%", alignItems: "center", justifyContent: "center"}}>
+                        <Text style={{fontSize: 17}}>{item.refundPoint}</Text>
+                    </View>
+                    <View style={{width: "30%", alignItems: "center", justifyContent: "center"}}>
+                        <Text style={{fontSize: 17}}>{item.status}</Text>
+                    </View>
+                </View>
             </View>
         )
     }

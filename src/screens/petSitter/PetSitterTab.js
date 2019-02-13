@@ -31,6 +31,7 @@ import PaymentResult from "../booking/PaymentResult";
 import PetSitterReservationList from "./PetSitterReservationList";
 import PetSitterReservationDetail from "./PetSitterReservationDetail";
 import PetSitterPoint from "./PetSitterPoint";
+import PointDetail from "./PointDetail";
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -150,6 +151,16 @@ export default class PetSitterTab extends Component{
             }
           }
         },
+        PointDetail: {
+          screen: PointDetail,
+          navigationOptions: {
+            title: "예약 상세",
+            headerTitleStyle: {
+              width: "70%",
+              textAlign: "center"
+            }
+          }
+        }
       })
 
       petSitterProfileStackNavigation.navigationOptions = ({ navigation }) => {
