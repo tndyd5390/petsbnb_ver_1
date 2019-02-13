@@ -15,17 +15,17 @@ app.use((err, req, res, next) => {
   const port = process.env.PORT || 3000;
   const LOBBY_ROOM_ID = 'LOBBY';
 
-  server.listen(port, function(){
+  server.listen(port, ()=>{
     console.log('Listening on port ' + port);
   });
   
-  io.on('connection', function(socket){
+  io.on('connection', (socket)=>{
       const { userNo } = socket.handshake.query;
       const user = {id: socket.id, userNo : userNo};
       socket.emit('connected', user);  
         socket.on('enterLobby', ()=>{
         console.log(user);
-        socket.join(LOBBY_ROOM_ID, ()=>{
+        socket.join(userNo, ()=>{
             socket.emit('rooms', [{user}]);
         })
     })
