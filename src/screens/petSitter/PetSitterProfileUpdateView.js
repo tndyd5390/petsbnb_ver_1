@@ -66,7 +66,7 @@ export default class PetSitterProfileUpdateView extends Component{
     componentWillMount(){
         this._getPetSitterInfo();
     }
-
+    //펫시터 프로필 가져오는 메소드
     _getPetSitterInfo = async() => {
         const petSitterNo = this.props.navigation.getParam('petSitterNo');
 

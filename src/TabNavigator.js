@@ -36,6 +36,7 @@ import PaymentResult from "./screens/booking/PaymentResult";
 
 export default class TabNavigator extends Component {
   render(){
+    //탭 네비게이터에서 사용할 스택 네비게이터 생성
     const ProfileStackNavigator = createStackNavigator({
       ProfileMenu : {
           screen : props => <ProfileMenu {...props} rootStack={this.props.navigation}/>,
@@ -145,6 +146,7 @@ export default class TabNavigator extends Component {
       };
     };
 
+    //탭네비게이터 생성
     const Tabs = createBottomTabNavigator({
       Explore : {
         screen : BookingStacks,

@@ -2870,6 +2870,15 @@ https-proxy-agent@^2.2.0:
     agent-base "^4.1.0"
     debug "^3.1.0"
 
+iamport-react-native@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/iamport-react-native/-/iamport-react-native-1.0.6.tgz#c71bf0eaf4d9704ed6f13fe32a3729616a75666c"
+  integrity sha512-673P8ALGzUi0QocEVWEmNzqg9UVA6TpHFOYoz6qErE8NE1oR4wevGJKT8BPENn43aFxitanGY35O1iwqC4qS/Q==
+  dependencies:
+    prop-types "^15.6.2"
+    query-string "^6.1.0"
+    react "^16.4.2"
+
 iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -3747,9 +3756,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-keymirror@0.1.1:
+keymirror@0.1.1, keymirror@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/keymirror/-/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
+  integrity sha1-kYiJ6hP40KQufFVyUO7nE63JXDU=
 
 kind-of@^1.1.0:
   version "1.1.0"
@@ -4592,6 +4602,11 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
+opencollective-postinstall@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
+  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
+
 opencollective@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/opencollective/-/opencollective-1.0.3.tgz#aee6372bc28144583690c3ca8daecfc120dd0ef1"
@@ -5062,6 +5077,13 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-button@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-button/-/react-native-button-2.3.0.tgz#7d0a90095d415b0edf98a904556a7c4439646568"
+  integrity sha512-NZet4juC9+yNN/ql4WYfrjRp/cyuN9zwYwMb/0yllwGCzxfAVqMU59oNCaMQvkMkgV/S52RcwER1QWZH7k1AQg==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-calendar-picker@^5.22.0:
   version "5.22.0"
   resolved "https://registry.yarnpkg.com/react-native-calendar-picker/-/react-native-calendar-picker-5.22.0.tgz#03e2bec556d80a3cd83ba7db704bca8e9e81dc69"
@@ -5107,13 +5129,27 @@ react-native-fetch-blob@^0.10.8:
     base-64 "0.1.0"
     glob "7.0.6"
 
+react-native-firebase@^5.1.1:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-5.2.2.tgz#68abdb65978bcf1f98d837f6602687fa18b82e71"
+  integrity sha512-+mm7zxpYDfxwqPgSw4pNS6XT3VSEwCmydANS8DnvRCYmZ93Ruti+GkdEyPnj6fmQHEsdWO5zPCe5ynlpBlMpCg==
+  dependencies:
+    opencollective-postinstall "^2.0.0"
+    prop-types "^15.6.2"
+
 react-native-flexi-radio-button@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/react-native-flexi-radio-button/-/react-native-flexi-radio-button-0.2.2.tgz#a0180393c531ba3477722c6e42a31ceb1c11623b"
 
-react-native-image-picker@^0.27.1:
+react-native-image-crop-picker@^0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.22.0.tgz#8f7f657dcde45cc366ac529a624205155571c03f"
+  integrity sha512-F8ytcTAbrUgsCaz3v+jm/qi4XAgv4qywxNnFH/qC3cApI0KwvHZ/WjiyzJbWiLQ+6UKDUeUCGum4oY4fzOlzpA==
+
+react-native-image-picker@^0.27.2:
   version "0.27.2"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.27.2.tgz#c44195feb1a4855eead36fadacc8b82828329b2a"
+  integrity sha512-1GuPIuQHjnLxmzUkmOHbI6cllETVRhJyrf8UoJXotD38+eX4JdcUSHGqV48XPc3e1u7b4HU7drFgyJcKFfQKRA==
 
 react-native-image-slider@^2.0.3:
   version "2.0.3"
@@ -5122,19 +5158,10 @@ react-native-image-slider@^2.0.3:
     flow-bin "^0.63.1"
     flow-typed "^2.2.3"
 
-react-native-modal-datetime-picker@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-6.0.0.tgz#8018994524122ad48fd6bc66f26f623c75a49fb3"
-  dependencies:
-    prop-types "^15.6.1"
-    react-native-modal "^6.2.0"
-
-react-native-modal@^6.2.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.5.0.tgz#46220b2289a41597d344c1db17454611b426a758"
-  dependencies:
-    prop-types "^15.6.1"
-    react-native-animatable "^1.2.4"
+react-native-ionicons@^4.4.6:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-ionicons/-/react-native-ionicons-4.5.5.tgz#4657ce742e39f0443b0960f20b946269fa0b90b5"
+  integrity sha512-Pj1jFcwcOPG62EzWpLfu7UQwByd3SjTfjbs2WMPjmnfBuA6xiR8hh1+fflhpQ7Yv4j5cQuCSiR53uLbasxH/6Q==
 
 react-native-modal@^7.0.0:
   version "7.0.2"
@@ -5142,6 +5169,11 @@ react-native-modal@^7.0.0:
   dependencies:
     prop-types "^15.6.1"
     react-native-animatable "^1.2.4"
+
+react-native-module@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-module/-/react-native-module-0.0.1.tgz#e53ac3712ebb1d9df34cc2014e7e6e0feb1202f9"
+  integrity sha1-5TrDcS67HZ3zTMIBTn5uD+sSAvk=
 
 react-native-navigation@^1.1.492:
   version "1.1.493"
@@ -5171,6 +5203,16 @@ react-native-screens@^1.0.0-alpha.11:
   version "1.0.0-alpha.17"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.17.tgz#8c1a7224b967c476670963fce7d06b946e7158e9"
 
+react-native-star-rating@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-star-rating/-/react-native-star-rating-1.1.0.tgz#57fcd023c63e947427c4dbbd1c8f4cc49e5c48ce"
+  integrity sha512-ocOYx+BKUvfruvXm45MBbQZtpkVO3PQieBDepB0FaLuxE3vUtDTPzHqXuBes3iCM5oRi5umrnmMUMsM0mEq5ZA==
+  dependencies:
+    prop-types "^15.5.10"
+    react-native-animatable "^1.2.4"
+    react-native-button "^2.3.0"
+    react-native-vector-icons "^4.5.0"
+
 react-native-swiper@^1.5.13:
   version "1.5.14"
   resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.5.14.tgz#1c6f949ca377186300f972bb0f30d24062c899aa"
@@ -5189,6 +5231,29 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
+react-native-tab-view@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.3.2.tgz#c4e43a538dcacce151938745cea09176beeccbc3"
+  integrity sha512-2U+HxDQdjzExoC6gZ+wUhC8v8JjntppsFVU4v4pRvC/1dkN7DJv1k8UEy9+p7ucEaNrcAzu/j5N09Jf4qG36vw==
+  dependencies:
+    prop-types "^15.6.1"
+
+react-native-textarea@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-textarea/-/react-native-textarea-1.0.2.tgz#1d42249dbac2693a242620d44dbd1001ee826323"
+  integrity sha512-iJjfaimz/68TESH62drCwHs1QwMgcwGR3ppHZnD0it/nyd+/jZ02c3C7iKW+D8UkiQjGtzyeYO+cFCT6546c/A==
+  dependencies:
+    prop-types "^15.5.10"
+
+react-native-vector-icons@^4.5.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.6.0.tgz#e4014311ffa6de397d914ffc31b7097a874cc8d5"
+  integrity sha512-rpfhfPiXCK2PX1nrNhdxSMrEGB/Gw/SvKoPM0G2wAkSoqynnes19K0VYI+Up7DqR1rFIpE4hP2erpT1tNx2tfg==
+  dependencies:
+    lodash "^4.0.0"
+    prop-types "^15.5.10"
+    yargs "^8.0.2"
+
 react-native-vector-icons@^6.0.2:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.1.0.tgz#770a3f8ced692d75deb3afbb9829195ceed1eedd"
@@ -5196,6 +5261,15 @@ react-native-vector-icons@^6.0.2:
     lodash "^4.0.0"
     prop-types "^15.6.2"
     yargs "^8.0.2"
+
+react-native-video@^4.1.0:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-video/-/react-native-video-4.3.1.tgz#dd5cd7feeba1068dffb36ca0406214fe6ffc01aa"
+  integrity sha512-Xvup8RRJCIXM7SjfxhzOP7XCZIhSBpuMvLYnlAYkt/eCl8mzkqRSmXqqu4KZXgdvdU4rtRVvVZ9CwUEESPCJuA==
+  dependencies:
+    keymirror "^0.1.1"
+    prop-types "^15.5.10"
+    shaka-player "^2.4.4"
 
 react-native-webview-bridge@^0.40.1:
   version "0.40.1"
@@ -5349,6 +5423,16 @@ react@16.6.0-alpha.8af6728:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.10.0-alpha.8af6728"
+
+react@^16.4.2:
+  version "16.8.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.8.1.tgz#ae11831f6cb2a05d58603a976afc8a558e852c4a"
+  integrity sha512-wLw5CFGPdo7p/AgteFz7GblI2JPOos0+biSoxf1FPsGxWQZdN/pj6oToJs1crn61DL3Ln7mN86uZ4j74p31ELQ==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.1"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -5699,6 +5783,14 @@ scheduler@^0.10.0-alpha.8af6728:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
+scheduler@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.1.tgz#1a217df1bfaabaf4f1b92a9127d5d732d85a9591"
+  integrity sha512-VJKOkiKIN2/6NOoexuypwSrybx13MY7NSy9RNt8wPvZDMRT1CW6qlpF5jXRToXNHz3uWzbm2elNpZfXfGPqP9A==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
 semver-diff@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/semver-diff/-/semver-diff-2.1.0.tgz#4bbb8437c8d37e4b0cf1a68fd726ec6d645d6d36"
@@ -5769,6 +5861,11 @@ setimmediate@^1.0.5, setimmediate@~1.0.4:
 setprototypeof@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.1.0.tgz#d0bd85536887b6fe7c0d818cb962d9d91c54e656"
+
+shaka-player@^2.4.4:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-2.4.6.tgz#2a373cfa7f2867d7ba78a53fcdb25fa19cdaf5c0"
+  integrity sha512-f9zWbTPfQYtAKNlL9jmT77XUKvylueu3oM5Vo9DSXwfJa3OE8Vv1R9DGUh1eHra8mVWzvwppkbYVFV/ewQIisw==
 
 shebang-command@^1.2.0:
   version "1.2.0"

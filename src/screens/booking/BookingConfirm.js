@@ -32,6 +32,7 @@ export default class BookingConfirm extends Component {
     
     constructor(props){
         super(props);
+        //네이게이션으로 부터 전달 받은 파라미터
         const data = this.props.navigation.getParam('data');
         const pDTO = this.props.navigation.getParam('pDTO');
         const isDayCare = this.props.navigation.getParam('isDayCare', false);
@@ -79,7 +80,7 @@ export default class BookingConfirm extends Component {
     }
 
     
-
+    //사용자의 정보를 가져오는 메소드
     _getUserInfo = async() => {
         const userNo = await AsyncStorage.getItem("userInfo");
 
@@ -107,6 +108,7 @@ export default class BookingConfirm extends Component {
         return userInfo;
     }
 
+    //선택된 동물의 정보를 가져오는 메소드
     _getSelectedPetList = async () =>{
         const petNoMapArr = this.props.navigation.getParam('data').selected._mapData;
         let petNoArr = [];
@@ -177,6 +179,7 @@ export default class BookingConfirm extends Component {
         });
     };
 
+    //데이케어 가격을 계산하는 메소드
     _calcPriceDayCare = (petList, checkin, checkout, smallPetDayPrice, middlePetDayPrice, bigPetDayPrice) => {
         let price = 0;
         petList = this._parsePetList(petList);
@@ -193,6 +196,7 @@ export default class BookingConfirm extends Component {
         return price;
     }
 
+    //나이트케어 가격을 계산하는 메소드
     _calcPriceNightCare = (petList, diffDate, smallPetNightPrice, middlePetNightPrice, bigPetNightPrice) => {
         let price = 0;
         petList = this._parsePetList(petList);
@@ -209,6 +213,7 @@ export default class BookingConfirm extends Component {
         return price;
     }
 
+    //펫의 종류(소형, 중형, 대형)를 반환하는 메소드
     _definePetKind = (weight) => {
         weight = Number(weight);
         if(weight > 0 && weight <= 6){
@@ -220,12 +225,14 @@ export default class BookingConfirm extends Component {
         }
     }
 
+    //반려동물 목록을 보기좋게 변환
     _parsePetList = (petList) => petList.map((pDTO) => {return {...pDTO, petKind : this._definePetKind(pDTO.petWeight)}})
 
     addCommma = (price) =>{
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
+    //총 가격 계산
     _calcTotalPrice = (priceData) => {
         if(priceData.isDayCare){
             return this._calcPriceDayCare(
@@ -545,7 +552,8 @@ class BottomRequest extends Component{
     constructor(props) {
         super(props);
     };
-
+    
+    //결제 화면으로 이동하는 메소드
     onSubmit = async () =>{
         const termsAccept = this.props.termsAccept;
         const userInfo = this.props.data.userInfo;

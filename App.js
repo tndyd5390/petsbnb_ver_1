@@ -50,7 +50,7 @@ import {RemoteMessage} from 'react-native-firebase';
 
 // })
 
-
+//실질적인 어플리케이션의 최초 진입점
 export default class App extends Component {
   constructor(props){
     super(props);
@@ -59,6 +59,7 @@ export default class App extends Component {
     console.log("navi "+navigation);
   }
 
+  // push notification을 받기위한 이벤트 등록
   async componentDidMount(){
     this._checkPermission();
     this._clearNowChat();
@@ -66,6 +67,7 @@ export default class App extends Component {
     //BackgroundTask.schedule();
   }
 
+  //앱이 종료된 상태에서도 push notification을 받기위한 코드
   componentWillUnmount(){
     this.notificationListener();
     this.notificationOpenedListener();
@@ -76,6 +78,7 @@ export default class App extends Component {
     console.log(await AsyncStorage.getItem('nowChat'));
   }
 
+  //push notification을 받기위한 권한 검사
   _checkPermission = async() => {
     const fcmEnabled = await firebase.messaging().hasPermission();
     if(fcmEnabled){
@@ -85,6 +88,7 @@ export default class App extends Component {
     }
   }
 
+  //push notification을 받기위한 디바이스 token얻기
   _getToken = async() => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
     console.log(fcmToken);
@@ -98,6 +102,7 @@ export default class App extends Component {
     }
   }
 
+  //push notification을 받을 수 있는 권한이 없다면 권한 요청
   _requestPermission = async() =>{
     try{
       await firebase.messaging().requestPermission();
@@ -108,6 +113,7 @@ export default class App extends Component {
     }
   }
 
+  //push notification을 받기위한 이벤트 리스너
   _createNotificationListeners = async() => {
     this.notificationListener = firebase.notifications().onNotification((notification) => {
       const {title, body, data} = notification;
@@ -177,7 +183,7 @@ export default class App extends Component {
     }
   }
 
-
+  //위에서 import한 StackNavigator를 화면에 출력
   render() {
     return(
       <StackNavigator/>

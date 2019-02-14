@@ -29,7 +29,7 @@ export default class PetSitterProfileMenu extends Component{
         }
         this._getUserImage();
     }
-
+    //펫시터 프로필 이미지 가져오는 메소드
     _getUserImage = async() => {
         const userNo = await AsyncStorage.getItem('userInfo');
         const params = {
@@ -57,16 +57,16 @@ export default class PetSitterProfileMenu extends Component{
              console.log("서버 에러" + err);
         })
     }
-
+    //비밀번호 확인 화면으로 이동하는 메소드
     _updateUserInfo = () => {
         this.props.navigation.navigate('CheckPassword', {nextView : 'ProfileUserUpdate'});
     }
-
+    //사용자 모드 변환
     _userMode = async() => {
         await AsyncStorage.removeItem('petSitterMode');
         this._gotoInit();
     }
-
+    //로그아웃
     _logOut = async () => {
         await AsyncStorage.removeItem('petSitterMode');
         await AsyncStorage.removeItem('userInfo');
@@ -81,19 +81,19 @@ export default class PetSitterProfileMenu extends Component{
           });
         this.props.rootStack.dispatch(resetAction);
     }
-
+    //환경설정 이동
     _gotoPreference = () => {
         this.props.navigation.navigate('Preference');
     }
-
+    //고객센터 이동
     _gotoCustomerCenter = () => {
         this.props.navigation.navigate('CustomerCenter');
     }
-
+    //반려동물 리스트 이동
     _gotoPetList = () => {
         this.props.navigation.navigate('PetList');
     }
-
+    //펫시터 프로필 이동
     _gotoPetSitterProfile = async () => {
         this.setState({activityIndicator : true});
         const userNo = await AsyncStorage.getItem('userInfo');
@@ -123,6 +123,34 @@ export default class PetSitterProfileMenu extends Component{
             this.setState({activityIndicator : false});
         })
         this.setState({activityIndicator : false});
+    }
+    //포인트 화면 이동
+    _gotoPetSitterPoint = async () => {
+        const userNo = await AsyncStorage.getItem("userInfo");
+        const params = {
+            userNo
+        }
+
+        this.setState({
+            activityIndicator: true
+        })
+
+        fetch("http://192.168.0.10:8080/petSitter/getPetSitterPointInfo.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            this.setState({activityIndicator: false});
+            this.props.navigation.navigate("PetSitterPoint", {pointData: res});
+        })
+        .catch(err => {
+
+        })
     }
 
     render() {
@@ -195,7 +223,7 @@ export default class PetSitterProfileMenu extends Component{
 
                     <TouchableOpacity 
                         style={{width : width, height : 50, borderTopWidth : 1, borderTopColor: Colors.black, justifyContent : 'center', marginTop : 0}}
-                        
+                        onPress={this._gotoPetSitterPoint}
                     >
                         <Text style={{marginLeft : 10, fontSize : 15, fontWeight : '600'}}>포인트 조회</Text>
                     </TouchableOpacity>

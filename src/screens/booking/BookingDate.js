@@ -22,7 +22,7 @@ export default class BookingDate extends Component{
         };
         this.onDateChange = this.onDateChange.bind(this);
       }
-    
+      //선택한 날짜가 바뀔때 실행되는 메소드
       onDateChange(date, type) {
         if (type === 'END_DATE') {
           this.setState({
@@ -140,7 +140,7 @@ class BottomRequest extends Component{
     constructor(props) {
         super(props);
     }
-
+    //날짜 선택후 예약 상세 페이지로 이동하는 메소드
     onSubmit = async() => {
         if(this.props.date.stDate==''){
             alert('시작일을 선택해주세요.');

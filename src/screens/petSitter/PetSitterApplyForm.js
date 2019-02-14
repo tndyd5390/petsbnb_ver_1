@@ -52,7 +52,7 @@ export default class PetSitterApplyForm extends Component{
             userNo : userNo
         });
     }
-
+    //이메일 중복 확인
     _confirmUserAddress = async() => {
         this.setState({
             activityIndicator : true
@@ -94,7 +94,7 @@ export default class PetSitterApplyForm extends Component{
               alert("서버 에러입니다. 잠시후 다시 시도해주세요.");
           })
     }
-
+    //펫시터 지원 메소드
     _petSitterApply = async() => {
         const state = this.state;
         const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -108,11 +108,10 @@ class PetY extends Component {
         };
 
     };
-    //여기서 불가능한 동물이 아예 안뜨게 만들어야겠다...필원아 좆댓다 점점 복잡해진다. 미안하다.
+
     async componentWillMount() {
-        //이부분은 내가 생각해도 졸라 복잡하기때문에 툭별히 주석을 남긴다.
         //여기서 문제는 펫시터가 이용불가라고 설정해놓은 견종을 화면에 출력하면 안된다.
-        //나는 여기서 자바스크립트로 해결할까 했지만 아싸리 스프링에서 데이터를 불러올때 펫시터가 이용불가로 설정해놓은 견종을 불러오지 않는 방식으로 변경한다.
+        //자바스크립트로 해결할까 했지만 아싸리 스프링에서 데이터를 불러올때 펫시터가 이용불가로 설정해놓은 견종을 불러오지 않는 방식으로 변경한다.
         
         //먼저 펫시터가 이용불가로 설정해놓은 데이터를 불러오기위하여 부모 컴포넌트에서 넘겨준 펫시터 정보를 불러온다.
         //데이터는 price가 0이면 펫시터가 이용 불가로 설정해 놓은 것이다.
@@ -158,7 +157,7 @@ class PetY extends Component {
         });
         this.setState({data : refinedPetList});
     }
-
+    //펫시터를 이용가능한 반려동물 목록을 불러오는 메소드
     _getPetList = async(availablePetKind) => {        
         const userNo = await AsyncStorage.getItem('userInfo');
         const params = {

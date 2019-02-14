@@ -32,7 +32,8 @@ import PetSitterReservationList from "./PetSitterReservationList";
 import PetSitterReservationDetail from "./PetSitterReservationDetail";
 import Timeline from '../timeline/Timeline';
 import TLComments from '../timeline/TLComments';
-
+import PetSitterPoint from "./PetSitterPoint";
+import PointDetail from "./PointDetail";
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -142,6 +143,26 @@ export default class PetSitterTab extends Component{
               }
             }
           },
+        PetSitterPoint: {
+          screen: PetSitterPoint,
+          navigationOptions: {
+            title: "포인트 조회",
+            headerTitleStyle: {
+              width: "75%",
+              textAlign: "center"
+            }
+          }
+        },
+        PointDetail: {
+          screen: PointDetail,
+          navigationOptions: {
+            title: "예약 상세",
+            headerTitleStyle: {
+              width: "70%",
+              textAlign: "center"
+            }
+          }
+        }
       })
 
       petSitterProfileStackNavigation.navigationOptions = ({ navigation }) => {
@@ -178,7 +199,11 @@ export default class PetSitterTab extends Component{
         PetSitterReservationList : {
           screen : PetSitterReservationList,
           navigationOptions : {
-            header : null 
+            title: "요청 예약보기",
+            headerTitleStyle: {
+              width: "80%",
+              textAlign: "center"
+            }
           }
         },
         PetSitterReservationDetail : {

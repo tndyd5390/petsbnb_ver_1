@@ -40,7 +40,7 @@ class LoginForm extends Component {
       this._loginProc();
     }
   }
-
+  //로그인 프로세스
   _loginProc = async () => {
     this.setState({activityIndicator : true});
     let loginFcmToken = await firebase.messaging().getToken();
@@ -80,7 +80,7 @@ class LoginForm extends Component {
       console.log(err);
     })
   }
-
+  //로그인후 데이터를 로컬스토리지에 저장
   _storeData = async (data) => {
     try{
       await AsyncStorage.setItem('userInfo', data);

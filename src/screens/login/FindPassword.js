@@ -28,7 +28,7 @@ export default class FindPassword extends Component{
             phone : ''
         }
     }
-
+    //비밀번호 찾기 메소드
     _findPassword = async() => {
         const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if(this.state.email == ''){
