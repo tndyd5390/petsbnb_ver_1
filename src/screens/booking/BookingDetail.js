@@ -87,7 +87,7 @@ export default class BookingDetail extends Component{
             body :JSON.stringify(params),
         })
         .then((response) => {
-            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, propsUserNo : this.state.userNo,petsitterNo : this.state.petsitterNo,petsitterUserNo : this.state.bookingDetail.petsitterUserNo ,petsitterName : this.state.bookingDetail.petsitterName});
+            this.props.navigation.navigate("ChatRoom",{roomId:roomId,userNo : this.state.userNo, propsUserNo : this.state.userNo,petsitterNo : this.state.petsitterNo,petsitterUserNo : this.state.bookingDetail.petsitterUserNo ,userName : this.state.bookingDetail.petsitterName});
         })
         .catch((err) => {
             console.log(err);

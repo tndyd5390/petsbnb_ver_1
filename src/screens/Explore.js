@@ -157,16 +157,6 @@ export default class Explore extends Component {
                             />
                         </View>
                     </View>
-                    {/* <ScrollView
-                        horizontal={ true }
-                        scrollEventThrottle={16}
-                        refreshControl={
-                            <RefreshControl
-                              refreshing={this.state.refreshing}
-                              onRefresh={this._getBookingList}
-                            />
-                        }
-                    > */}
                     {this.state.activityIndicator && (
                     <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
                         <ActivityIndicator size="large" color="#10b5f1"/>
@@ -191,7 +181,6 @@ export default class Explore extends Component {
                         />
                         </View>
                     )}
-                    {/* </ScrollView> */}
                 </View>
             </SafeAreaView>
         );

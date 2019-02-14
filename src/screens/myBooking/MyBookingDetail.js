@@ -43,7 +43,7 @@ export default class MyBookingDetail extends Component {
         const params = {
             id
         }
-        const reservationDetail = await fetch("http://192.168.0.10:8080/reservation/getReservationDetail.do", {
+        const reservationDetail = await fetch("http://192.168.0.8:8091/reservation/getReservationDetail.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -68,7 +68,8 @@ export default class MyBookingDetail extends Component {
             stDate: reservationDetail.stDate,
             edDate: reservationDetail.edDate,
             status: reservationDetail.status,
-            petsitterIntroOne: reservationDetail.petsitterIntroOne
+            petsitterIntroOne: reservationDetail.petsitterIntroOne,
+            petsitterNo : reservationDetail.petsitterNo
         })
     }
 
@@ -82,7 +83,8 @@ export default class MyBookingDetail extends Component {
             stDate: reservationDetail.stDate,
             edDate: reservationDetail.edDate,
             status: reservationDetail.status,
-            petsitterIntroOne: reservationDetail.petsitterIntroOne
+            petsitterIntroOne: reservationDetail.petsitterIntroOne,
+            petsitterNo : reservationDetail.petsitterNo
         })
     }
 
@@ -123,6 +125,8 @@ export default class MyBookingDetail extends Component {
                 <CompleteBottomRequest 
                     navigation={this.props.navigation} 
                     review={this.state.review}
+                    petsitterNo={this.state.petsitterNo}
+                    reservationNo={this.state.id}
                 /> 
                 : 
                 <BottomRequest 
@@ -138,7 +142,7 @@ export default class MyBookingDetail extends Component {
 };
 class Profile extends Component {
     render(){
-        const fileSource = this.props.petsitterFileName ? {uri : `http://192.168.0.10:8080/userImageFile/${this.props.petsitterFileName}`} : require("../../../img/user.png")
+        const fileSource = this.props.petsitterFileName ? {uri : `http://192.168.0.8:8091/userImageFile/${this.props.petsitterFileName}`} : require("../../../img/user.png")
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
@@ -281,7 +285,7 @@ class BottomRequest extends Component{
             reason: this.state.reason
         };
 
-        const reservationDetail = await fetch("http://192.168.0.10:8080/reservation/cancelReservation.do", {
+        const reservationDetail = await fetch("http://192.168.0.8:8091/reservation/cancelReservation.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -458,13 +462,15 @@ class CompleteBottomRequest extends Component{
     constructor(props){
         super(props);
         this.state = {
-            review : this.props.review
+            review : this.props.review,
+            petsitterNo : this.props.petsitterNo,
+            reservationNo : this.props.reservationNo
         }
     };
 
     _goReviewWrite = (review) => {
         if(!review){
-            this.props.navigation.navigate('BookingReviewWrite');
+            this.props.navigation.navigate('BookingReviewWrite', {petsitterNo : this.state.petsitterNo, reservationNo : this.state.reservationNo});
             return true;
         }else{
             alert('이미 리뷰를 작성하셨습니다.');

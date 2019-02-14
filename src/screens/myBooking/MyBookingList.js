@@ -39,7 +39,7 @@ export default class MyBookingList extends Component{
         const params = {
             userNo,
         }
-        const bookingList = await fetch("http://192.168.0.10:8080/reservation/getReservationList.do", {
+        const bookingList = await fetch("http://192.168.0.8:8091/reservation/getReservationList.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",

@@ -30,6 +30,9 @@ import Payment from "../booking/Payment";
 import PaymentResult from "../booking/PaymentResult";
 import PetSitterReservationList from "./PetSitterReservationList";
 import PetSitterReservationDetail from "./PetSitterReservationDetail";
+import Timeline from '../timeline/Timeline';
+import TLComments from '../timeline/TLComments';
+
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -187,7 +190,27 @@ export default class PetSitterTab extends Component{
               textAlign: "center"
             }
           }
+        },
+        Timeline :{
+          screen : Timeline,
+          navigationOptions : {
+            title : '타임 라인',
+            headerTitleStyle: {
+              width: '75%',
+              textAlign: 'center',
+          },
         }
+       },
+       TLComments :{
+          screen : TLComments,
+          navigationOptions : {
+            title : '댓글',
+            headerTitleStyle: {
+              width: '75%',
+              textAlign: 'center',
+          },
+        }
+       }
       })
 
       petSitterReservationStackNavigator.navigationOptions = ({ navigation }) => {

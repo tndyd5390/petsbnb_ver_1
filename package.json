@@ -28,6 +28,7 @@
     "react-native-module": "0.0.1",
     "react-native-navigation": "^1.1.492",
     "react-native-phone-call": "^1.0.9",
+    "react-native-popup-menu": "^0.15.0",
     "react-native-restart": "0.0.7",
     "react-native-restart-android": "0.0.7",
     "react-native-star-rating": "^1.1.0",

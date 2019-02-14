@@ -65,12 +65,10 @@ export default class ChatRoom extends Component{
 
     componentWillMount(){
       this.didFocusSubscription = this.props.navigation.addListener('didFocus', () => {
-        console.log('didFocus');
         this._focusChatRoom();
       })
   
       this.didBlurSubscription = this.props.navigation.addListener('willBlur', () => {
-        console.log('didBlur');
         this._blurChatRoom();
       })
     }

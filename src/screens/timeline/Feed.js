@@ -46,7 +46,7 @@ export default class Feed extends Component {
 
   onBuffer({ isBuffering }: { isBuffering: boolean }) {
     this.setState({ isBuffering });
-  }
+  };
 
   render() {
     if (this.props.type === 'image') {

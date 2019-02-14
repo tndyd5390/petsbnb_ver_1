@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     SafeAreaView,
+    ActivityIndicator,
     TextInput,
     Platform,
     StatusBar,
@@ -23,14 +24,30 @@ import {List, ListItem} from 'react-native-elements';
 import Textarea from 'react-native-textarea';
 import StarRating from 'react-native-star-rating';
 
+const{width, height} = Dimensions.get('window');
 export default class BookingReviewWrite extends Component{
     constructor(props){
         super(props);
         this.state = {
             text : '',
-            starCount : 0
+            starCount : 0,
+            petsitterNo : this.props.navigation.getParam('petsitterNo'),
+            reservationNo : this.props.navigation.getParam('reservationNo'),
+            userNo : '',
+            activityIndicator : true
         }
     };
+    componentDidMount(){
+        this._getUserInfo();
+    }
+
+    _getUserInfo = async() =>{
+        const userNo = await AsyncStorage.getItem('userInfo');
+        this.setState({
+          userNo : userNo,
+          activityIndicator : false,
+        })
+      };
 
     _onChangeText = (txt) =>{
         this.setState({
@@ -47,6 +64,12 @@ export default class BookingReviewWrite extends Component{
     render(){
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
+            {this.state.activityIndicator && (
+                    <View style={{backgroundColor : Colors.white, width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+           )}
+            {!this.state.activityIndicator && (
                 <ScrollView>
                     <View style={{flexDirection:'column'}}>
                         <View style={styles.EnvBar}>
@@ -78,42 +101,94 @@ export default class BookingReviewWrite extends Component{
                         <View style={{flex:1,flexDirection :'column', alignItems :'center'}}>
                             <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 10}}>
                                 <Text style={{fontSize : 15, fontWeight : 'bold', color : Colors.grey}}>최소 10자이상 작성 부탁드립니다.</Text>
-                            </View> 
+                            </View>
                         </View>
                     </View>
                 </ScrollView>
-                <BottomRequest navigation={this.props.navigation} text={this.state.text} starCount={this.state.starCount}/>
-            </SafeAreaView>
+            )}
+            {!this.state.activityIndicator && (
+                <BottomRequest navigation={this.props.navigation} petsitterNo={this.state.petsitterNo} userNo={this.state.userNo} reviewText={this.state.text} starCount={this.state.starCount} reservationNo={this.state.reservationNo}/>
+            )}
+        </SafeAreaView>
         );
     };
 };
 
-
 class BottomRequest extends Component{
-    constructor(props) {
+    constructor(props){
         super(props);
+        this.state = {
+            userNo : this.props.userNo,
+            petsitterNo : this.props.petsitterNo,
+            reviewText : this.props.reviewText,
+            starCount : this.props.starCount,
+            reservationNo : this.props.reservationNo
+        }
+    }
+    componentDidUpdate(prevProps){
+        if(this.props != prevProps){
+            this.setState({
+                reviewText : this.props.reviewText,
+                starCount : this.props.starCount
+            })
+        }
     }
 
     _onSubmit = (text) => {
         const count = text.length;
+        console.log(count);
         if(count<=10){
             alert('최소 10자 이상 작성해주세요.');
             return false;
         }else{
-            if(this.props.starCount==0){
+            if(this.state.starCount==0){
+                console.log(this.state.starCount);
                 alert('별점을 선택해주세요.');
                 return false;
             }else{
-                this.props.navigation.goBack();
+                this._regReview();
                 return true;
             };
         };
     };
 
+    _regReview = async() => {
+        const params = {
+            userNo : this.state.userNo,
+            petsitterNo : this.state.petsitterNo,
+            starCount : this.state.starCount,
+            reviewText : this.state.reviewText,
+            reservationNo : this.state.reservationNo
+        }
+        console.log(params);
+        fetch('http://192.168.0.8:8091/booking/reviewWrite.do', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+          })
+          .then((response) => response.json())
+          .then((res => {
+              console.log(res);
+              if(res.regSuccess === 1){
+                try{
+                    alert('작성완료 되셨습니다.');
+                    this.props.navigation.goBack();
+                }catch(error){
+                    alert('다시 시도해주세요.')
+                }
+              }else{
+                  alert('서버에 문제가 있습니다. 잠시후 다시 시도해주세요.');
+              }
+          }))
+     }
+
     render(){
         return(
             <View style={styles.bottomRequest}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this._onSubmit(this.props.text)}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>this._onSubmit(this.props.reviewText)}>
                     <Text style={styles.bottomText}>등록 하기</Text>
                 </TouchableOpacity>
             </View>

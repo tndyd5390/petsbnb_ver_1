@@ -64,10 +64,11 @@ export default class PetSitterReservationDetail extends Component{
             return(null);
         } else if (this.state.reservationDetail.status === "펫시팅 진행"){
             return(
-                <CompleteButton  
+                <CompleteButton 
+                    navigation={this.props.navigation}
                     setActivityIndicator={this._setActivityIndicator} 
                     setReservationDetail={this._setReservationDetail}
-                    reservationNo={this.state.reservationDetail.reservationInfoNo}
+                    reservationDetail={this.state.reservationDetail}
                 />
             )
         }
@@ -329,7 +330,7 @@ class ProgressButton extends Component {
 
     _progressReservation = () => {
         const params = {
-            reservationNo: this.props.reservationNo + ""
+            reservationNo: this.props.reservationNo + "",
         }
         this.props.setActivityIndicator(true);
         fetch("http://192.168.0.10:8080/petSitter/progressReservation.do", {
@@ -368,11 +369,19 @@ class ProgressButton extends Component {
 class CompleteButton extends Component {
     constructor(props){
         super(props);
+        this.state = {
+            reservationNo : this.props.reservationDetail.reservationInfoNo,
+            serviceProvider : this.props.reservationDetail.serviceProvider,
+            serviceReciever : this.props.reservationDetail.serviceReciever
+        }
+    }
+    _goToTimeLine = () => {
+        this.props.navigation.navigate('Timeline',{reservationNo : this.state.reservationNo,serviceProvider : this.state.serviceProvider, serviceReciever : this.state.serviceReciever})
     }
 
     _completeReservation = () => {
         const params = {
-            reservationNo: this.props.reservationNo + ""
+            reservationNo: this.props.reservationDetail.reservationInfoNo + ""
         }
         this.props.setActivityIndicator(true);
         fetch("http://192.168.0.10:8080/petSitter/completeReservation.do", {
@@ -400,9 +409,16 @@ class CompleteButton extends Component {
     render() {
         return(
             <View style={styles.bottomRequest}>
+                <View style={{justifyContent : 'center', flex:1}}>
+                <TouchableOpacity style={styles.bottomButton} onPress={this._goToTimeLine}>
+                    <Text style={styles.bottomText}>타임라인</Text>
+                </TouchableOpacity>
+                </View>
+                <View style={{justifyContent : 'center', flex:1}}>
                 <TouchableOpacity style={styles.bottomButton} onPress={this._completeReservation}>
                     <Text style={styles.bottomText}>펫시팅 완료</Text>
                 </TouchableOpacity>
+                </View>
             </View>
         );
     }
