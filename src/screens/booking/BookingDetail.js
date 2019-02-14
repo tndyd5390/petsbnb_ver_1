@@ -30,6 +30,7 @@ const{width, height} = Dimensions.get('window');
 export default class BookingDetail extends Component{
     constructor(props) {
         super(props);
+        //네비게이터의 펫시터 번호를 파라미터로 받음
         const petsitterNo = this.props.navigation.getParam('petsitterNo');
         this.state = {
             activityIndicator : true,
@@ -44,12 +45,13 @@ export default class BookingDetail extends Component{
         };
     };
     
-
+    //컴포넌트가 마운트 될때 실행될 내장 메소드
     componentWillMount(){
         this._getBookingDetail();
         this._getUserInfo();
     };
     
+    //네비게이션 바 설정
     static navigationOptions = ({navigation}) => {
         const { params = {} } = navigation.state;
         const setHeart = () => {
@@ -65,6 +67,7 @@ export default class BookingDetail extends Component{
         };
     };
 
+    //채팅 화면으로 이동하는 메소드
     _goToChat = async() => {
         const roomId = 'p'+this.state.petsitterNo+'u'+this.state.userNo;
         const params = {
@@ -93,6 +96,7 @@ export default class BookingDetail extends Component{
 
     }
     
+    //사용자의 정보를 가져오는 메소드
     _getUserInfo = async() =>{
         const userNo = await AsyncStorage.getItem('userInfo');
         this.setState({
@@ -281,6 +285,8 @@ class Price extends Component {
         }
     }
 
+
+    //금액에 콤마를 더하는 메소드
     _addCommma = (price) =>{
         let rslt = '';
         if(price == 0){

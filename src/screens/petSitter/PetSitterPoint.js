@@ -32,7 +32,7 @@ export default class PetSitterPoint extends Component{
             activityIndicator: false
         }
     }
-
+    //환급 요청 메소드
     _requestRefund = async() => {
         if(Number(this.state.refundPointInput) > this.state.totalPoint){
             alert("보유한 포인트보다 많은 급액을 환급 받으실 수 없습니다.");
@@ -80,11 +80,13 @@ export default class PetSitterPoint extends Component{
             modalVisiable: false
         });
     }
+    //activityindicator 활성화 및 비활성화 메소드
     _toggleActivityIndicator = (flag) => {
         this.setState({
             activityIndicator: flag
         })
     }
+    //숫자만 입력받는 메소드
     _onChangeCheckNumber = (text) => {
         let newText = '';
         let numbers = '0123456789';
@@ -244,7 +246,7 @@ class GetPointFlatList extends Component {
     }
 
     _keyExtractor = (item, index) => index + "";
-
+    //어느 펫시팅 예약에서 포인트를 얻었는지 볼 수 있는 메소드
     _getPointDetail = (pointInfoNo) => {
         const params = {
             pointInfoNo: pointInfoNo+ ""

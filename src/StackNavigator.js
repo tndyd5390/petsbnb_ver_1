@@ -1,3 +1,4 @@
+//화면에 출력할 js파일들 import
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import Reservation from './screens/Reservation';
 import Init from './screens/Init';
@@ -25,6 +26,7 @@ export default class StackNavigator extends Component {
   
 
   render(){
+    //스택 네비케이터 생성
     const Stacks = createStackNavigator({
       Init : {
         screen : Init,
@@ -118,6 +120,7 @@ export default class StackNavigator extends Component {
       },
     }
   );
+    //스택 네비게이터 출력
     return(
       <Stacks/>
     );

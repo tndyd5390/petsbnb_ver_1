@@ -26,7 +26,7 @@ export default class PetSitterReservationDetail extends Component{
             activityIndicator: false
         }
     }
-
+    //하단 버튼 변경 메소드
     _generateBottomButton = () => {
         if(this.state.reservationDetail.status === "승인 대기"){
             return(
@@ -79,6 +79,7 @@ export default class PetSitterReservationDetail extends Component{
         })
     }
 
+    //예약 정보 변경시 state변경 메소드
     _setReservationDetail =(reservationDetail) => {
         this.setState({
             reservationDetail: reservationDetail
@@ -234,7 +235,7 @@ class ApprovalButton extends Component {
     constructor(props){
         super(props);
     }
-
+    //예약 승인 메소드
     _approvalReservation = () => {
         const params = {
             reservationNo: this.props.reservationNo + ""
@@ -280,7 +281,7 @@ class RejectButton extends Component {
             reservationNo: this.props.reservationNo
         }
     }
-
+    //예약 반려 메소드
     _rejectReservation = () => {
         const params = {
             reservationNo: this.state.reservationNo + ""
@@ -326,7 +327,7 @@ class ProgressButton extends Component {
     constructor(props){
         super(props);
     }
-
+    //펫시팅 진행 메소드
     _progressReservation = () => {
         const params = {
             reservationNo: this.props.reservationNo + ""
@@ -369,7 +370,7 @@ class CompleteButton extends Component {
     constructor(props){
         super(props);
     }
-
+    //펫시팅 완료 메소드
     _completeReservation = () => {
         const params = {
             reservationNo: this.props.reservationNo + ""

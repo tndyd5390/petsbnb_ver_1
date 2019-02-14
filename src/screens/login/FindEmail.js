@@ -28,7 +28,7 @@ export default class FindEmail extends Component{
     }
   }
 
-
+  //이메일 찾는 코드
   _findEmail = async() => {
     if(this.state.name ==''){
       alert('이름을 입력해 주세요');

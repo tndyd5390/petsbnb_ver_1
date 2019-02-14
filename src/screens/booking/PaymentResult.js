@@ -85,6 +85,7 @@ export default class PaymentResult extends Component {
         return JSON.parse(data);
     }
 
+    //iamport로부터 결제 정보를 가져오는 메소드
     _getPaymentInfo = async(imp_uid) => {
         const token = await this._getToken();
         const paymentInfo = await fetch("https://api.iamport.kr/payments/" + imp_uid, {
@@ -107,6 +108,7 @@ export default class PaymentResult extends Component {
         return paymentInfo;
     }
     
+    //iamport로 부터 token을 받는 메소드
     _getToken = async() => {
         const token = await fetch('http://192.168.0.10:8080/payment/getToken.do', {
             method: 'POST',
@@ -128,7 +130,7 @@ export default class PaymentResult extends Component {
         })
         return token;
     }
-
+    //스택을 비우는 메소드
     _gotoTop = () => {
         const resetAction = StackActions.reset({
             index: 0,

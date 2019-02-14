@@ -27,7 +27,7 @@ import {
 } from 'react-native-elements';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 
-
+//결제 방법 선택 컴포넌트
 export default class BookingPaymentList extends Component {
     constructor(props){
         super(props);
@@ -62,10 +62,6 @@ export default class BookingPaymentList extends Component {
                 
                         <RadioButton value={'휴대폰 결제'}>
                             <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>휴대폰 결제</Text>
-                        </RadioButton>
-                
-                        <RadioButton value={'가상 계좌'}>
-                            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:5}}>가상계좌</Text>
                         </RadioButton>
                         
                         <RadioButton value={'실시간 계좌이체'}>

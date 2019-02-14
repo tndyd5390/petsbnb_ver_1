@@ -60,7 +60,6 @@ export default class PetSitterReservationExposure extends Component{
         })
         .then((response) => response.json())
         .then((res => {
-            console.log(res);
             if(res.pDTO){
                 this.setState({
                     petSitterName : res.pDTO.petSitterName,

@@ -197,7 +197,11 @@ export default class PetSitterTab extends Component{
         PetSitterReservationList : {
           screen : PetSitterReservationList,
           navigationOptions : {
-            header : null 
+            title: "요청 예약보기",
+            headerTitleStyle: {
+              width: "80%",
+              textAlign: "center"
+            }
           }
         },
         PetSitterReservationDetail : {

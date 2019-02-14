@@ -65,7 +65,7 @@ export default class PetSitterProfileReg extends Component{
     componentWillMount(){
         //this._getFirstPetsitterInfo();
     }
-
+    //프로필 사진 지우기 메소드
     _deleteImage = (index) => {
         if(this.state.imageDataArr.length < 2){
             this.setState({imageDataArr : []});    
@@ -74,7 +74,7 @@ export default class PetSitterProfileReg extends Component{
         const imageDataArr = this.state.imageDataArr.splice(index, 1);
         this.setState({imageDataArr : imageDataArr});
     }
-
+    //프로필 사진 띄우기 메소드
     _imageDisplay = () => {
         let imageView = [];
         const imageDataArr = this.state.imageDataArr;
@@ -105,7 +105,7 @@ export default class PetSitterProfileReg extends Component{
         )
         return imageView;
     }
-
+    //사진 등록 버튼 등작 메소드
     _butttonHandleFunc = () => {
         ImagePicker.showImagePicker(options, (response) => {
             
@@ -136,7 +136,7 @@ export default class PetSitterProfileReg extends Component{
             }
         });
     }
-
+    //선택사항이 전체 선택 됬는지 확인하는 메소드
     _checkAvailable = () => {
         if(
             !this.state.longTermAvailable && 
@@ -150,7 +150,7 @@ export default class PetSitterProfileReg extends Component{
             return false;
         }
     }
-
+    //선택사항이 전체 선택 안됐는지 확인하는 메소드
     _checkImpossible = () => {
         if(
             !this.state.markingImpossible &&
@@ -165,14 +165,7 @@ export default class PetSitterProfileReg extends Component{
         }
     }
 
-    _returnTrue = () => {
-        return true;
-    }
-
-    _returnFalse = () => {
-        return false;
-    }
-
+    //펫시터 프로필 등록 유효성 검사
     _petSitterRegCheck = () => {
         
         if(this.state.imageDataArr.length < 1){
@@ -231,6 +224,7 @@ export default class PetSitterProfileReg extends Component{
         
     }
 
+    //펫시터 프로필 등록
     _petSitterRegProc = async() =>{
         this.setState({activityIndicator : true})
         
