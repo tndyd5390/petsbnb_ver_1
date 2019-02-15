@@ -5,8 +5,14 @@ import Icon from 'react-native-ionicons'
 import Feed from './Feed';
 import Colors from '../../utils/Colors';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
+import ImagePicker from 'react-native-image-picker';
 
 const{width, height} = Dimensions.get('window');
+const options={
+  title : '사진',
+  takePhotoButtonTitle : '사진 촬영',
+  chooseFromLibraryButtonTitle : '갤러리에서 고르기'
+}
 
 export default class Timeline extends Component {
   constructor(props){
@@ -15,6 +21,10 @@ export default class Timeline extends Component {
       reservationNo : this.props.navigation.getParam('reservationNo'),
       serviceProvider : this.props.navigation.getParam('serviceProvider') == null ? '' : this.props.navigation.getParam('serviceProvider'),
       userNo : '',
+      imageSource: '',
+      imageData : '',
+      extension : '',
+      fileName : '',
       data : [
         {
           key: 2,
@@ -78,6 +88,27 @@ export default class Timeline extends Component {
       activityIndicator : false
     })
   };
+
+  _butttonHandleFunc = () => {
+    ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          const source = { uri: response.uri };
+          const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
+          this.setState({
+            imageSource: source,
+            extension : extension,
+            //사진을 고를 경우 파일 이름을 임의로 설정하여 사진이 화면에 출력되게끔 함
+            fileName : "tmp"
+          });
+          
+          this.props.navigation.navigate('TimelineWrite', {data : this.state});
+        }
+      });
+  }
 
   render() {
     const data = [
@@ -173,27 +204,11 @@ export default class Timeline extends Component {
         )}
       />
       )} 
-      <BottomRequest/>
-      </View>
-    )
-  }
-}
-
-class BottomRequest extends Component{
-  constructor(props){
-    super(props)
-  }
-  
-  _showPopUp = () =>{
-    
-  }
-
-  render(){
-    return(
-      <TouchableOpacity activeOpacity={0.8} style={styles.stickerBtn} onPress={this._showPopUp}>
+      <TouchableOpacity activeOpacity={0.8} style={styles.stickerBtn} onPress={this._butttonHandleFunc}>
         <IconFontAwesome name='camera-retro' color={Colors.buttonSky} size={25}/>
       </TouchableOpacity>
-      )
+      </View>
+    )
   }
 }
 

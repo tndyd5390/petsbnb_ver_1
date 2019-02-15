@@ -32,6 +32,7 @@ import PetSitterReservationList from "./PetSitterReservationList";
 import PetSitterReservationDetail from "./PetSitterReservationDetail";
 import Timeline from '../timeline/Timeline';
 import TLComments from '../timeline/TLComments';
+import TimelineWrite from '../timeline/TimelineWrite';
 import PetSitterPoint from "./PetSitterPoint";
 import PointDetail from "./PointDetail";
 export default class PetSitterTab extends Component{
@@ -230,6 +231,16 @@ export default class PetSitterTab extends Component{
           screen : TLComments,
           navigationOptions : {
             title : '댓글',
+            headerTitleStyle: {
+              width: '75%',
+              textAlign: 'center',
+          },
+        }
+       },
+       TimelineWrite :{
+          screen : TimelineWrite,
+          navigationOptions : {
+            title : ' ',
             headerTitleStyle: {
               width: '75%',
               textAlign: 'center',

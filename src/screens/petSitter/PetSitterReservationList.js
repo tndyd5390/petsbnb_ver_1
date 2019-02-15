@@ -64,7 +64,7 @@ class ReservationY extends Component{
         const params ={
             reservationNo: id + ""
         }
-        fetch("http://192.168.0.10:8080/petSitter/petSitterReservationDetail.do", {
+        fetch("http://192.168.0.8:8091/petSitter/petSitterReservationDetail.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",

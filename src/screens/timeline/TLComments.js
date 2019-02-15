@@ -123,8 +123,6 @@ class InputBar extends Component{
         );
     };
 
-
-
     render(){
         return(
           <View>

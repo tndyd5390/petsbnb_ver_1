@@ -50,7 +50,7 @@ export default class PetSitterReservationExposure extends Component{
         const params = {
             userNo
         }
-        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterExposure.do', {
+        await fetch('http://192.168.0.8:8091/petSitter/getPetSitterExposure.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

@@ -385,7 +385,7 @@ class CompleteButton extends Component {
             reservationNo: this.props.reservationDetail.reservationInfoNo + ""
         }
         this.props.setActivityIndicator(true);
-        fetch("http://192.168.0.10:8080/petSitter/completeReservation.do", {
+        fetch("http://192.168.0.8:8091/petSitter/completeReservation.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",

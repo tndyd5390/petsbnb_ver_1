@@ -35,7 +35,7 @@ export default class PetSitterReservationMenu extends Component{
         const params = {
             userNo
         };
-        fetch("http://192.168.0.10:8080/petSitter/petSitterReservationList.do", {
+        fetch("http://192.168.0.8:8091/petSitter/petSitterReservationList.do", {
             method: "POST",
             headers : {
                 Accept : "application/json",
