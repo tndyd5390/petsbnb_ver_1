@@ -96,7 +96,7 @@ export default class PetSitterReservationDetail extends Component{
                     </View>
                 ) : (null)}
                 <ScrollView>
-                    <ReservationPetList reservationPetDetail={this.state.reservationPetDetail}/>
+                    <ReservationPetList reservationPetDetail={this.state.reservationPetDetail} navigation={this.props.navigation} setActivityIndicator={this._setActivityIndicator}/>
                     <ReservationDetail reservationDetail={this.state.reservationDetail}/>
                 </ScrollView>
                     {this._generateBottomButton()}
@@ -122,7 +122,28 @@ class ReservationPetList extends Component {
     }
 
     _goPetDetail =(petNo) => {
-        console.log(petNo);
+        const params = {
+            petNo: petNo + ""
+        };
+        this.props.setActivityIndicator(true);
+        fetch("http://192.168.0.10:8080/petSitter/gotoPetDetail.do", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            if(res){
+                this.props.navigation.navigate("ReservationPetDetail", {petDetail: res});
+            }
+            this.props.setActivityIndicator(false);
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     _generatePetList = () => {
