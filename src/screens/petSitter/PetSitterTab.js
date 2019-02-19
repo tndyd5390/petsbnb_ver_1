@@ -35,6 +35,7 @@ import TLComments from '../timeline/TLComments';
 import TimelineWrite from '../timeline/TimelineWrite';
 import PetSitterPoint from "./PetSitterPoint";
 import PointDetail from "./PointDetail";
+import ReservationPetDetail from "./ReservationPetDetail";
 export default class PetSitterTab extends Component{
     render() {
       const petSitterProfileStackNavigation = createStackNavigator({
@@ -246,6 +247,16 @@ export default class PetSitterTab extends Component{
               textAlign: 'center',
           },
         }
+      },
+       ReservationPetDetail: {
+         screen: ReservationPetDetail,
+         navigationOptions: {
+           title: "반려동물 상세",
+           headerTitleStyle: {
+             width: "75%",
+             textAlign: "center"
+           }
+         }
        }
       })
 

@@ -350,7 +350,7 @@ class PetList extends Component{
                         <View style={{flexDirection: 'column', marginTop : 5}}>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
-                                <Text>{`종류 ${pDTO.petKind}`}</Text>
+                                <Text>{`${pDTO.petKind}`}</Text>
                             </View>
                             <View style={{alignItems : 'center', flexDirection: 'row'}}>
                                 <View style={styles.blueCircle}/>
@@ -560,6 +560,8 @@ class BottomRequest extends Component{
         const price = this.props.data.price;
         const userNo = await AsyncStorage.getItem("userInfo");
         let name = "";
+        console.log("test");
+        console.log(this.props.data.petList.length);
         if(this.props.data.petList.length === 1){
             name = this.props.data.petList[0].petName + " 예약";
         }else{
