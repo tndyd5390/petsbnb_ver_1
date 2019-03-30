@@ -21,6 +21,7 @@ import Category from './components/Explore/Category';
 import Colors from '../utils/Colors';
 import RNFetchBlob from 'react-native-fetch-blob';
 import StarRating from 'react-native-star-rating';
+import { ip } from "../utils/const";
 
 const{height, width} = Dimensions.get('window');
 
@@ -67,7 +68,7 @@ export default class Explore extends Component {
             });
         }
         
-        await fetch('http://192.168.0.8:8091/booking/getBookingList.do', {
+        await fetch(ip + '/booking/getBookingList.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

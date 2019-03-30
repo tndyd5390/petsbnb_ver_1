@@ -17,6 +17,9 @@ const options={
 export default class Timeline extends Component {
   constructor(props){
     super(props);
+    console.log("reservationNo ; " + this.props.navigation.getParam('reservationNo'));
+    console.log("serviceProvider : " + this.props.navigation.getParam('serviceProvider'));
+    console.log('serviceReceiver : ' + this.props.navigation.getParam('serviceReceiver'));
     this.state = {
       reservationNo : this.props.navigation.getParam('reservationNo'),
       serviceProvider : this.props.navigation.getParam('serviceProvider') == null ? '' : this.props.navigation.getParam('serviceProvider'),
@@ -89,6 +92,8 @@ export default class Timeline extends Component {
     })
   };
 
+
+
   _butttonHandleFunc = () => {
     ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {
@@ -98,14 +103,16 @@ export default class Timeline extends Component {
         } else {
           const source = { uri: response.uri };
           const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
-          this.setState({
-            imageSource: source,
-            extension : extension,
-            //사진을 고를 경우 파일 이름을 임의로 설정하여 사진이 화면에 출력되게끔 함
-            fileName : "tmp"
-          });
+          const param = {
+            reservationNo: this.state.reservationNo,
+            userNo : this.state.userNo,
+            imageData : response.data,
+            imageSource : response.uri,
+            extension : extension
+          }
+
           
-          this.props.navigation.navigate('TimelineWrite', {data : this.state});
+          this.props.navigation.navigate('TimelineWrite', {data : param});
         }
       });
   }

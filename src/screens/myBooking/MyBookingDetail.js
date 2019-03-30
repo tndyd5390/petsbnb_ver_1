@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../../utils/Colors';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {List, ListItem} from 'react-native-elements';
+import { ip } from '../../utils/const';
 
 const{width, height} = Dimensions.get("window");
 
@@ -43,7 +44,7 @@ export default class MyBookingDetail extends Component {
         const params = {
             id
         }
-        const reservationDetail = await fetch("http://192.168.0.8:8091/reservation/getReservationDetail.do", {
+        const reservationDetail = await fetch(ip + "/reservation/getReservationDetail.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",

@@ -20,6 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../../utils/Colors';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {List, ListItem} from 'react-native-elements';
+import { ip } from "../../utils/const";
 
 export default class MyBookingList extends Component{
     constructor(props){
@@ -39,7 +40,7 @@ export default class MyBookingList extends Component{
         const params = {
             userNo,
         }
-        const bookingList = await fetch("http://192.168.0.8:8091/reservation/getReservationList.do", {
+        const bookingList = await fetch(ip + "/reservation/getReservationList.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",

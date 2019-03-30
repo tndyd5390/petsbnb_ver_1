@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, Textarea,Dimensions, SafeAreaView} from 'react-native';
+import { View, Image, Text, StyleSheet, ScrollView, Textarea,Dimensions, SafeAreaView, TextInput, TouchableOpacity,Platform} from 'react-native';
 import Colors from '../../utils/Colors';
 
 const{width, height} = Dimensions.get('window');
@@ -7,49 +7,61 @@ const{width, height} = Dimensions.get('window');
 export default class TimelineWrite extends Component {
     constructor(props){
         super(props)
+        const data = this.props.navigation.getParam("data");
         this.state = {
-            // reservationNo : data.reservationNo,
-            // serviceProvider : data.serviceProvider,
-            // imageSource: data.imageSource,
-            // extension : data.extension,
+            reservationNo : data.reservationNo,
+            userNo: data.userNo,
+            imageSource: data.imageSource,
+            extension : data.extension,
             // fileName : data.fileName,
             text : '',
         }
     };
     
     render(){
-        // const imageSource = this.state.imageSource + '.' + this.state.extension;
+        const imageSource = this.state.imageSource;
         return(
-            <SafeAreaView style={styles.safeAreaViewStyle}>
-                <ScrollView>
-                    <View style={{flexDirection:'column'}}>
-                        <View style={styles.EnvBar}>
-                            <View style={{flex:1,alignItems : 'center', flexDirection: 'row',marginLeft : 20}}>
-                                <View style={styles.blueCircle}/>
-                                <Text style={{fontWeight:'bold', fontSize : 20}}>리뷰</Text>
-                            </View>
-                        </View>
-                        <View style={{alignItems:'center', width : width, height : width, }}>
-                            {/* <Image source={{uri : imageSource}} style={{width : '100%', height : '100%'}}/> */}
-                        </View>
-                        <View style={styles.textAreaContainer1}>
-                            <Textarea
-                                containerStyle={styles.textareaContainer2}
-                                style={styles.textarea}
-                                onChangeText={this._onChangeText}
-                                defaultValue={this.state.text}
-                                maxLength={999}
-                                underlineColorAndroid={'transparent'}
-                            />
-                        </View>
-                        <View style={{flex:1,flexDirection :'column', alignItems :'center'}}>
-                            <View style={{flexDirection :'row',alignItems :'center', justifyContent : 'center', marginTop : 10}}>
-                                <Text style={{fontSize : 15, fontWeight : 'bold', color : Colors.grey}}>최소 10자이상 작성 부탁드립니다.</Text>
-                            </View>
+           <SafeAreaView>
+               <View style={{width: '100%', height : '100%', backgroundColor: Colors.white}}>
+                    <View style={{width : width, height : 200, backgroundColor : Colors.white, borderBottomWidth : 1, borderBottomColor : Colors.buttonBorderGrey}}>
+                        <View style={{ alignItems : 'center', justifyContent : 'center'}}>
+                        <Image source={{uri : imageSource}} style={{width : '100%', height : '100%'}}/>
                         </View>
                     </View>
-                </ScrollView>
-            </SafeAreaView>
+                    <View style={{width: '100%', alignItems: 'center'}}>
+                        <View style={{width: '95%', marginTop: 15}}>
+                            <TextInput 
+                                style={{
+                                    backgroundColor : Colors.white, 
+                                    height : 80, borderWidth : 1, 
+                                    borderColor : '#BDBDBD',
+                                    borderRadius: 10, 
+                                    paddingLeft : 10, 
+                                    paddingTop : 10, 
+                                    paddingBottom : 0, 
+                                    paddingRight : 0, 
+                                    fontSize : 15
+                                }} 
+                                textAlignVertical="top"
+                                placeholder="test"
+                            />
+                        </View>
+                    </View>
+                    <View style={{position: 'absolute', left: 0, right: 0, bottom: 10, alignItems: 'center'}}>
+                        <TouchableOpacity 
+                            style={{
+                                width: "95%", 
+                                height: 50, 
+                                backgroundColor: Colors.buttonSky, 
+                                justifyContent: 'center', 
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>타임라인 등록</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+           </SafeAreaView>
         );
     };
 }

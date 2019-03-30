@@ -15,7 +15,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-
+import { ip } from "../../utils/const";
 
 const {width, height} = Dimensions.get('window');
 
@@ -36,7 +36,7 @@ export default class ProfileMenu extends Component {
         const params = {
             userNo : userNo
         }
-        await fetch('http://192.168.0.10:8080/user/getUserImage.do', {
+        await fetch(ip + '/user/getUserImage.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -48,7 +48,7 @@ export default class ProfileMenu extends Component {
             .then((res => {
                 if(res.result === true){
                     this.setState({
-                        userImageURI : {uri : 'http://192.168.0.10:8080/userImageFile/' + res.fileInfo.fileName}
+                        userImageURI : {uri : ip + '/userImageFile/' + res.fileInfo.fileName}
                     })
                 }else{
                   
@@ -92,7 +92,7 @@ export default class ProfileMenu extends Component {
             userNo : userNo
         }
 
-        await fetch('http://192.168.0.10:8080/user/checkPetSitter.do', {
+        await fetch(ip + '/user/checkPetSitter.do', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -133,7 +133,7 @@ export default class ProfileMenu extends Component {
             userNo : userNo
         }
 
-        await fetch('http://192.168.0.10:8080/user/checkAppliedUser.do', {
+        await fetch(ip + '/user/checkAppliedUser.do', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

@@ -13,6 +13,7 @@ import {
     ActivityIndicator
 } from "react-native";
 import Colors from "../../utils/Colors";
+import { ip } from "../../utils/const";
 const {width, height} = Dimensions.get("window");
 
 export default class PetSitterReservationList extends Component{
@@ -64,7 +65,7 @@ class ReservationY extends Component{
         const params ={
             reservationNo: id + ""
         }
-        fetch("http://192.168.0.8:8091/petSitter/petSitterReservationDetail.do", {
+        fetch(ip + "/petSitter/petSitterReservationDetail.do", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -152,7 +153,7 @@ class ReservationList extends Component {
     };
     render() {
         const statusColor = this._statusColor(this.props.status);
-        const petFileSource = this.props.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
+        const petFileSource = this.props.petFileName ? {uri : ip + `/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
         return(
             <TouchableOpacity
                 onPress={this._onPress}
