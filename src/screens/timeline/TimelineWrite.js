@@ -68,7 +68,7 @@ export default class TimelineWrite extends Component {
                 } else {
                     alert("타임라인 업로드 실패");
                 }
-                this.props.navigation.goBack();
+                this.props.navigation.pop(2);
             })
         }
     }
