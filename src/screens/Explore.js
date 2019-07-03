@@ -219,7 +219,7 @@ class BookingsContents extends Component{
                     <View style={styles.exploreWrapper}>
                         <View style={styles.exploreImageView}>
                             <Image
-                                source={{uri:`http://192.168.0.10:8080/petSitterImageFile/${this.props.petsitterFileName}`}}
+                                source={{uri:`${ip}/petSitterImageFile/${this.props.petsitterFileName}`}}
                                 style={styles.exploreImage}
                             />
                         </View>
