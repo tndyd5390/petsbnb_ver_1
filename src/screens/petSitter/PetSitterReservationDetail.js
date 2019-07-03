@@ -399,32 +399,29 @@ class CompleteButton extends Component {
         }
     }
     _goToTimeLine = () => {
-        // const params = {
-        //     reservationNo : this.state.reservationNo
-        // }
-        // this.props.setActivityIndicator(true);
-        // fetch(ip + '/timeline/getTimelineList.do', {
-        //     method: 'POST',
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type' : 'application/json'
-        //     },
-        //     body : JSON.stringify(params)
-        // })
-        // .then((response) => response.json())
-        // .then(res => {
+        const params = {
+            reservationNo : this.state.reservationNo.toString()
+        }
+        this.props.setActivityIndicator(true);
+        fetch(ip + '/timeline/getTimelineList.do', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(params)
+        })
+        .then((response) => response.json())
+        .then(res => {
+            this.props.setActivityIndicator(false);
+            this.props.navigation.navigate("Timeline", {
+                timelineList : res,
+                reservationNo : this.state.reservationNo
+            });
+        })
+        .catch(err => {
 
-        // })
-        // .catch(err => {
-
-        // })
-
-        this.props.navigation.navigate('Timeline',{   
-                reservationNo : this.state.reservationNo,
-                serviceProvider : this.state.serviceProvider, 
-                serviceReciever : this.state.serviceReciever
-            }
-        )
+        });
     }
     //펫시팅 완료 메소드
     _completeReservation = () => {

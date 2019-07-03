@@ -6,6 +6,7 @@ import Feed from './Feed';
 import Colors from '../../utils/Colors';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-picker';
+import { ip } from "../../utils/const";
 
 const{width, height} = Dimensions.get('window');
 const options={
@@ -18,64 +19,28 @@ export default class Timeline extends Component {
   constructor(props){
     super(props);
     console.log("reservationNo ; " + this.props.navigation.getParam('reservationNo'));
-    console.log("serviceProvider : " + this.props.navigation.getParam('serviceProvider'));
-    console.log('serviceReceiver : ' + this.props.navigation.getParam('serviceReceiver'));
+    const timelineList = this.props.navigation.getParam("timelineList");
+    const timelineArr = [];
+    for(let i = 0; i< timelineList.length; i++){
+      const timelineObject = {
+        key: i + 1,
+        type: "image",
+        source: `${ip}/timelineFile/${timelineList[i].TIMELINE_FILE_NAME}`,
+        avatarUrl: 'https://unsplash.it/100?image=1027',
+        text: timelineList[i].CONTENT,
+        emotionRate: timelineList[i].EMOTION_RATE
+      }
+      timelineArr.push(timelineObject);
+    }
+
     this.state = {
       reservationNo : this.props.navigation.getParam('reservationNo'),
-      serviceProvider : this.props.navigation.getParam('serviceProvider') == null ? '' : this.props.navigation.getParam('serviceProvider'),
       userNo : '',
       imageSource: '',
       imageData : '',
       extension : '',
       fileName : '',
-      data : [
-        {
-          key: 2,
-          username: 'jennifer',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/baking.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=1027',
-          text : '1번~asdsadsadsadsadsadwq asfkmjaslkdfjk암ㄴ인미언망ㅁㄴㅇㄴㅁㅇㄴㅁㅇㄴㅁㅇㄴㅁ'
-        },
-        {
-          key: 3,
-          username: 'cathy',
-          type: 'video',
-          source: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-          avatarUrl: 'https://unsplash.it/100?image=996',
-          text : '2번 ㄱㄱㄱㄱㄱㅂㅈㄷㅈㅂ'
-        },
-         {
-          key: 4,
-          username: 'zack',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/landscape.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=856',
-          text : '3번 ㅂㅈㄷㅈㅂㄷㅈㅂㄷ'
-        }, {
-          key: 5,
-          username: 'luke',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/snow.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=669',
-          text : '4번123213'
-        }, 
-        {
-          key: 6,
-          username: 'anna',
-          type: 'video',
-          source: 'https://sample-videos.com/video123/mkv/720/big_buck_bunny_720p_1mb.mkv',
-          avatarUrl: 'https://unsplash.it/100?image=823',
-          text : '6번ㅁ아ㅓ민안미암니ㅏ임ㄴ'
-        },
-         {
-          key: 7,
-          username: 'ken',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/town.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=550',
-          text : '7번 ㅁ인ㅁ안미아ㅣㄴㅁ'
-        }],
+      data : timelineArr,
       activityIndicator : true
     }
   }
@@ -103,69 +68,21 @@ export default class Timeline extends Component {
         } else {
           const source = { uri: response.uri };
           const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
+          const timestamp = new Date().getTime();
           const param = {
             reservationNo: this.state.reservationNo,
             userNo : this.state.userNo,
             imageData : response.data,
             imageSource : response.uri,
-            extension : extension
-          }
-
-          
+            extension : extension,
+            fileName : timestamp.toString()
+          }  
           this.props.navigation.navigate('TimelineWrite', {data : param});
         }
       });
   }
 
   render() {
-    const data = [
-        {
-          key: 2,
-          username: 'jennifer',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/baking.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=1027',
-          text : '1번~asdsadsadsadsadsadwq asfkmjaslkdfjk암ㄴ인미언망ㅁㄴㅇㄴㅁㅇㄴㅁㅇㄴㅁㅇㄴㅁ'
-        },
-        {
-          key: 3,
-          username: 'cathy',
-          type: 'video',
-          source: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
-          avatarUrl: 'https://unsplash.it/100?image=996',
-          text : '2번 ㄱㄱㄱㄱㄱㅂㅈㄷㅈㅂ'
-        },
-         {
-          key: 4,
-          username: 'zack',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/landscape.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=856',
-          text : '3번 ㅂㅈㄷㅈㅂㄷㅈㅂㄷ'
-        }, {
-          key: 5,
-          username: 'luke',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/snow.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=669',
-          text : '4번123213'
-        }, 
-        {
-          key: 6,
-          username: 'anna',
-          type: 'video',
-          source: 'https://sample-videos.com/video123/mkv/720/big_buck_bunny_720p_1mb.mkv',
-          avatarUrl: 'https://unsplash.it/100?image=823',
-          text : '6번ㅁ아ㅓ민안미암니ㅏ임ㄴ'
-        },
-         {
-          key: 7,
-          username: 'ken',
-          type: 'image',
-          source: 'https://github.com/saitoxu/InstaClone/raw/master/contents/images/town.jpg',
-          avatarUrl: 'https://unsplash.it/100?image=550',
-          text : '7번 ㅁ인ㅁ안미아ㅣㄴㅁ'
-        }]
     
     return (
       <View style={{flex : 1}}>
@@ -195,6 +112,7 @@ export default class Timeline extends Component {
               <TouchableOpacity onPress={()=> this.props.navigation.navigate('TLComments', {user : item.username, text : item.text}) }>
               <Icon name="text" size={34} color="grey" style={{ marginTop: 12, marginLeft: 20 }} />
               </TouchableOpacity>
+              <Text style={{ marginTop: 16, marginLeft: 15, color: 'gray' }}>{`감정분석 점수 ${item.emotionRate}`}</Text>
             </View>
             <View>
                 <Text style={{fontSize : 13, color:'black', paddingLeft: 15}}>{item.text}</Text>

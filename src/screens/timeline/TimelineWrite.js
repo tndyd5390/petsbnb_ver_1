@@ -1,6 +1,21 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, Textarea,Dimensions, SafeAreaView, TextInput, TouchableOpacity,Platform} from 'react-native';
+import { 
+    View, 
+    Image, 
+    Text, 
+    StyleSheet,
+    ScrollView, 
+    Textarea,
+    Dimensions, 
+    SafeAreaView, 
+    TextInput, 
+    TouchableOpacity,
+    Platform,
+    ActivityIndicator
+} from 'react-native';
 import Colors from '../../utils/Colors';
+import RNFetchBlob from 'react-native-fetch-blob';
+import { ip } from "../../utils/const";
 
 const{width, height} = Dimensions.get('window');
 
@@ -13,15 +28,60 @@ export default class TimelineWrite extends Component {
             userNo: data.userNo,
             imageSource: data.imageSource,
             extension : data.extension,
-            // fileName : data.fileName,
-            text : '',
+            fileName : data.fileName,
+            imageData: data.imageData,
+            timelineText : '',
+            activityIndicator: false
         }
     };
+
+    _uploadTimeline = async () => {
+        if(this.state.timelineText == ""){
+            alert("내용을 작성해 주세요.");
+            return;
+        } else {
+            const arr = [];
+            arr.push({name: "reservationNo", data: this.state.reservationNo.toString()});
+            arr.push({name: "userNo", data: this.state.userNo})
+            arr.push({
+                name: "timelineFile",
+                filename: this.state.fileName + "." + this.state.extension,
+                type: "image/" + this.state.extension,
+                data: this.state.imageData
+            });
+            arr.push({name: "content", data: this.state.timelineText});
+            this.setState({
+                activityIndicator: true
+            });
+            
+            await RNFetchBlob.fetch("POST", `${ip}/timeline/uploadTimeline.do`, {
+                Authorization : "Bearer access-token",
+                'Content-Type' : 'multipart/form-data',
+            }, arr)
+            .then((resp) => resp.json())
+            .then((res) => {
+                this.setState({
+                    activityIndicator: false
+                });
+                if(res.result == true){
+                    alert("타임라인 업로드 성공");
+                } else {
+                    alert("타임라인 업로드 실패");
+                }
+                this.props.navigation.goBack();
+            })
+        }
+    }
     
     render(){
         const imageSource = this.state.imageSource;
         return(
            <SafeAreaView>
+               {this.state.activityIndicator ? (
+                    <View style={{backgroundColor : 'rgba(0,0,0,0.2)', width : width, height : height, position : 'absolute', zIndex : 10, alignItems : 'center', justifyContent : 'center'}}>
+                        <ActivityIndicator size="large" color="#10b5f1"/>
+                    </View>
+                ) : (null)}
                <View style={{width: '100%', height : '100%', backgroundColor: Colors.white}}>
                     <View style={{width : width, height : 200, backgroundColor : Colors.white, borderBottomWidth : 1, borderBottomColor : Colors.buttonBorderGrey}}>
                         <View style={{ alignItems : 'center', justifyContent : 'center'}}>
@@ -43,7 +103,10 @@ export default class TimelineWrite extends Component {
                                     fontSize : 15
                                 }} 
                                 textAlignVertical="top"
-                                placeholder="test"
+                                placeholder=""
+                                onChangeText={(text) => {
+                                    this.setState({timelineText : text})
+                                }}
                             />
                         </View>
                     </View>
@@ -56,6 +119,7 @@ export default class TimelineWrite extends Component {
                                 justifyContent: 'center', 
                                 alignItems: 'center'
                             }}
+                            onPress={() => {this._uploadTimeline()}}
                         >
                             <Text style={{color : Colors.white, fontSize : 20, fontWeight : '700'}}>타임라인 등록</Text>
                         </TouchableOpacity>

@@ -270,7 +270,27 @@ class BottomRequest extends Component{
             })
         }else{
             text = '타임 라인';
-            this.props.navigation.navigate('Timeline');
+            const params = {
+                reservationNo : this.state.id.toString()
+            }
+            fetch(ip + '/timeline/getTimelineList.do', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify(params)
+            })
+            .then((response) => response.json())
+            .then(res => {
+                this.props.navigation.navigate("Timeline", {
+                    timelineList : res,
+                    reservationNo : this.state.id.toString()
+                });
+            })
+            .catch(err => {
+    
+            });
         }
     };
 
@@ -479,6 +499,30 @@ class CompleteBottomRequest extends Component{
         };
     };
 
+    _gotoTimeline = async() => {
+        const params = {
+            reservationNo : this.state.reservationNo.toString()
+        }
+        fetch(ip + '/timeline/getTimelineList.do', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(params)
+        })
+        .then((response) => response.json())
+        .then(res => {
+            this.props.navigation.navigate("Timeline", {
+                timelineList : res,
+                reservationNo : this.state.reservationNo
+            });
+        })
+        .catch(err => {
+
+        });
+    }
+
     render(){
         return(
             <View style={styles.bottomRequest}>
@@ -488,7 +532,7 @@ class CompleteBottomRequest extends Component{
                 </TouchableOpacity>
                 </View>
                 <View style={{justifyContent : 'center', flex:1}}>
-                <TouchableOpacity style={styles.bottomButton} onPress={()=>this.props.navigation.navigate('Timeline')}>
+                <TouchableOpacity style={styles.bottomButton} onPress={()=>{this._gotoTimeline()}}>
                     <Text style={styles.bottomText}>타임라인</Text>
                 </TouchableOpacity>
                 </View>

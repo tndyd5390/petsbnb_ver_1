@@ -214,6 +214,7 @@ export default class PetUpdateView extends Component{
         const imageDataArr = this.state.imageDataArr;
         imageDataArr.forEach((value, index) => {
             const uri = {uri : `${ip}/petImageFile/` + value.petFileName}
+            console.log(uri);
             imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
                                 <Image source={uri} style={{width : '100%', height : '100%'}}/>
                                 <View style={{position : 'absolute', bottom : 10, right : 15}}>
