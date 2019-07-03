@@ -20,6 +20,7 @@ import {
     Image,
     Alert
 } from "react-native";
+import { ip } from "../../utils/const";
 const {width, height} = Dimensions.get("window");
 
 export default class ReservationPetDetail extends Component{
@@ -36,7 +37,7 @@ export default class ReservationPetDetail extends Component{
         let imageView = [];
         const imageDataArr = this.state.petImages;
         imageDataArr.forEach((value, index) => {
-            const uri = {uri : 'http://192.168.0.10:8080/petImageFile/' + value}
+            const uri = {uri : `${ip}/petImageFile/` + value}
             imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
                                 <Image source={uri} style={{width : '100%', height : '100%'}}/>
                            </View>)

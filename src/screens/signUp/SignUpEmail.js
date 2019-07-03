@@ -15,7 +15,7 @@ import {
     SafeAreaView,
     Platform
 } from 'react-native';
-
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class SignUpEmail extends Component {
@@ -38,7 +38,7 @@ export default class SignUpEmail extends Component {
             const params = {
                 email : this.state.email
             }
-            await fetch('http://192.168.0.10:8080/user/emailCheck.do', {
+            await fetch(`${ip}/user/emailCheck.do`, {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',

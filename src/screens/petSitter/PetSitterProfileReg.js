@@ -21,6 +21,7 @@ import {
     AsyncStorage,
     Alert
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 const options={
     title : '사진',
@@ -247,7 +248,7 @@ export default class PetSitterProfileReg extends Component{
         const userNo = await AsyncStorage.getItem('userInfo');
         arr.push({name : 'userNo', data : userNo});
         
-        await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/petSitter/petSitterRegProc.do', {
+        await RNFetchBlob.fetch('POST', `${ip}/petSitter/petSitterRegProc.do`, {
             Authorization : "Bearer access-token",
             'Content-Type' : 'multipart/form-data',
         },arr)

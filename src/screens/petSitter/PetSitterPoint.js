@@ -15,6 +15,7 @@ import {
     ActivityIndicator
 } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import { ip } from "../../utils/const";
 const{ width, height } = Dimensions.get("window");
 
 export default class PetSitterPoint extends Component{
@@ -54,7 +55,7 @@ export default class PetSitterPoint extends Component{
             userNo,
             refundPointInput: this.state.refundPointInput
         }
-        const data = await fetch("http://192.168.0.10:8080/petSitter/requestRefund.do", {
+        const data = await fetch(`${ip}/petSitter/requestRefund.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -102,7 +103,7 @@ export default class PetSitterPoint extends Component{
     }
 
     render() {
-        const imageSource = this.state.userImage ? {uri: `http://192.168.0.10:8080/userImageFile/${this.state.userImage}`} : require("../../../img/user.png");
+        const imageSource = this.state.userImage ? {uri: `${ip}/userImageFile/${this.state.userImage}`} : require("../../../img/user.png");
         return(
             <View style={{width: width, height: height, backgroundColor: Colors.white, flex: 1}}>
                 {this.state.activityIndicator ? (
@@ -252,7 +253,7 @@ class GetPointFlatList extends Component {
             pointInfoNo: pointInfoNo+ ""
         }
         this.props.toggleActivityIndicator(true);
-        fetch("http://192.168.0.10:8080/petSitter/getPointDetail.do", {
+        fetch(`${ip}/petSitter/getPointDetail.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",

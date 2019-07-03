@@ -14,6 +14,7 @@ import {
     ActivityIndicator,
     FlatList
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class PetList extends Component{
@@ -50,7 +51,7 @@ export default class PetList extends Component{
         const params = {
             userNo : userNo
         }
-        await fetch('http://192.168.0.10:8080/pet/getPetList.do', {
+        await fetch(`${ip}/pet/getPetList.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -112,8 +113,8 @@ export default class PetList extends Component{
 class PetFlatList extends Component{
     render() {
         const{petName, petNo, petKind, petFileName, age, petGender} = this.props.item;
-        const uri = petFileName ? {uri : 'http://192.168.0.10:8080/petImageFile/' + this.props.item.petFileName} : require("../../../img/user.png");
-        //const uri = {uri : 'http://192.168.0.10:8080/petImageFile/' + this.props.item.petFileName};
+        const uri = petFileName ? {uri : `${ip}/petImageFile/` + this.props.item.petFileName} : require("../../../img/user.png");
+        //const uri = {uri : '${ip}/petImageFile/' + this.props.item.petFileName};
         return(
             <View>
                 <View style={{height : 80, alignItems : 'center', marginTop : 10}}>

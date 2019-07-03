@@ -13,6 +13,7 @@ import {
     TouchableOpacity,
     WebView
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class SignUpForm extends Component{
@@ -58,7 +59,7 @@ export default class SignUpForm extends Component{
             return(
                 <WebView
                     /**여기 주소는 나중에 웹뷰 보여줄 도메인으로 대체해야함 */
-                    source={{uri: 'http://192.168.0.10:8080/mobile/camera.jsp'}}
+                    source={{uri: `${ip}/mobile/camera.jsp`}}
                     onMessage={(event) => {this._getAddressData(event)}}
                     style={{width : width, height : 300}}
                 />

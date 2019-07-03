@@ -23,7 +23,7 @@ import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import BookingDate from './BookingDate';
 import StarRating from 'react-native-star-rating';
-
+import { ip } from "../../utils/const";
 
 const{width, height} = Dimensions.get('window');
 
@@ -81,7 +81,7 @@ export default class BookingDetail extends Component{
             petsitterUserNo : this.state.bookingDetail.petsitterUserNo,
             date : new Date()
         }
-        await fetch("http://192.168.0.8:8091/chat/createChatRoom.do", {
+        await fetch(`${ip}/chat/createChatRoom.do`, {
             method : 'POST',
             headers : {
                 Accept: 'application/json',
@@ -113,7 +113,7 @@ export default class BookingDetail extends Component{
             petsitterNo : this.state.petsitterNo,
             reviewNow : 0
         }
-        await fetch('http://192.168.0.8:8091/booking/getBookingDetail.do', {
+        await fetch(`${ip}/booking/getBookingDetail.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -148,7 +148,7 @@ export default class BookingDetail extends Component{
                 return 0;
             }
         })
-        .map((image, index) => `http://192.168.0.10:8080/petSitterImageFile/${image.petsitterFileName}`);
+        .map((image, index) => `${ip}/petSitterImageFile/${image.petsitterFileName}`);
         return(
             <SafeAreaView style={styles.safeAreaViewStyle}>
                 {this.state.activityIndicator && (
@@ -208,7 +208,7 @@ class Profile extends Component {
     };
 
     render(){
-        const petsitterImageSource = this.state.petsitterUserProfileImage ? {uri : `http://192.168.0.10:8080/userImageFile/${this.state.petsitterUserProfileImage}`} : require("../../../img/user.png");
+        const petsitterImageSource = this.state.petsitterUserProfileImage ? {uri : `${ip}/userImageFile/${this.state.petsitterUserProfileImage}`} : require("../../../img/user.png");
         return(
         <View style={styles.listBar}>
             <View style={{alignItems : 'center', justifyContent: 'center'}}>
@@ -551,7 +551,7 @@ class MoreReview extends Component{
             petsitterNo : this.state.petsitterNo,
             reviewNow : this.state.reviewNow
         }
-        await fetch('http://192.168.0.8:8091/booking/getMoreReview.do', {
+        await fetch(`${ip}/booking/getMoreReview.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',

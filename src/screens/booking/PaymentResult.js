@@ -9,6 +9,7 @@ import {
 import Colors from "../../utils/Colors";
 import RoundedButton from "../components/buttons/RoundedButton";
 import { StackActions, NavigationActions } from 'react-navigation';
+import { ip } from "../../utils/const";
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,7 +62,7 @@ export default class PaymentResult extends Component {
             stDate: customData.stDate,
             edDate: customData.edDate
         };
-        const result = await fetch("http://192.168.0.10:8080/reservation/insertReservationInfo.do", {
+        const result = await fetch(`${ip}/reservation/insertReservationInfo.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -110,7 +111,7 @@ export default class PaymentResult extends Component {
     
     //iamport로 부터 token을 받는 메소드
     _getToken = async() => {
-        const token = await fetch('http://192.168.0.10:8080/payment/getToken.do', {
+        const token = await fetch(`${ip}/payment/getToken.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',

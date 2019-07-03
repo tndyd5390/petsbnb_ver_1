@@ -1,4 +1,4 @@
-const ip = 'http://192.168.56.1:8080';
+const ip = 'http://192.168.0.40:8080';
 
 module.exports = {
     ip

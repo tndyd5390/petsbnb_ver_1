@@ -12,6 +12,7 @@ import {
     StyleSheet,
     Switch
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class Preference extends Component{

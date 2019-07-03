@@ -54,7 +54,7 @@ class LoginForm extends Component {
       password : password,
       deviceToken : loginFcmToken
     }
-    await fetch('http://192.168.0.8:8091/user/loginProc.do', {
+    await fetch('http://192.168.0.40:8080/user/loginProc.do', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

@@ -23,6 +23,7 @@ import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import PropTypes from 'prop-types';
 import {List, ListItem} from 'react-native-elements';
+import { ip } from "../../utils/const";
 
 export default class BookingPetList extends Component{
     constructor(props) {
@@ -164,7 +165,7 @@ class PetY extends Component {
             userNo,
             availablePetKind
         }
-        const petList = await fetch('http://192.168.0.10:8080/pet/getAvaliablePetList.do', {
+        const petList = await fetch(`${ip}/pet/getAvaliablePetList.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -244,7 +245,7 @@ class PetList extends Component{
 
 class PetProfile extends Component {
     render(){
-        const petFileSource = this.props.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
+        const petFileSource = this.props.petFileName ? {uri : `${ip}/petImageFile/${this.props.petFileName}`} : require("../../../img/user.png")
         return(
             <View style={{
                     flex:1,

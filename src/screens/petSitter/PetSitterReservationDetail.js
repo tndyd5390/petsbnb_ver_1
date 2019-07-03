@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import Colors from "../../utils/Colors";
 import PetList from "../profile/PetList";
+import { ip } from "../../utils/const";
 const { width, height } = Dimensions.get("window");
 
 export default class PetSitterReservationDetail extends Component{
@@ -126,7 +127,7 @@ class ReservationPetList extends Component {
             petNo: petNo + ""
         };
         this.props.setActivityIndicator(true);
-        fetch("http://192.168.0.10:8080/petSitter/gotoPetDetail.do", {
+        fetch(`${ip}/petSitter/gotoPetDetail.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -150,7 +151,7 @@ class ReservationPetList extends Component {
         let viewElement = [];
         const petList = this.state.petList;
         petList.forEach((petDetail, index) => {
-            const fileSource = petDetail.petFileName ? {uri: `http://192.168.0.10:8080/petImageFile/${petDetail.petFileName}`} : require("../../../img/user.png");
+            const fileSource = petDetail.petFileName ? {uri: `${ip}/petImageFile/${petDetail.petFileName}`} : require("../../../img/user.png");
             viewElement.push(
                 <TouchableOpacity
                     onPress={() => this._goPetDetail(petDetail.petNo)}
@@ -263,7 +264,7 @@ class ApprovalButton extends Component {
             reservationNo: this.props.reservationNo + ""
         }
         this.props.setActivityIndicator(true);
-        fetch("http://192.168.0.10:8080/petSitter/approvalReservation.do", {
+        fetch(`${ip}/petSitter/approvalReservation.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -309,7 +310,7 @@ class RejectButton extends Component {
             reservationNo: this.state.reservationNo + ""
         }
         this.props.setActivityIndicator(true);
-        fetch("http://192.168.0.10:8080/petSitter/rejectReservation.do", {
+        fetch(`${ip}/petSitter/rejectReservation.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -355,7 +356,7 @@ class ProgressButton extends Component {
             reservationNo: this.props.reservationNo + "",
         }
         this.props.setActivityIndicator(true);
-        fetch("http://192.168.0.10:8080/petSitter/progressReservation.do", {
+        fetch(`${ip}/petSitter/progressReservation.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -431,7 +432,7 @@ class CompleteButton extends Component {
             reservationNo: this.props.reservationDetail.reservationInfoNo + ""
         }
         this.props.setActivityIndicator(true);
-        fetch("http://192.168.0.8:8091/petSitter/completeReservation.do", {
+        fetch(`${ip}/petSitter/completeReservation.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",

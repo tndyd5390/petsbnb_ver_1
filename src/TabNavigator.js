@@ -33,6 +33,7 @@ import UsageTerm from './screens/profile/UsageTerm';
 import NightBookingDetails from './screens/booking/NightBookingDetails';
 import Payment from "./screens/booking/Payment";
 import PaymentResult from "./screens/booking/PaymentResult";
+import ChatView from "./screens/chat/ChatView";
 
 export default class TabNavigator extends Component {
   render(){
@@ -397,7 +398,7 @@ const myBookingStacks = createStackNavigator({
 
 const ChatStacks = createStackNavigator({ 
   Chat : {
-      screen : Chat,
+      screen : ChatView,
       navigationOptions : {
         title : '대화하기',
         headerTitleStyle: {

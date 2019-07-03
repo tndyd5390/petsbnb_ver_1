@@ -23,6 +23,7 @@ import {
     Platform,
     Image
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 const options={
     title : '사진',
@@ -210,7 +211,7 @@ export default class PetRegView extends Component{
             this.setState({
                 activityIndicator : true
             })
-            await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petProfileRegProc.do', {
+            await RNFetchBlob.fetch('POST', `${ip}/pet/petProfileRegProc.do`, {
                 Authorization : "Bearer access-token",
                 'Content-Type' : 'multipart/form-data',
             },arr)

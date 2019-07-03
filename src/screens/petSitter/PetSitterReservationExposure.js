@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import RoundedButton from '../components/buttons/RoundedButton';
 import { StackActions, NavigationActions } from 'react-navigation';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class PetSitterReservationExposure extends Component{
@@ -50,7 +51,7 @@ export default class PetSitterReservationExposure extends Component{
         const params = {
             userNo
         }
-        await fetch('http://192.168.0.8:8091/petSitter/getPetSitterExposure.do', {
+        await fetch(`${ip}/petSitter/getPetSitterExposure.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -97,7 +98,7 @@ export default class PetSitterReservationExposure extends Component{
             exposure : (!this.state.exposure).toString(),
             petSitterNo : this.state.petSitterNo
         }
-        await fetch('http://192.168.0.10:8080/petSitter/togglePetSitterReservationExposure.do', {
+        await fetch(`${ip}/petSitter/togglePetSitterReservationExposure.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -158,7 +159,7 @@ export default class PetSitterReservationExposure extends Component{
             nightCheckout : this.state.nightCheckout + ""
         }
 
-        await fetch('http://192.168.0.10:8080/petSitter/startReservationExposure.do', {
+        await fetch(`${ip}/petSitter/startReservationExposure.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -187,7 +188,7 @@ export default class PetSitterReservationExposure extends Component{
             petSitterNo : this.state.petSitterNo
         }
 
-        await fetch('http://192.168.0.10:8080/petSitter/stopReservationExposure.do', {
+        await fetch(`${ip}/petSitter/stopReservationExposure.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',

@@ -20,6 +20,7 @@ import {
     ActivityIndicator,
     Alert
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class PetSitterApplyForm extends Component{
@@ -62,7 +63,7 @@ export default class PetSitterApplyForm extends Component{
             userNo : this.state.userNo
         }
 
-        await fetch('http://192.168.0.10:8080/user/getUserAddress.do', {
+        await fetch(`${ip}/user/getUserAddress.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -140,7 +141,7 @@ export default class PetSitterApplyForm extends Component{
                 userNo : state.userNo
             }
 
-            await fetch('http://192.168.0.10:8080/user/applyPetSitter.do', {
+            await fetch(`${ip}/user/applyPetSitter.do`, {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',

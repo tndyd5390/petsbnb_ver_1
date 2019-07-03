@@ -11,6 +11,7 @@ import PetProfileRegCheckbox from '../components/checkbox/PetProfileRegCheckbox'
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Swiper from 'react-native-swiper';
+import { ip } from "../../utils/const";
 import {
     View,
     Text,
@@ -63,7 +64,7 @@ export default class PetUpdateView extends Component{
             userNo : this.state.userNo
         }
 
-        await fetch('http://192.168.0.10:8080/pet/deletePetProfile.do', {
+        await fetch(`${ip}/pet/deletePetProfile.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -144,7 +145,7 @@ export default class PetUpdateView extends Component{
             userNo : userNo,
             petNo : this.state.petNo
         }
-        await fetch('http://192.168.0.10:8080/pet/getPetInfo.do', {
+        await fetch(`${ip}/pet/getPetInfo.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -212,7 +213,7 @@ export default class PetUpdateView extends Component{
         let imageView = [];
         const imageDataArr = this.state.imageDataArr;
         imageDataArr.forEach((value, index) => {
-            const uri = {uri : 'http://192.168.0.10:8080/petImageFile/' + value.petFileName}
+            const uri = {uri : `${ip}/petImageFile/` + value.petFileName}
             imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
                                 <Image source={uri} style={{width : '100%', height : '100%'}}/>
                                 <View style={{position : 'absolute', bottom : 10, right : 15}}>
@@ -253,7 +254,7 @@ export default class PetUpdateView extends Component{
                 this.setState({
                     activityIndicator : true
                 })
-                RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/pet/petImageUploadSep.do', {
+                RNFetchBlob.fetch('POST', `${ip}/pet/petImageUploadSep.do`, {
                     Authorization : "Bearer access-token",
                     'Content-Type' : 'multipart/form-data',
                 },[
@@ -296,7 +297,7 @@ export default class PetUpdateView extends Component{
             petNo : this.state.petNo
         }
 
-        await fetch('http://192.168.0.10:8080/pet/deletePetImage.do', {
+        await fetch(`${ip}/pet/deletePetImage.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -368,7 +369,7 @@ export default class PetUpdateView extends Component{
                 petReference : data.petReference 
             }
 
-            await fetch('http://192.168.0.10:8080/pet/updatePetProfile.do', {
+            await fetch(`${ip}/pet/updatePetProfile.do`, {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',

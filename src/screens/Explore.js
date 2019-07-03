@@ -108,6 +108,7 @@ export default class Explore extends Component {
     };
 
     _onPressItem = (item) => {
+        console.log("test");
         this.props.navigation.navigate('BookingDetail',{heart : false, petsitterNo: item.petsitterNo});
         
     };

@@ -10,6 +10,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import Colors from '../../utils/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'react-moment';
+import { ip } from "../../utils/const";
 
 export default class BookingDate extends Component{
     constructor(props) {
@@ -153,7 +154,7 @@ class BottomRequest extends Component{
                     const params = {
                         petSitterNo : this.props.petsitterNo.toString()
                     }
-                    await fetch('http://192.168.0.10:8080/petSitter/getPDTO.do', {
+                    await fetch(`${ip}/petSitter/getPDTO.do`, {
                         method: 'POST',
                         headers: {
                           Accept: 'application/json',
@@ -188,7 +189,7 @@ class BottomRequest extends Component{
                 const params = {
                     petSitterNo : this.props.petsitterNo.toString()
                 }
-                await fetch('http://192.168.0.10:8080/petSitter/getPDTO.do', {
+                await fetch(`${ip}/petSitter/getPDTO.do`, {
                     method: 'POST',
                     headers: {
                       Accept: 'application/json',

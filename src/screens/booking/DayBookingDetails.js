@@ -23,6 +23,7 @@ import Colors from '../../utils/Colors';
 import ImageSlider from 'react-native-image-slider';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import PropTypes from 'prop-types';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class DayBookingDetails extends Component{
@@ -64,7 +65,7 @@ class Profile extends Component {
         super(props);
     }
     render(){
-        const petsitterImageSource = this.props.petsitterUserImage.petsitterUserImage ? {uri:`http://192.168.0.10:8080/userImageFile/${this.props.petsitterUserImage.petsitterUserImage}`} : require("../../../img/user.png");
+        const petsitterImageSource = this.props.petsitterUserImage.petsitterUserImage ? {uri:`${ip}/userImageFile/${this.props.petsitterUserImage.petsitterUserImage}`} : require("../../../img/user.png");
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>

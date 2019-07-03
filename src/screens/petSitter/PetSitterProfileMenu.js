@@ -16,6 +16,7 @@ import {
     ActivityIndicator,
     ScrollView
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 export default class PetSitterProfileMenu extends Component{
@@ -35,7 +36,7 @@ export default class PetSitterProfileMenu extends Component{
         const params = {
             userNo : userNo
         }
-        await fetch('http://192.168.0.10:8080/user/getUserImage.do', {
+        await fetch(`${ip}/user/getUserImage.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -47,7 +48,7 @@ export default class PetSitterProfileMenu extends Component{
          .then((res => {
             if(res.result === true){
                 this.setState({
-                    userImageURI : {uri : 'http://192.168.0.10:8080/userImageFile/' + res.fileInfo.fileName}
+                    userImageURI : {uri : '${ip}/userImageFile/' + res.fileInfo.fileName}
                 })
             }else{
               
@@ -100,7 +101,7 @@ export default class PetSitterProfileMenu extends Component{
         const params = {
             userNo : userNo
         }
-        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfo.do', {
+        await fetch(`${ip}/petSitter/getPetSitterInfo.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -135,7 +136,7 @@ export default class PetSitterProfileMenu extends Component{
             activityIndicator: true
         })
 
-        fetch("http://192.168.0.10:8080/petSitter/getPetSitterPointInfo.do", {
+        fetch(`${ip}/petSitter/getPetSitterPointInfo.do`, {
             method: "POST",
             headers: {
                 Accept: "application/json",

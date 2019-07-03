@@ -21,6 +21,7 @@ import {
     AsyncStorage,
     Alert
 } from 'react-native';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 const options={
     title : '사진',
@@ -74,7 +75,7 @@ export default class PetSitterProfileUpdateView extends Component{
             petSitterNo : petSitterNo
         }
 
-        await fetch('http://192.168.0.10:8080/petSitter/getPetSitterInfoWithImage.do', {
+        await fetch(`${ip}/petSitter/getPetSitterInfoWithImage.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -135,7 +136,7 @@ export default class PetSitterProfileUpdateView extends Component{
         let imageView = [];
         const imageDataArr = this.state.imageDataArr;
         imageDataArr.forEach((value, index) => {
-            const uri = {uri : 'http://192.168.0.10:8080/petSitterImageFile/' + value.petSitterFileName}
+            const uri = {uri : `${ip}/petSitterImageFile/` + value.petSitterFileName}
             imageView.push(<View key={index} style={{ alignItems : 'center', justifyContent : 'center'}}>
                                 <Image source={uri} style={{width : '100%', height : '100%'}}/>
                                 <View style={{position : 'absolute', bottom : 10, right : 15}}>
@@ -169,7 +170,7 @@ export default class PetSitterProfileUpdateView extends Component{
             petSitterFileNo : petSitterFileNo,
             petSitterNo : this.state.petSitterNo
         }
-        await fetch('http://192.168.0.10:8080/petSitter/deletePetSitterImage.do', {
+        await fetch(`${ip}/petSitter/deletePetSitterImage.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -209,7 +210,7 @@ export default class PetSitterProfileUpdateView extends Component{
                 }else {
                     const extension = response.path.substr(response.path.lastIndexOf('.') + 1 , response.path.length);
 
-                    RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/petSitter/petSitterImageUpload.do', {
+                    RNFetchBlob.fetch('POST', `${ip}/petSitter/petSitterImageUpload.do`, {
                         Authorization : "Bearer access-token",
                         'Content-Type' : 'multipart/form-data',
                     },[
@@ -353,7 +354,7 @@ export default class PetSitterProfileUpdateView extends Component{
                 petSitterIntroduce : state.petSitterIntroduce.toString()
             }
     
-            await fetch('http://192.168.0.10:8080/petSitter/updatePetSitterProc.do', {
+            await fetch(`${ip}/petSitter/updatePetSitterProc.do`, {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',

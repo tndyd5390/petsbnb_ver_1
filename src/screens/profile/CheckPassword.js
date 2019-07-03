@@ -12,7 +12,7 @@ import {
     AsyncStorage
 } from 'react-native';
 const {width, height} = Dimensions.get('window');
-
+import { ip } from "../../utils/const";
 export default class CheckPassword extends Component{
 
     constructor(props){
@@ -33,7 +33,7 @@ export default class CheckPassword extends Component{
             userNo : userInfo,
             password : this.state.password
         }
-        await fetch('http://192.168.0.10:8080/user/checkPassword.do', {
+        await fetch(`${ip}/user/checkPassword.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',

@@ -20,6 +20,7 @@ import {
     WebView
 } from 'react-native';
 import { colors } from 'react-native-elements';
+import { ip } from "../../utils/const";
 const{width, height} = Dimensions.get('window');
 
 const options={
@@ -61,7 +62,7 @@ export default class ProfileUserUpdate extends Component {
         const params = {
             userNo : userNo
         }
-        await fetch('http://192.168.0.10:8080/user/getUserInfo.do', {
+        await fetch(`${ip}/user/getUserInfo.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -128,7 +129,7 @@ export default class ProfileUserUpdate extends Component {
             activityIndicator : true
         })
 
-        await fetch('http://192.168.0.10:8080/user/userUpdatePassword.do', {
+        await fetch(`${ip}/user/userUpdatePassword.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -167,7 +168,7 @@ export default class ProfileUserUpdate extends Component {
         }
         
         
-        await RNFetchBlob.fetch('POST', 'http://192.168.0.10:8080/user/userImageUpload.do', {
+        await RNFetchBlob.fetch('POST', `${ip}/user/userImageUpload.do`, {
             Authorization : "Bearer access-token",
             'Content-Type' : 'multipart/form-data',
           }, [
@@ -222,7 +223,7 @@ export default class ProfileUserUpdate extends Component {
             userNo : this.state.userNo
         }
 
-        await fetch('http://192.168.0.10:8080/user/userUpdateAddress.do', {
+        await fetch(`${ip}/user/userUpdateAddress.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -247,13 +248,13 @@ export default class ProfileUserUpdate extends Component {
     }
 
     render(){
-        const imageSource = this.state.imageSource == null ? {uri : 'http://192.168.0.10:8080/userImageFile/' + this.state.fileName} : this.state.imageSource;
+        const imageSource = this.state.imageSource == null ? {uri : `${ip}/userImageFile/` + this.state.fileName} : this.state.imageSource;
         console.log(imageSource);
         if(this.state.daumWebView){
             return(
                 <WebView
                     /**여기 주소는 나중에 웹뷰 보여줄 도메인으로 대체해야함 */
-                    source={{uri: 'http://192.168.0.10:8080/user/daumPostView.do'}}
+                    source={{uri: `${ip}/user/daumPostView.do`}}
                     onMessage={(event) => {this._getAddressData(event)}}
                     style={{width : width, height : 300}}
                 />

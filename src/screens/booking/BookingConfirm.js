@@ -27,6 +27,7 @@ import {
     ListItem, 
     CheckBox
 } from 'react-native-elements';
+import { ip } from "../../utils/const";
 
 export default class BookingConfirm extends Component {
     
@@ -88,7 +89,7 @@ export default class BookingConfirm extends Component {
             userNo
         };
 
-        const userInfo = await fetch('http://192.168.0.10:8080/user/getUserInfo.do', {
+        const userInfo = await fetch(`${ip}/user/getUserInfo.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -122,7 +123,7 @@ export default class BookingConfirm extends Component {
             petNoArr
         }
 
-        const selectedPetList = await fetch('http://192.168.0.10:8080/pet/getSelectedPetList.do', {
+        const selectedPetList = await fetch(`${ip}/pet/getSelectedPetList.do`, {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -299,7 +300,7 @@ class Profile extends Component {
         return(
             <View style={styles.listBar}>
                 <View style={{alignItems : 'center', justifyContent: 'center'}}>
-                        <Image source={{uri:`http://192.168.0.10:8080/userImageFile/${petsitterUserImageFileName}`}} style={{width : 80, height : 80, margin : 18}}/>
+                        <Image source={{uri:`${ip}/userImageFile/${petsitterUserImageFileName}`}} style={{width : 80, height : 80, margin : 18}}/>
                 </View>
                 <View style={{justifyContent: 'center', marginLeft : 15}}>
                     <View>
@@ -337,7 +338,7 @@ class PetList extends Component{
             }else{
                 size='대형';
             }
-            const petFileSource = pDTO.petFileName ? {uri : `http://192.168.0.10:8080/petImageFile/${pDTO.petFileName}`} : require("../../../img/user.png");
+            const petFileSource = pDTO.petFileName ? {uri : `${ip}/petImageFile/${pDTO.petFileName}`} : require("../../../img/user.png");
             return(
                 <View style={styles.listBar} key={index}>
                     <View style={{alignItems : 'center', justifyContent: 'center'}}>
