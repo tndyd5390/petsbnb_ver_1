@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "iamport-react-native": "^1.0.6",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.23",
     "react": "16.6.0-alpha.8af6728",
     "react-devtools": "^3.4.2",
